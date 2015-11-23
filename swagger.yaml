@@ -277,7 +277,7 @@ definitions:
   Tag:
     type: string
 
-  EPPNPrior:
+  EPPNPriorArray:
     type: array
     items:
       $ref: "#/definitions/EPPNPrior"
