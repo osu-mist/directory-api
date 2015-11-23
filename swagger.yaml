@@ -247,7 +247,6 @@ definitions:
       - email
       - eppn
       - upn
-      - EPPNPrior
 
     properties:
       firstName:
@@ -264,8 +263,6 @@ definitions:
         type: string
       upn:
         type: string
-      EPPNPrior:
-        type: string
       Tags:
         type: string
 
@@ -280,9 +277,9 @@ definitions:
   EPPNPriorArray:
     type: array
     items:
-      $ref: "#/definitions/EPPNPrior"
+      $ref: "#/definitions/Email"
 
-  EPPNPrior:
+  Email:
     type: string
 
   directoryEntity:
