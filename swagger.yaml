@@ -345,8 +345,3 @@ definitions:
         type: integer
       details:
         type: string
-  Errors:
-    title: ArrayOfErrors
-    type: array
-    items:
-      $ref: "#/definitions/Error"
