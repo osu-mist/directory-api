@@ -40,27 +40,29 @@ paths:
           in: query
           description: "The email address of the person"
           required: false
-          type: string
+          schema:
+            $ref: "#/definitions/Email"
 
         - name: eppn
           in: query
           description: "The person's email, specifically [onidusername@oregonstate.edu]"
           required: false
-          type: string
+          schema:
+            $ref: "#/definitions/Email"
 
         - name: upn
           in: query
           description: "Same as EPPN in the long term..."
           required: false
-          type: string
+          schema:
+            $ref: "#/definitions/Email"
 
         - name: EPPNPrior
           in: query
           description: "Any prior email addresses the user may have"
           required: false
-          type: array
-          items:
-            type: string
+          schema:
+            $ref: "#/definitions/EPPNPriorArray"
 
       # Expected responses for this operation:
       responses:
@@ -95,7 +97,8 @@ paths:
           in: path
           description: "EPPN of person to be fetched"
           required: true
-          type: string
+          schema:
+            $ref: "#/definitions/Email"
       responses:
         "200":
           description: "Successful response"
@@ -137,7 +140,8 @@ paths:
           in: query
           description: "Email address of person to be searched for."
           required: false
-          type: string
+          schema:
+            $ref: "#/definitions/Email"
 
         - name: Office Phone
           in: query
@@ -258,11 +262,14 @@ definitions:
       username:
         type: string
       email:
-        type: string
+        schema:
+          $ref: "#/definitions/Email"
       eppn:
-        type: string
+        schema:
+          $ref: "#/definitions/Email"
       upn:
-        type: string
+        schema:
+          $ref: "#/definitions/Email"
       Tags:
         type: string
         
@@ -281,6 +288,7 @@ definitions:
 
   Email:
     type: string
+    format: email
 
   directoryEntity:
     required:
@@ -309,7 +317,8 @@ definitions:
       faxNumber:
         type: string
       emailAddress:
-        type: string
+        schema: # FIXME: this is an error
+          $ref: "#/definitions/Email"
       username:
         type: string
         
