@@ -24,38 +24,38 @@ paths:
       produces:
         - application/json
       parameters:
-        - in: query
-          name: firstName
+        - name: firstName
+          in: query
           description: "The first name of the person"
           required: false
           type: string
 
-        - in: query
-          name: lastName
+        - name: lastName
+          in: query
           description: "The last name of the person"
           required: false
           type: string
 
-        - in: query
-          name: email
+        - name: email
+          in: query
           description: "The email address of the person"
           required: false
           type: string
 
-        - in: query
-          name: eppn
+        - name: eppn
+          in: query
           description: "The person's email, specifically [onidusername@oregonstate.edu]"
           required: false
           type: string
 
-        - in: query
-          name: upn
+        - name: upn
+          in: query
           description: "Same as EPPN in the long term..."
           required: false
           type: string
 
-        - in: query
-          name: EPPNPrior
+        - name: EPPNPrior
+          in: query
           description: "Any prior email addresses the user may have"
           required: false
           type: array
@@ -121,74 +121,74 @@ paths:
       produces:
         - application/json
       parameters:
-        - in: query
-          name: Full Name
+        - name: Full Name
+          in: query
           description: "Full name of person to be searched for."
           required: false
           type: string
 
-        - in: query
-          name: Surname
+        - name: Surname
+          in: query
           description: "Surname of person to be searched for."
           required: false
           type: string
 
-        - in: query
-          name: Email Address
+        - name: Email Address
+          in: query
           description: "Email address of person to be searched for."
           required: false
           type: string
 
-        - in: query
-          name: Office Phone
+        - name: Office Phone
+          in: query
           description: "Office phone number of person to be searched for."
           required: false
           type: string
 
-        - in: query
-          name: Alternate Phone
+        - name: Alternate Phone
+          in: query
           description: "Alternate phone number of person to be searched for."
           required: false
           type: string
 
-        - in: query
-          name: Home Phone
+        - name: Home Phone
+          in: query
           description: "Home phone number of person to be searched for."
           required: false
           type: string
 
-        - in: query
-          name: Fax Number
+        - name: Fax Number
+          in: query
           description: "Fax number of person to be searched for."
           required: false
           type: string
 
-        - in: query
-          name: Office Address
+        - name: Office Address
+          in: query
           description: "Office address of person to be searched for."
           required: false
           type: string
 
-        - in: query
-          name: Department
+        - name: Department
+          in: query
           description: "Department of person to be searched for."
           required: false
           type: string
 
-        - in: query
-          name: Affiliation
+        - name: Affiliation
+          in: query
           description: "Any, Employee, Student, Other are valid options to be searched with."
           required: false
           type: string
 
-        - in: query
-          name: Any Phone Number
+        - name: Any Phone Number
+          in: query
           description: "Any phone number to be searched with"
           required: false
           type: string
 
-        - in: query
-          name: Join Search Parameters With And or Or
+        - name: Join Search Parameters With And or Or
+          in: query
           description: "and & or are valid options. And is default value"
           required: false
           type: string
@@ -212,8 +212,8 @@ paths:
       - directory
       operationId: getDirectoryEntryByOsuuid
       parameters:
-        - in: path
-          name: osuuid
+        - name: osuuid
+          in: path
           description: "OSUUID of the person to be fetched."
           type: integer
           required: true
