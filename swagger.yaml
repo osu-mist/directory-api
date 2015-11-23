@@ -268,12 +268,12 @@ definitions:
         type: string
       Tags:
         type: string
-
+        
   Tags:
     type: array
     items:
       $ref: "#/definitions/Tag"
-
+      
   Tag:
     type: string
 
@@ -315,7 +315,21 @@ definitions:
         type: string
       username:
         type: string
-
+        
+  Job:
+    type: object
+    properties:
+      jobTitle:
+        type: string
+      department:
+        type: string
+  
+  Jobs:
+    title: ArrayOfJobs
+    type: array
+    items:
+      $ref: "#/definitions/Job"
+        
   Error:
     type: object
     properties:
