@@ -1,0 +1,352 @@
+# Example YAML to get you started quickly.
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "1"
+  title: OSU People/Directory API
+
+# Describe your paths here
+
+paths:
+
+  /people:
+    # This is a HTTP operation
+    get:
+      tags:
+       - people
+      # Describe this verb here. Note: you can use markdown
+      description: "Gets all `person` objects. Can be filtered by parameters."
+      operationId: getPeople
+      # This is array of GET operation parameters:
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: firstName
+          description: "The first name of the person"
+          required: false
+          type: string
+
+        - in: query
+          name: lastName
+          description: "The last name of the person"
+          required: false
+          type: string
+
+        - in: query
+          name: email
+          description: "The email address of the person"
+          required: false
+          type: string
+
+        - in: query
+          name: eppn
+          description: "The person's email, specifically [onidusername@oregonstate.edu]"
+          required: false
+          type: string
+
+        - in: query
+          name: upn
+          description: "Same as EPPN in the long term..."
+          required: false
+          type: string
+
+        - in: query
+          name: EPPNPrior
+          description: "Any prior email addresses the user may have"
+          required: false
+          type: array
+          items:
+            type: string
+
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        "200":
+          description: "Successful response"
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            $ref: "#/definitions/Person"
+        "404":
+          description: "Not Found"
+          schema:
+            $ref: "#/definitions/Error"
+        "500":
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/Error"
+      security:
+        - people_api_key: []
+
+  /people/{eppn}:
+    get:
+      tags:
+        - people
+      description: "Finds Person by eppn"
+      operationId: getPersonByEppn
+      produces:
+        - application/json
+      parameters:
+        - name: eppn
+          in: path
+          description: "EPPN of person to be fetched"
+          required: true
+          type: string
+      responses:
+        "200":
+          description: "Successful response"
+          schema:
+            $ref: "#/definitions/Person"
+        "404":
+          description: "Resource not found"
+          schema:
+            $ref: "#/definitions/Error"
+        "500":
+          description: "Internal Server Error"
+          schema:
+            $ref: "#/definitions/Error"
+      security:
+        - people_api_key: []
+
+  /directory:
+    get:
+      tags:
+        - directory
+      operationId: getDirectoryEntries
+      description: "Get all entities in directory. Can be filtered by query parameters"
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: Full Name
+          description: "Full name of person to be searched for."
+          required: false
+          type: string
+
+        - in: query
+          name: Surname
+          description: "Surname of person to be searched for."
+          required: false
+          type: string
+
+        - in: query
+          name: Email Address
+          description: "Email address of person to be searched for."
+          required: false
+          type: string
+
+        - in: query
+          name: Office Phone
+          description: "Office phone number of person to be searched for."
+          required: false
+          type: string
+
+        - in: query
+          name: Alternate Phone
+          description: "Alternate phone number of person to be searched for."
+          required: false
+          type: string
+
+        - in: query
+          name: Home Phone
+          description: "Home phone number of person to be searched for."
+          required: false
+          type: string
+
+        - in: query
+          name: Fax Number
+          description: "Fax number of person to be searched for."
+          required: false
+          type: string
+
+        - in: query
+          name: Office Address
+          description: "Office address of person to be searched for."
+          required: false
+          type: string
+
+        - in: query
+          name: Department
+          description: "Department of person to be searched for."
+          required: false
+          type: string
+
+        - in: query
+          name: Affiliation
+          description: "Any, Employee, Student, Other are valid options to be searched with."
+          required: false
+          type: string
+
+        - in: query
+          name: Any Phone Number
+          description: "Any phone number to be searched with"
+          required: false
+          type: string
+
+        - in: query
+          name: Join Search Parameters With And or Or
+          description: "and & or are valid options. And is default value"
+          required: false
+          type: string
+
+      responses:
+        "200":
+          description: "Successful response"
+          schema:
+            $ref: "#/definitions/directoryEntity"
+        "400":
+          description: "Bad Request"
+          #example: "Error: Too many entries returned. Try a more precise search."
+          schema:
+            $ref: "#/definitions/Error"
+        "500":
+          description: "Internal server error"
+
+  /directory/{osuuid}:
+    get:
+      tags:
+      - directory
+      operationId: getDirectoryEntryByOsuuid
+      parameters:
+        - in: path
+          name: osuuid
+          description: "OSUUID of the person to be fetched."
+          type: integer
+          required: true
+      responses:
+        "200":
+          description: "Succesful response"
+          schema:
+           $ref: "#/definitions/directoryEntity"
+        "404":
+          description: "Resource not found"
+        "500":
+          description: "Internal server error"
+
+securityDefinitions:
+  people_api_key:
+    type: apiKey
+    name: people_api_key
+    in: query
+  directory_api_key:
+    type: apiKey
+    name: directory_api_key
+    in: query
+
+definitions:
+
+  Person:
+    required:
+      - firstName
+      - lastName
+      - username
+      - email
+      - eppn
+      - upn
+      - EPPNPrior
+      - Tags
+
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      osuID:
+        type: string
+      username:
+        type: string
+      email:
+        type: string
+      eppn:
+        type: string
+      upn:
+        type: string
+      EPPNPrior:
+        type: string
+      Tags:
+        type: string
+        
+  Tags:
+    type: array
+    items:
+      $ref: "#/definitions/Tag"
+      
+  Tag:
+    type: string
+
+  EPPNPrior:
+    type: array
+    items:
+      $ref: "#/definitions/EPPNPrior"
+
+  EPPNPrior:
+    type: string
+
+  directoryEntity:
+    required:
+      - fullName
+      - primaryAffiliation
+      - username
+    properties:
+      fullName:
+        type: string
+      primaryAffiliation:
+        type: string
+      title:
+        type: string
+      department:
+        type: string
+      departmentMailingAddress:
+        type: string
+      homePhoneNumber:
+        type: string
+      homeAddress:
+        type: string
+      officePhoneNumber:
+        type: string
+      officeAddress:
+        type: string
+      faxNumber:
+        type: string
+      emailAddress:
+        type: string
+      username:
+        type: string
+        
+  Job:
+    type: object
+    properties:
+      jobTitle:
+        type: string
+      department:
+        type: string
+  
+  Jobs:
+    title: ArrayOfJobs
+    type: array
+    items:
+      $ref: "#/definitions/Job"
+        
+  Error:
+    type: object
+    properties:
+      status:
+        type: integer
+        format: int32
+      developerMessage:
+        type: string
+      userMesage:
+        type: string
+      code:
+        type: integer
+      details:
+        type: string
+  Errors:
+    title: ArrayOfErrors
+    type: array
+    items:
+      $ref: "#/definitions/Error"
