@@ -1,0 +1,18 @@
+# Gradle
+.gradle/
+
+# Dropwizard
+build/
+logs/
+configuration.yaml
+
+# IntelliJ IDEA
+*.iml
+*.ipr
+*.iws
+
+# Mac OS X
+.DS_Store
+
+# Build Properties
+build.properties
