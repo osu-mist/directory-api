@@ -267,8 +267,8 @@ definitions:
         $ref: "#/definitions/Email"
       upn:
         $ref: "#/definitions/Email"
-      Tags:
-        type: string
+      tags:
+        $ref: "#/definitions/Tags"
         
   Tags:
     type: array
