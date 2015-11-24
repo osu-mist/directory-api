@@ -262,14 +262,11 @@ definitions:
       username:
         type: string
       email:
-        schema:
-          $ref: "#/definitions/Email"
+        $ref: "#/definitions/Email"
       eppn:
-        schema:
-          $ref: "#/definitions/Email"
+        $ref: "#/definitions/Email"
       upn:
-        schema:
-          $ref: "#/definitions/Email"
+        $ref: "#/definitions/Email"
       Tags:
         type: string
         
@@ -317,8 +314,7 @@ definitions:
       faxNumber:
         type: string
       emailAddress:
-        schema: # FIXME: this is an error
-          $ref: "#/definitions/Email"
+        $ref: "#/definitions/Email"
       username:
         type: string
         
