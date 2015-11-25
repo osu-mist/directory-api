@@ -281,7 +281,7 @@ definitions:
     type: array
     items:
       $ref: "#/definitions/Tag"
-      
+
   Tag:
     type: string
 
@@ -324,7 +324,7 @@ definitions:
         $ref: "#/definitions/Email"
       username:
         type: string
-        
+
   Job:
     type: object
     properties:
@@ -332,13 +332,13 @@ definitions:
         type: string
       department:
         type: string
-  
+
   Jobs:
     title: ArrayOfJobs
     type: array
     items:
       $ref: "#/definitions/Job"
-        
+
   Error:
     type: object
     properties:
