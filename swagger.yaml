@@ -272,18 +272,18 @@ definitions:
         $ref: "#/definitions/Email"
       upn:
         $ref: "#/definitions/Email"
-      tags:
-        $ref: "#/definitions/Tags"
-      jobs:
-        $ref: "#/definitions/Jobs"
+#     tags:
+#       $ref: "#/definitions/Tags"
+#     jobs:
+#       $ref: "#/definitions/Jobs"
 
-  Tags:
-    type: array
-    items:
-      $ref: "#/definitions/Tag"
+# Tags:
+#   type: array
+#   items:
+#     $ref: "#/definitions/Tag"
 
-  Tag:
-    type: string
+# Tag:
+#   type: string
 
   EPPNPriorArray:
     type: array
@@ -325,19 +325,19 @@ definitions:
       username:
         type: string
 
-  Job:
-    type: object
-    properties:
-      jobTitle:
-        type: string
-      department:
-        type: string
+# Job:
+#   type: object
+#   properties:
+#     jobTitle:
+#       type: string
+#     department:
+#       type: string
 
-  Jobs:
-    title: ArrayOfJobs
-    type: array
-    items:
-      $ref: "#/definitions/Job"
+# Jobs:
+#   title: ArrayOfJobs
+#   type: array
+#   items:
+#     $ref: "#/definitions/Job"
 
   Error:
     type: object
