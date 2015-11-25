@@ -40,25 +40,25 @@ paths:
           in: query
           description: "The email address of the person"
           required: false
-          schema:
-            $ref: "#/definitions/Email"
+          type: string
+          format: email
 
         - name: eppn
           in: query
           description: "The person's email, specifically [onidusername@oregonstate.edu]"
           required: false
-          schema:
-            $ref: "#/definitions/Email"
+          type: string
+          format: email
 
         - name: upn
           in: query
           description: "Same as EPPN in the long term..."
           required: false
-          schema:
-            $ref: "#/definitions/Email"
+          type: string
+          format: email
 
         - name: EPPNPrior
-          in: query
+          in: body
           description: "Any prior email addresses the user may have"
           required: false
           schema:
@@ -97,8 +97,9 @@ paths:
           in: path
           description: "EPPN of person to be fetched"
           required: true
-          schema:
-            $ref: "#/definitions/Email"
+          type: string
+          format: email
+
       responses:
         "200":
           description: "Successful response"
@@ -140,8 +141,8 @@ paths:
           in: query
           description: "Email address of person to be searched for."
           required: false
-          schema:
-            $ref: "#/definitions/Email"
+          type: string
+          format: email
 
         - name: Office Phone
           in: query
