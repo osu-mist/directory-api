@@ -210,6 +210,8 @@ paths:
             $ref: "#/definitions/Error"
         "500":
           description: "Internal server error"
+      security:
+        - directory_api_key: []
 
   /directory/{osuuid}:
     get:
@@ -231,6 +233,8 @@ paths:
           description: "Resource not found"
         "500":
           description: "Internal server error"
+      security:
+        - directory_api_key: []
 
 securityDefinitions:
   people_api_key:
