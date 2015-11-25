@@ -274,7 +274,9 @@ definitions:
         $ref: "#/definitions/Email"
       tags:
         $ref: "#/definitions/Tags"
-        
+      jobs:
+        $ref: "#/definitions/Jobs"
+
   Tags:
     type: array
     items:
