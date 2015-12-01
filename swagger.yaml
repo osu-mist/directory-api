@@ -237,10 +237,10 @@ paths:
         - directory_api_key: []
 
 securityDefinitions:
-  people_api_key:
-    type: apiKey
-    name: people_api_key
-    in: query
+#  people_api_key:
+#    type: apiKey
+#    name: people_api_key
+#    in: query
   directory_api_key:
     type: apiKey
     name: directory_api_key
