@@ -300,6 +300,10 @@ definitions:
       - primaryAffiliation
       - username
     properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
       fullName:
         type: string
       primaryAffiliation:
