@@ -4,9 +4,11 @@ package edu.oregonstate.mist.webapiskeleton
  * DirectoryEntity representation class.
  */
 class DirectoryEntity {
+    String firstName
+    String lastName
     String fullName
     String primaryAffiliation
-    String title
+    String jobTitle
     String department
     String departmentMailingAddress
     String homePhoneNumber
@@ -14,6 +16,7 @@ class DirectoryEntity {
     String officePhoneNumber
     String officeAddress
     String faxNumber
-    Email email
+    Email emailAddress
     String username
+    Integer osuuid
 }
