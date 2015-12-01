@@ -308,7 +308,7 @@ definitions:
         type: string
       primaryAffiliation:
         type: string
-      title:
+      jobTitle:
         type: string
       department:
         type: string
