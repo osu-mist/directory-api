@@ -14,6 +14,6 @@ class DirectoryEntity {
     String officePhoneNumber
     String officeAddress
     String faxNumber
-    Email emailAddress
+    Email email
     String username
 }
