@@ -12,109 +12,109 @@ info:
 
 paths:
 
-  /people:
-    # This is a HTTP operation
-    get:
-      tags:
-       - people
-      # Describe this verb here. Note: you can use markdown
-      description: "Gets all `person` objects. Can be filtered by parameters."
-      operationId: getPeople
-      # This is array of GET operation parameters:
-      produces:
-        - application/json
-      parameters:
-        - name: firstName
-          in: query
-          description: "The first name of the person"
-          required: false
-          type: string
-
-        - name: lastName
-          in: query
-          description: "The last name of the person"
-          required: false
-          type: string
-
-        - name: email
-          in: query
-          description: "The email address of the person"
-          required: false
-          type: string
-          format: email
-
-        - name: eppn
-          in: query
-          description: "The person's email, specifically [onidusername@oregonstate.edu]"
-          required: false
-          type: string
-          format: email
-
-        - name: upn
-          in: query
-          description: "Same as EPPN in the long term..."
-          required: false
-          type: string
-          format: email
-
-        - name: EPPNPrior
-          in: body
-          description: "Any prior email addresses the user may have"
-          required: false
-          schema:
-            $ref: "#/definitions/EPPNPriorArray"
-
-      # Expected responses for this operation:
-      responses:
-        # Response code
-        "200":
-          description: "Successful response"
-          # A schema describing your response object.
-          # Use JSON Schema format
-          schema:
-            $ref: "#/definitions/Person"
-        "404":
-          description: "Not Found"
-          schema:
-            $ref: "#/definitions/Error"
-        "500":
-          description: "Internal Server Error"
-          schema:
-            $ref: "#/definitions/Error"
-      security:
-        - people_api_key: []
-
-  /people/{eppn}:
-    get:
-      tags:
-        - people
-      description: "Finds Person by eppn"
-      operationId: getPersonByEppn
-      produces:
-        - application/json
-      parameters:
-        - name: eppn
-          in: path
-          description: "EPPN of person to be fetched"
-          required: true
-          type: string
-          format: email
-
-      responses:
-        "200":
-          description: "Successful response"
-          schema:
-            $ref: "#/definitions/Person"
-        "404":
-          description: "Resource not found"
-          schema:
-            $ref: "#/definitions/Error"
-        "500":
-          description: "Internal Server Error"
-          schema:
-            $ref: "#/definitions/Error"
-      security:
-        - people_api_key: []
+#  /people:
+#    # This is a HTTP operation
+#    get:
+#      tags:
+#       - people
+#      # Describe this verb here. Note: you can use markdown
+#      description: "Gets all `person` objects. Can be filtered by parameters."
+#      operationId: getPeople
+#      # This is array of GET operation parameters:
+#      produces:
+#        - application/json
+#      parameters:
+#        - name: firstName
+#          in: query
+#          description: "The first name of the person"
+#          required: false
+#          type: string
+#
+#        - name: lastName
+#          in: query
+#          description: "The last name of the person"
+#          required: false
+#          type: string
+#
+#        - name: email
+#          in: query
+#          description: "The email address of the person"
+#          required: false
+#          type: string
+#          format: email
+#
+#        - name: eppn
+#          in: query
+#          description: "The person's email, specifically [onidusername@oregonstate.edu]"
+#          required: false
+#          type: string
+#          format: email
+#
+#        - name: upn
+#          in: query
+#          description: "Same as EPPN in the long term..."
+#          required: false
+#          type: string
+#          format: email
+#
+#        - name: EPPNPrior
+#          in: body
+#          description: "Any prior email addresses the user may have"
+#          required: false
+#          schema:
+#            $ref: "#/definitions/EPPNPriorArray"
+#
+#      # Expected responses for this operation:
+#      responses:
+#        # Response code
+#        "200":
+#          description: "Successful response"
+#          # A schema describing your response object.
+#          # Use JSON Schema format
+#          schema:
+#            $ref: "#/definitions/Person"
+#        "404":
+#          description: "Not Found"
+#          schema:
+#            $ref: "#/definitions/Error"
+#        "500":
+#          description: "Internal Server Error"
+#          schema:
+#            $ref: "#/definitions/Error"
+#      security:
+#        - people_api_key: []
+#
+#  /people/{eppn}:
+#    get:
+#      tags:
+#        - people
+#      description: "Finds Person by eppn"
+#      operationId: getPersonByEppn
+#      produces:
+#        - application/json
+#      parameters:
+#        - name: eppn
+#          in: path
+#          description: "EPPN of person to be fetched"
+#          required: true
+#          type: string
+#          format: email
+#
+#      responses:
+#        "200":
+#          description: "Successful response"
+#          schema:
+#            $ref: "#/definitions/Person"
+#        "404":
+#          description: "Resource not found"
+#          schema:
+#            $ref: "#/definitions/Error"
+#        "500":
+#          description: "Internal Server Error"
+#          schema:
+#            $ref: "#/definitions/Error"
+#      security:
+#        - people_api_key: []
 
   /directory:
     get:
@@ -248,30 +248,30 @@ securityDefinitions:
 
 definitions:
 
-  Person:
-    required:
-      - firstName
-      - lastName
-      - username
-      - email
-      - eppn
-      - upn
-
-    properties:
-      firstName:
-        type: string
-      lastName:
-        type: string
-      osuID:
-        type: string
-      username:
-        type: string
-      email:
-        $ref: "#/definitions/Email"
-      eppn:
-        $ref: "#/definitions/Email"
-      upn:
-        $ref: "#/definitions/Email"
+#  Person:
+#    required:
+#      - firstName
+#      - lastName
+#      - username
+#      - email
+#      - eppn
+#      - upn
+#
+#    properties:
+#      firstName:
+#        type: string
+#      lastName:
+#        type: string
+#      osuID:
+#        type: string
+#      username:
+#        type: string
+#      email:
+#        $ref: "#/definitions/Email"
+#      eppn:
+#        $ref: "#/definitions/Email"
+#      upn:
+#        $ref: "#/definitions/Email"
 #     tags:
 #       $ref: "#/definitions/Tags"
 #     jobs:
@@ -285,10 +285,10 @@ definitions:
 # Tag:
 #   type: string
 
-  EPPNPriorArray:
-    type: array
-    items:
-      $ref: "#/definitions/Email"
+#  EPPNPriorArray:
+#    type: array
+#    items:
+#      $ref: "#/definitions/Email"
 
   Email:
     type: string
