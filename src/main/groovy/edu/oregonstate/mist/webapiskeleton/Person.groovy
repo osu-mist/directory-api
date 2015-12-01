@@ -8,7 +8,7 @@ class Person {
     String lastName
     String osuID
     String username
-    String email
-    String eppn
-    String upn
+    Email email
+    Email eppn
+    Email upn
 }
