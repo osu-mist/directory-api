@@ -1,4 +1,4 @@
-package edu.oregonstate.mist.api.core
+package edu.oregonstate.mist.webapiskeleton
 
 /**
  * DirectoryEntity representation class.
