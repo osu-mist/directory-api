@@ -328,6 +328,8 @@ definitions:
         $ref: "#/definitions/Email"
       username:
         type: string
+      osuuid:
+        type: integer
 
 # Job:
 #   type: object
