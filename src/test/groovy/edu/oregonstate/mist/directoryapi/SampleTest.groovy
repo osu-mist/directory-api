@@ -1,6 +1,6 @@
-package edu.oregonstate.mist.webapiskeleton
+package edu.oregonstate.mist.directoryapi
 
-import edu.oregonstate.mist.webapiskeleton.core.Sample
+import edu.oregonstate.mist.directoryapi.core.Sample
 import org.junit.Test
 import static org.junit.Assert.*
 

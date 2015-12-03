@@ -1,4 +1,4 @@
-package edu.oregonstate.mist.webapiskeleton
+package edu.oregonstate.mist.directoryapi
 
 import edu.oregonstate.mist.api.Configuration
 import edu.oregonstate.mist.api.Resource

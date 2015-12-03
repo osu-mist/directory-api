@@ -1,4 +1,4 @@
-package edu.oregonstate.mist.webapiskeleton
+package edu.oregonstate.mist.directoryapi
 
 /**
  * Email Representation Class.
