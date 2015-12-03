@@ -1,4 +1,4 @@
-package edu.oregonstate.mist.webapiskeleton.resources
+package edu.oregonstate.mist.webapiskeleton
 
 import edu.oregonstate.mist.api.Resource
 import edu.oregonstate.mist.webapiskeleton.core.Sample
@@ -17,7 +17,7 @@ import javax.ws.rs.core.MediaType
  * Sample resource class.
  */
 @Path('/sample/')
-class SampleResource extends Resource {
+class DirectoryEntityResource extends Resource {
     /**
      * Responds to GET requests by returning a message.
      *
