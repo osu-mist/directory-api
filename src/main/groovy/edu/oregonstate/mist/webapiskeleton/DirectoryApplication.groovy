@@ -14,7 +14,7 @@ import io.dropwizard.auth.basic.BasicAuthFactory
 /**
  * Main application class.
  */
-class SkeletonApplication extends Application<Configuration> {
+class DirectoryApplication extends Application<Configuration> {
     /**
      * Initializes application bootstrap.
      *
@@ -49,6 +49,6 @@ class SkeletonApplication extends Application<Configuration> {
      * @throws Exception
      */
     public static void main(String[] arguments) throws Exception {
-        new SkeletonApplication().run(arguments)
+        new DirectoryApplication().run(arguments)
     }
 }
