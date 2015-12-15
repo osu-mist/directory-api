@@ -18,5 +18,5 @@ class DirectoryEntity {
     String faxNumber
     Email emailAddress
     String username
-    Integer osuuid
+    Long osuuid
 }
