@@ -74,6 +74,7 @@ class DirectoryEntityDAO {
                 directoryEntityList.add(convert(entry))
             }
         } finally{
+            // TODO: http://www.ldaptive.org/docs/guide/connections/pooling.html
             connection.close()
         }
         directoryEntityList
