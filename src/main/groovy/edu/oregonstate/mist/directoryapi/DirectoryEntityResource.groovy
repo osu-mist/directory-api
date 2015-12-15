@@ -25,7 +25,7 @@ class DirectoryEntityResource extends Resource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response getMessage(@Auth AuthenticatedUser authenticatedUser) {
-        ResponseBuilder responseBuilder = ok(new Sample().message)
+        ResponseBuilder responseBuilder = ok('hello world')
         responseBuilder.build()
     }
 
