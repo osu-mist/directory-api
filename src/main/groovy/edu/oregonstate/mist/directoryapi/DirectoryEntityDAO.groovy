@@ -45,7 +45,7 @@ class DirectoryEntityDAO {
     /**
      * Returns directory entity matching input id.
      */
-    public DirectoryEntity getByOSUUID(Integer osuuid) {
+    public DirectoryEntity getByOSUUID(Long osuuid) {
         // TODO: convert parameter into filter string
         // TODO: return search result
     }

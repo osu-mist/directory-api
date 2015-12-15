@@ -223,6 +223,7 @@ paths:
           in: path
           description: "OSUUID of the person to be fetched."
           type: integer
+          format: int64
           required: true
       responses:
         "200":
@@ -330,6 +331,7 @@ definitions:
         type: string
       osuuid:
         type: integer
+        format: int64
 
 # Job:
 #   type: object
