@@ -46,8 +46,13 @@ class DirectoryEntityDAO {
      * Returns directory entity matching input id.
      */
     public DirectoryEntity getByOSUUID(Long osuuid) {
-        // TODO: convert parameter into filter string
-        // TODO: return search result
+        String filter = '(osuuid=' + osuuid + ')'
+        List<DirectoryEntity> result = searchLDAP(filter)
+        if (!result.isEmpty()) {
+            return result.get(0)
+        } else {
+            return null
+        }
     }
 
     /**
@@ -82,5 +87,6 @@ class DirectoryEntityDAO {
      */
     private DirectoryEntity convert(LdapEntry ldapEntry) {
         // TODO: convert LdapEntry to DirectoryEntity
+        new DirectoryEntity()
     }
 }
