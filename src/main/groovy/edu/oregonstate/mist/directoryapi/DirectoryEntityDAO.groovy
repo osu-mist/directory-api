@@ -84,7 +84,7 @@ class DirectoryEntityDAO {
      */
     private static DirectoryEntity convert(LdapEntry ldapEntry) {
         new DirectoryEntity(
-                firstName:                get(ldapEntry, 'givenName'),
+                firstName:                get(ldapEntry, 'givenname'),
                 lastName:                 get(ldapEntry, 'sn'),
                 fullName:                 get(ldapEntry, 'cn'),
                 primaryAffiliation:       affiliation(get(ldapEntry, 'osuprimaryaffiliation')),
