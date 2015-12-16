@@ -32,7 +32,8 @@ class DirectoryApplication extends Application<Configuration> {
     @Override
     public void run(Configuration configuration, Environment environment) {
         Resource.loadProperties('resource.properties')
-        environment.jersey().register(new DirectoryEntityResource())
+        final DirectoryEntityDAO directoryEntityDAO = new DirectoryEntityDAO()
+        environment.jersey().register(new DirectoryEntityResource(directoryEntityDAO))
         environment.jersey().register(new InfoResource())
         environment.jersey().register(
                 AuthFactory.binder(

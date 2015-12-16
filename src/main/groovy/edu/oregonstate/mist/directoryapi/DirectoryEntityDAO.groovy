@@ -40,6 +40,7 @@ class DirectoryEntityDAO {
     public List<DirectoryEntity> getByParameters(Map parameters) {
         // TODO: convert parameters into filter string
         // TODO: return search results
+        new ArrayList<DirectoryEntity>()
     }
 
     /**
