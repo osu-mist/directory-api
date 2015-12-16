@@ -73,7 +73,7 @@ class DirectoryEntityDAO {
             for (LdapEntry entry : result.getEntries()) {
                 directoryEntityList.add(convert(entry))
             }
-        } finally{
+        } finally {
             // TODO: http://www.ldaptive.org/docs/guide/connections/pooling.html
             connection.close()
         }
