@@ -86,8 +86,41 @@ class DirectoryEntityDAO {
      * @param ldapEntry
      * @return DirectoryEntity
      */
-    private DirectoryEntity convert(LdapEntry ldapEntry) {
-        // TODO: convert LdapEntry to DirectoryEntity
-        new DirectoryEntity()
+    private static DirectoryEntity convert(LdapEntry ldapEntry) {
+        new DirectoryEntity(
+                firstName:                get(ldapEntry, 'givenName'),
+                lastName:                 get(ldapEntry, 'sn'),
+                fullName:                 get(ldapEntry, 'cn'),
+                primaryAffiliation:       affiliation(get(ldapEntry, 'osuprimaryaffiliation')),
+                jobTitle:                 get(ldapEntry, 'title'),
+                department:               get(ldapEntry, 'osudepartment'),
+                departmentMailingAddress: get(ldapEntry, 'postaladdress'),
+                homePhoneNumber:          get(ldapEntry, 'homephone'),
+                homeAddress:              get(ldapEntry, 'homepostaladdress'),
+                officePhoneNumber:        get(ldapEntry, 'telephonenumber'),
+                officeAddress:            get(ldapEntry, 'osuofficeaddress'),
+                faxNumber:                get(ldapEntry, 'facsimiletelephonenumber'),
+                emailAddress:             get(ldapEntry, 'mail'),
+                username:                 get(ldapEntry, 'uid'),
+                osuuid:                   Long.parseLong(get(ldapEntry, 'osuuid'))
+        )
+    }
+
+    private static String get(LdapEntry ldapEntry, String name) {
+        ldapEntry.getAttribute(name)?.getStringValue()
+    }
+
+    private static String affiliation(String abbreviation) {
+        switch (abbreviation) {
+            case 'E':
+                return 'Employee'
+            case 'S':
+                return 'Student'
+            case 'O':
+                return 'Other'
+            case 'U':
+            default:
+                return 'Unknown'
+        }
     }
 }
