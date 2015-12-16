@@ -16,7 +16,7 @@ class DirectoryEntity {
     String officePhoneNumber
     String officeAddress
     String faxNumber
-    Email emailAddress
+    String emailAddress
     String username
     Long osuuid
 }
