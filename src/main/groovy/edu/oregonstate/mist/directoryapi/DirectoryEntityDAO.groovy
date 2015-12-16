@@ -18,42 +18,37 @@ class DirectoryEntityDAO {
 
     /**
      * Returns all directory entities matching map of input parameters.
-     * <br>
-     * Possible parameters:
-     * <ul>
-     *     <li>String firstName</li>
-     *     <li>String lastName</li>
-     *     <li>String fullName</li>
-     *     <li>String primaryAffiliation</li>
-     *     <li>String jobTitle</li>
-     *     <li>String department</li>
-     *     <li>String departmentMailingAddress</li>
-     *     <li>String homePhoneNumber</li>
-     *     <li>String homeAddress</li>
-     *     <li>String officePhoneNumber</li>
-     *     <li>String officeAddress</li>
-     *     <li>String faxNumber</li>
-     *     <li>String emailAddress</li>
-     *     <li>String username</li>
-     * </ul>
      */
     public List<DirectoryEntity> getByParameters(Map parameters) {
-        // TODO: convert parameters into filter string
-        // TODO: return search results
-        new ArrayList<DirectoryEntity>()
+        List<DirectoryEntity> result = searchLDAP(filter(parameters))
+        if (!result.isEmpty()) {
+            return result
+        } else {
+            return null
+        }
     }
 
     /**
      * Returns directory entity matching input id.
      */
     public DirectoryEntity getByOSUUID(Long osuuid) {
-        String filter = '(osuuid=' + osuuid + ')'
-        List<DirectoryEntity> result = searchLDAP(filter)
+        List<DirectoryEntity> result = searchLDAP(filter(osuuid: osuuid))
         if (!result.isEmpty()) {
             return result.get(0)
         } else {
             return null
         }
+    }
+
+    private static String filter(Map parameters) {
+        String filter = '(&'
+        for (Map.Entry<String,String> parameter : parameters.entrySet()) {
+            if (parameter.value != null) {
+                filter += '(' + parameter.key + '=' + parameter.value + ')'
+            }
+        }
+        filter += ')'
+        filter
     }
 
     /**
