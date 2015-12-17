@@ -3,6 +3,15 @@ info:
   version: "1"
   title: OSU People/Directory API
 paths:
+  /:
+    get:
+      summary: Get information
+      description: Build and runtime information about the application.
+      responses:
+        200:
+          description: Object containing information
+          schema:
+            $ref: '#/definitions/Info'
   /directory:
     get:
       tags:
@@ -151,6 +160,16 @@ definitions:
       osuuid:
         type: integer
         format: int64
+  Info:
+    properties:
+      name:
+        type: string
+      time:
+        type: integer
+      commit:
+        type: string
+      documentation:
+        type: string
   Error:
     type: object
     properties:
