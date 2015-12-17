@@ -17,68 +17,57 @@ paths:
           description: "Full name of person to be searched for."
           required: false
           type: string
-
         - name: Surname
           in: query
           description: "Surname of person to be searched for."
           required: false
           type: string
-
         - name: Email Address
           in: query
           description: "Email address of person to be searched for."
           required: false
           type: string
           format: email
-
         - name: Office Phone
           in: query
           description: "Office phone number of person to be searched for."
           required: false
           type: string
-
         - name: Alternate Phone
           in: query
           description: "Alternate phone number of person to be searched for."
           required: false
           type: string
-
         - name: Home Phone
           in: query
           description: "Home phone number of person to be searched for."
           required: false
           type: string
-
         - name: Fax Number
           in: query
           description: "Fax number of person to be searched for."
           required: false
           type: string
-
         - name: Office Address
           in: query
           description: "Office address of person to be searched for."
           required: false
           type: string
-
         - name: Department
           in: query
           description: "Department of person to be searched for."
           required: false
           type: string
-
         - name: Affiliation
           in: query
           description: "Any, Employee, Student, Other are valid options to be searched with."
           required: false
           type: string
-
         - name: Any Phone Number
           in: query
           description: "Any phone number to be searched with"
           required: false
           type: string
-
       responses:
         "200":
           description: "Successful response"
@@ -93,7 +82,6 @@ paths:
           description: "Internal server error"
       security:
         - directory_api_key: []
-
   /directory/{osuuid}:
     get:
       tags:
@@ -117,18 +105,15 @@ paths:
           description: "Internal server error"
       security:
         - directory_api_key: []
-
 securityDefinitions:
   directory_api_key:
     type: apiKey
     name: directory_api_key
     in: query
-
 definitions:
   Email:
     type: string
     format: email
-
   directoryEntity:
     required:
       - fullName
