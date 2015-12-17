@@ -29,65 +29,80 @@ paths:
     get:
       tags:
         - directory
-      operationId: getDirectoryEntries
-      description: "Get all entities in directory. Can be filtered by query parameters"
+      operationId: getByParameters
+      description: Get entries in directory filtered by query parameters
       produces:
         - application/json
       parameters:
-        - name: Full Name
+        - name: firstName
           in: query
-          description: "Full name of person to be searched for."
+          description: First name
           required: false
           type: string
-        - name: Surname
+        - name: lastName
           in: query
-          description: "Surname of person to be searched for."
+          description: Last name
           required: false
           type: string
-        - name: Email Address
+        - name: fullName
           in: query
-          description: "Email address of person to be searched for."
+          description: Full name
+          required: false
+          type: string
+        - name: primaryAffiliation
+          in: query
+          description: Employee, Student, Other, or Unknown affiliation
+          required: false
+          type: string
+        - name: jobTitle
+          in: query
+          description: Job title
+          required: false
+          type: string
+        - name: department
+          in: query
+          description: Department
+          required: false
+          type: string
+        - name: departmentMailingAddress
+          in: query
+          description: Department mailing address
+          required: false
+          type: string
+        - name: homePhoneNumber
+          in: query
+          description: Home phone number
+          required: false
+          type: string
+        - name: homeAddress
+          in: query
+          description: Home address
+          required: false
+          type: string
+        - name: officePhoneNumber
+          in: query
+          description: Office phone number
+          required: false
+          type: string
+        - name: officeAddress
+          in: query
+          description: Office address
+          required: false
+          type: string
+        - name: faxNumber
+          in: query
+          description: Fax number
+          required: false
+          type: string
+        - name: emailAddress
+          in: query
+          description: Email address
           required: false
           type: string
           format: email
-        - name: Office Phone
+        - name: username
           in: query
-          description: "Office phone number of person to be searched for."
-          required: false
-          type: string
-        - name: Alternate Phone
-          in: query
-          description: "Alternate phone number of person to be searched for."
-          required: false
-          type: string
-        - name: Home Phone
-          in: query
-          description: "Home phone number of person to be searched for."
-          required: false
-          type: string
-        - name: Fax Number
-          in: query
-          description: "Fax number of person to be searched for."
-          required: false
-          type: string
-        - name: Office Address
-          in: query
-          description: "Office address of person to be searched for."
-          required: false
-          type: string
-        - name: Department
-          in: query
-          description: "Department of person to be searched for."
-          required: false
-          type: string
-        - name: Affiliation
-          in: query
-          description: "Any, Employee, Student, Other are valid options to be searched with."
-          required: false
-          type: string
-        - name: Any Phone Number
-          in: query
-          description: "Any phone number to be searched with"
+          description: User name
           required: false
           type: string
       responses:
@@ -111,7 +126,8 @@ paths:
     get:
       tags:
       - directory
-      operationId: getDirectoryEntryByOsuuid
+      operationId: getByOSUUID
+      description: Get entries in directory filtered by query parameters
       parameters:
         - name: osuuid
           in: path
