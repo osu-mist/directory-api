@@ -43,3 +43,6 @@ authentication:
   - username: username
     password: password
 
+ldap:
+  url: ldap://directory.example.com
+  base: ou=Directory, o=example.com

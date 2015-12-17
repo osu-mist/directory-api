@@ -12,9 +12,13 @@ import org.ldaptive.SearchResult
  * Directory entity data access object.
  */
 class DirectoryEntityDAO {
-    // FIXME: define properties in external file?
-    private final String LDAP_URL = 'ldap://client-ldap.onid.orst.edu'
-    private final String BASE_DN = 'ou=People, o=orst.edu'
+    private final String LDAP_URL
+    private final String BASE_DN
+
+    public DirectoryEntityDAO(Map<String,String> ldapConfiguration) {
+        LDAP_URL = ldapConfiguration.get('url')
+        BASE_DN = ldapConfiguration.get('base')
+    }
 
     /**
      * Returns all directory entities matching map of input parameters.
