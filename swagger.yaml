@@ -79,12 +79,6 @@ paths:
           required: false
           type: string
 
-        - name: Join Search Parameters With And or Or
-          in: query
-          description: "and & or are valid options. And is default value"
-          required: false
-          type: string
-
       responses:
         "200":
           description: "Successful response"
