@@ -98,12 +98,13 @@ paths:
             items:
               $ref: "#/definitions/directoryEntity"
         "400":
-          description: "Bad Request"
-          #example: "Error: Too many entries returned. Try a more precise search."
+          description: Bad request
           schema:
             $ref: "#/definitions/Error"
-        "500":
-          description: "Internal server error"
+        "404":
+          description: Not found
+          schema:
+            $ref: "#/definitions/Error"
       security:
         - directory_api_key: []
   /directory/{osuuid}:
@@ -123,10 +124,14 @@ paths:
           description: "Succesful response"
           schema:
            $ref: "#/definitions/directoryEntity"
+        "400":
+          description: Bad request
+          schema:
+            $ref: "#/definitions/Error"
         "404":
-          description: "Resource not found"
-        "500":
-          description: "Internal server error"
+          description: Not found
+          schema:
+            $ref: "#/definitions/Error"
       security:
         - directory_api_key: []
 securityDefinitions:
