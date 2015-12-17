@@ -1,15 +1,7 @@
-# Example YAML to get you started quickly.
-# Be aware that YAML has indentation based scoping.
-# Code completion support is available so start typing for available options.
 swagger: '2.0'
-
-# This is your document metadata
 info:
   version: "1"
   title: OSU People/Directory API
-
-# Describe your paths here
-
 paths:
 
 #  /people:
