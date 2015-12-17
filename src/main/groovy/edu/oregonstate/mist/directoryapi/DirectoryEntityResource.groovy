@@ -45,7 +45,7 @@ class DirectoryEntityResource extends Resource {
             @QueryParam('emailAddress') String emailAddress,
             @QueryParam('username') String username) {
         ResponseBuilder responseBuilder
-        List<DirectoryEntity> directoryEntityList = directoryEntityDAO.getByParameters( // TODO: security?
+        List<DirectoryEntity> directoryEntityList = directoryEntityDAO.getByParameters(
                 givenname: firstName,
                 sn: lastName,
                 cn: fullName,
