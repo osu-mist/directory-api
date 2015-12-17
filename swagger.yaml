@@ -1,7 +1,20 @@
 swagger: '2.0'
 info:
+  title: OSU Directory Web API
+  description: Web API to search the OSU Online Directory
   version: "1"
-  title: OSU People/Directory API
+  license:
+    name: GNU Affero General Public License Version 3
+    url: http://www.gnu.org/licenses/agpl-3.0.en.html
+externalDocs:
+  description: GitHub Repository
+  url: https://github.com/osu-mist/directory-api
+host: localhost
+schemes:
+  - https
+basePath: /api/v1
+produces:
+  - application/json
 paths:
   /:
     get:
