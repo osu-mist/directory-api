@@ -144,10 +144,6 @@ definitions:
     type: string
     format: email
   directoryEntity:
-    required:
-      - fullName
-      - primaryAffiliation
-      - username
     properties:
       firstName:
         type: string
