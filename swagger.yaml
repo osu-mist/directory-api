@@ -94,7 +94,9 @@ paths:
         "200":
           description: "Successful response"
           schema:
-            $ref: "#/definitions/directoryEntity"
+            type: array
+            items:
+              $ref: "#/definitions/directoryEntity"
         "400":
           description: "Bad Request"
           #example: "Error: Too many entries returned. Try a more precise search."
