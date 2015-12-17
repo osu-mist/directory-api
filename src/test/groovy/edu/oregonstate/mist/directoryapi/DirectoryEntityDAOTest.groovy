@@ -11,6 +11,8 @@ class DirectoryEntityDAOTest {
     private static DirectoryEntityDAO directoryEntityDAO
     private static final Long goodOSUUID = 51646559347
     private static final Long badOSUUID = 0
+    private static final String goodUID = 'browtayl'
+    private static final String badUID = 'abcdef'
 
     @ClassRule
     public static final DropwizardAppRule<DirectoryApplicationConfiguration> APPLICATION =
@@ -27,5 +29,11 @@ class DirectoryEntityDAOTest {
     public void testGetByOSUUID() {
         assertNotNull(directoryEntityDAO.getByOSUUID(goodOSUUID))
         assertNull(directoryEntityDAO.getByOSUUID(badOSUUID))
+    }
+
+    @Test
+    public void testGetByParameters() {
+        assertNotNull(directoryEntityDAO.getByParameters(uid: goodUID))
+        assertNull(directoryEntityDAO.getByParameters(uid: badUID))
     }
 }
