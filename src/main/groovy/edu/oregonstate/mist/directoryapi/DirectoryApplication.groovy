@@ -39,7 +39,7 @@ class DirectoryApplication extends Application<Configuration> {
                 AuthFactory.binder(
                         new BasicAuthFactory<AuthenticatedUser>(
                                 new BasicAuthenticator(configuration.getCredentialsList()),
-                                'SkeletonApplication',
+                                'DirectoryApplication',
                                 AuthenticatedUser.class)))
     }
 
