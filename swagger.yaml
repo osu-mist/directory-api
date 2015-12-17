@@ -1,223 +1,133 @@
-# Example YAML to get you started quickly.
-# Be aware that YAML has indentation based scoping.
-# Code completion support is available so start typing for available options.
 swagger: '2.0'
-
-# This is your document metadata
 info:
+  title: OSU Directory Web API
+  description: Web API to search the OSU Online Directory
   version: "1"
-  title: OSU People/Directory API
-
-# Describe your paths here
-
+  license:
+    name: GNU Affero General Public License Version 3
+    url: http://www.gnu.org/licenses/agpl-3.0.en.html
+externalDocs:
+  description: GitHub Repository
+  url: https://github.com/osu-mist/directory-api
+host: localhost
+schemes:
+  - https
+basePath: /api/v1
+produces:
+  - application/json
 paths:
-
-#  /people:
-#    # This is a HTTP operation
-#    get:
-#      tags:
-#       - people
-#      # Describe this verb here. Note: you can use markdown
-#      description: "Gets all `person` objects. Can be filtered by parameters."
-#      operationId: getPeople
-#      # This is array of GET operation parameters:
-#      produces:
-#        - application/json
-#      parameters:
-#        - name: firstName
-#          in: query
-#          description: "The first name of the person"
-#          required: false
-#          type: string
-#
-#        - name: lastName
-#          in: query
-#          description: "The last name of the person"
-#          required: false
-#          type: string
-#
-#        - name: email
-#          in: query
-#          description: "The email address of the person"
-#          required: false
-#          type: string
-#          format: email
-#
-#        - name: eppn
-#          in: query
-#          description: "The person's email, specifically [onidusername@oregonstate.edu]"
-#          required: false
-#          type: string
-#          format: email
-#
-#        - name: upn
-#          in: query
-#          description: "Same as EPPN in the long term..."
-#          required: false
-#          type: string
-#          format: email
-#
-#        - name: EPPNPrior
-#          in: body
-#          description: "Any prior email addresses the user may have"
-#          required: false
-#          schema:
-#            $ref: "#/definitions/EPPNPriorArray"
-#
-#      # Expected responses for this operation:
-#      responses:
-#        # Response code
-#        "200":
-#          description: "Successful response"
-#          # A schema describing your response object.
-#          # Use JSON Schema format
-#          schema:
-#            $ref: "#/definitions/Person"
-#        "404":
-#          description: "Not Found"
-#          schema:
-#            $ref: "#/definitions/Error"
-#        "500":
-#          description: "Internal Server Error"
-#          schema:
-#            $ref: "#/definitions/Error"
-#      security:
-#        - people_api_key: []
-#
-#  /people/{eppn}:
-#    get:
-#      tags:
-#        - people
-#      description: "Finds Person by eppn"
-#      operationId: getPersonByEppn
-#      produces:
-#        - application/json
-#      parameters:
-#        - name: eppn
-#          in: path
-#          description: "EPPN of person to be fetched"
-#          required: true
-#          type: string
-#          format: email
-#
-#      responses:
-#        "200":
-#          description: "Successful response"
-#          schema:
-#            $ref: "#/definitions/Person"
-#        "404":
-#          description: "Resource not found"
-#          schema:
-#            $ref: "#/definitions/Error"
-#        "500":
-#          description: "Internal Server Error"
-#          schema:
-#            $ref: "#/definitions/Error"
-#      security:
-#        - people_api_key: []
-
+  /:
+    get:
+      summary: Get information
+      description: Build and runtime information about the application.
+      responses:
+        200:
+          description: Object containing information
+          schema:
+            $ref: '#/definitions/Info'
   /directory:
     get:
       tags:
         - directory
-      operationId: getDirectoryEntries
-      description: "Get all entities in directory. Can be filtered by query parameters"
+      operationId: getByParameters
+      description: Get entries in directory filtered by query parameters
       produces:
         - application/json
       parameters:
-        - name: Full Name
+        - name: firstName
           in: query
-          description: "Full name of person to be searched for."
+          description: First name
           required: false
           type: string
-
-        - name: Surname
+        - name: lastName
           in: query
-          description: "Surname of person to be searched for."
+          description: Last name
           required: false
           type: string
-
-        - name: Email Address
+        - name: fullName
           in: query
-          description: "Email address of person to be searched for."
+          description: Full name
+          required: false
+          type: string
+        - name: primaryAffiliation
+          in: query
+          description: Employee, Student, Other, or Unknown affiliation
+          required: false
+          type: string
+        - name: jobTitle
+          in: query
+          description: Job title
+          required: false
+          type: string
+        - name: department
+          in: query
+          description: Department
+          required: false
+          type: string
+        - name: departmentMailingAddress
+          in: query
+          description: Department mailing address
+          required: false
+          type: string
+        - name: homePhoneNumber
+          in: query
+          description: Home phone number
+          required: false
+          type: string
+        - name: homeAddress
+          in: query
+          description: Home address
+          required: false
+          type: string
+        - name: officePhoneNumber
+          in: query
+          description: Office phone number
+          required: false
+          type: string
+        - name: officeAddress
+          in: query
+          description: Office address
+          required: false
+          type: string
+        - name: faxNumber
+          in: query
+          description: Fax number
+          required: false
+          type: string
+        - name: emailAddress
+          in: query
+          description: Email address
           required: false
           type: string
           format: email
-
-        - name: Office Phone
+        - name: username
           in: query
-          description: "Office phone number of person to be searched for."
+          description: User name
           required: false
           type: string
-
-        - name: Alternate Phone
-          in: query
-          description: "Alternate phone number of person to be searched for."
-          required: false
-          type: string
-
-        - name: Home Phone
-          in: query
-          description: "Home phone number of person to be searched for."
-          required: false
-          type: string
-
-        - name: Fax Number
-          in: query
-          description: "Fax number of person to be searched for."
-          required: false
-          type: string
-
-        - name: Office Address
-          in: query
-          description: "Office address of person to be searched for."
-          required: false
-          type: string
-
-        - name: Department
-          in: query
-          description: "Department of person to be searched for."
-          required: false
-          type: string
-
-        - name: Affiliation
-          in: query
-          description: "Any, Employee, Student, Other are valid options to be searched with."
-          required: false
-          type: string
-
-        - name: Any Phone Number
-          in: query
-          description: "Any phone number to be searched with"
-          required: false
-          type: string
-
-        - name: Join Search Parameters With And or Or
-          in: query
-          description: "and & or are valid options. And is default value"
-          required: false
-          type: string
-
       responses:
         "200":
-          description: "Successful response"
+          description: Array of directory entities
           schema:
-            $ref: "#/definitions/directoryEntity"
+            type: array
+            items:
+              $ref: "#/definitions/directoryEntity"
         "400":
-          description: "Bad Request"
-          #example: "Error: Too many entries returned. Try a more precise search."
+          description: Bad request
           schema:
             $ref: "#/definitions/Error"
-        "500":
-          description: "Internal server error"
+        "404":
+          description: Not found
+          schema:
+            $ref: "#/definitions/Error"
       security:
         - directory_api_key: []
-
   /directory/{osuuid}:
     get:
       tags:
       - directory
-      operationId: getDirectoryEntryByOsuuid
+      operationId: getByOSUUID
+      description: Get entries in directory filtered by query parameters
       parameters:
         - name: osuuid
           in: path
@@ -227,79 +137,29 @@ paths:
           required: true
       responses:
         "200":
-          description: "Succesful response"
+          description: Directory entity
           schema:
            $ref: "#/definitions/directoryEntity"
+        "400":
+          description: Bad request
+          schema:
+            $ref: "#/definitions/Error"
         "404":
-          description: "Resource not found"
-        "500":
-          description: "Internal server error"
+          description: Not found
+          schema:
+            $ref: "#/definitions/Error"
       security:
         - directory_api_key: []
-
 securityDefinitions:
-#  people_api_key:
-#    type: apiKey
-#    name: people_api_key
-#    in: query
   directory_api_key:
     type: apiKey
     name: directory_api_key
     in: query
-
 definitions:
-
-#  Person:
-#    required:
-#      - firstName
-#      - lastName
-#      - username
-#      - email
-#      - eppn
-#      - upn
-#
-#    properties:
-#      firstName:
-#        type: string
-#      lastName:
-#        type: string
-#      osuID:
-#        type: string
-#      username:
-#        type: string
-#      email:
-#        $ref: "#/definitions/Email"
-#      eppn:
-#        $ref: "#/definitions/Email"
-#      upn:
-#        $ref: "#/definitions/Email"
-#     tags:
-#       $ref: "#/definitions/Tags"
-#     jobs:
-#       $ref: "#/definitions/Jobs"
-
-# Tags:
-#   type: array
-#   items:
-#     $ref: "#/definitions/Tag"
-
-# Tag:
-#   type: string
-
-#  EPPNPriorArray:
-#    type: array
-#    items:
-#      $ref: "#/definitions/Email"
-
   Email:
     type: string
     format: email
-
   directoryEntity:
-    required:
-      - fullName
-      - primaryAffiliation
-      - username
     properties:
       firstName:
         type: string
@@ -332,21 +192,16 @@ definitions:
       osuuid:
         type: integer
         format: int64
-
-# Job:
-#   type: object
-#   properties:
-#     jobTitle:
-#       type: string
-#     department:
-#       type: string
-
-# Jobs:
-#   title: ArrayOfJobs
-#   type: array
-#   items:
-#     $ref: "#/definitions/Job"
-
+  Info:
+    properties:
+      name:
+        type: string
+      time:
+        type: integer
+      commit:
+        type: string
+      documentation:
+        type: string
   Error:
     type: object
     properties:
