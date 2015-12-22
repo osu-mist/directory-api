@@ -29,82 +29,16 @@ paths:
     get:
       tags:
         - directory
-      operationId: getByParameters
-      description: Get entries in directory filtered by query parameters
+      operationId: getBySearchQuery
+      description: Get entries in directory matching search query
       produces:
         - application/json
       parameters:
-        - name: firstName
+        - name: q
           in: query
-          description: First name
-          required: false
+          description: Search query
           type: string
-        - name: lastName
-          in: query
-          description: Last name
-          required: false
-          type: string
-        - name: fullName
-          in: query
-          description: Full name
-          required: false
-          type: string
-        - name: primaryAffiliation
-          in: query
-          description: Employee, Student, Other, or Unknown affiliation
-          required: false
-          type: string
-        - name: jobTitle
-          in: query
-          description: Job title
-          required: false
-          type: string
-        - name: department
-          in: query
-          description: Department
-          required: false
-          type: string
-        - name: departmentMailingAddress
-          in: query
-          description: Department mailing address
-          required: false
-          type: string
-        - name: homePhoneNumber
-          in: query
-          description: Home phone number
-          required: false
-          type: string
-        - name: homeAddress
-          in: query
-          description: Home address
-          required: false
-          type: string
-        - name: officePhoneNumber
-          in: query
-          description: Office phone number
-          required: false
-          type: string
-        - name: officeAddress
-          in: query
-          description: Office address
-          required: false
-          type: string
-        - name: faxNumber
-          in: query
-          description: Fax number
-          required: false
-          type: string
-        - name: emailAddress
-          in: query
-          description: Email address
-          required: false
-          type: string
-          format: email
-        - name: username
-          in: query
-          description: User name
-          required: false
-          type: string
+          required: true
       responses:
         "200":
           description: Array of directory entities
