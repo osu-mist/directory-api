@@ -9,5 +9,5 @@ class DirectoryApplicationConfiguration extends Configuration {
     @JsonProperty('ldap')
     @NotNull
     @Valid
-    Map<String, String> ldapConfiguration
+    Map<String,String> ldapConfiguration
 }
