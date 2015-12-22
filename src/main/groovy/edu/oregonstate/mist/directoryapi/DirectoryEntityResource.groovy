@@ -69,7 +69,7 @@ class DirectoryEntityResource extends Resource {
     }
 
     @GET
-    @Path('/{osuuid}')
+    @Path('/{osuuid: \\d+}')
     @Produces(MediaType.APPLICATION_JSON)
     public Response getByOSUUID(
             @Auth AuthenticatedUser authenticatedUser,
