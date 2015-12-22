@@ -75,6 +75,7 @@ class DirectoryEntityDAO {
             }
         } finally {
             // TODO: http://www.ldaptive.org/docs/guide/connections/pooling.html
+            // TODO: read parameters from config file
             connection.close()
         }
         directoryEntityList
