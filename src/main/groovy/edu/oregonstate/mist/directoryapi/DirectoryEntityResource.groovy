@@ -60,8 +60,7 @@ class DirectoryEntityResource extends Resource {
                 facsimiletelephonenumber: faxNumber,
                 mail: emailAddress,
                 uid: username)
-        if (directoryEntityList != null
-                && !directoryEntityList.isEmpty()) {
+        if (directoryEntityList) {
             responseBuilder = ok(directoryEntityList)
         } else {
             responseBuilder = notFound()
