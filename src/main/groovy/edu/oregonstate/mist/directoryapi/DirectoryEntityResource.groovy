@@ -28,42 +28,15 @@ class DirectoryEntityResource extends Resource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getByParameters(
+    public Response getBySearchQuery(
             @Auth AuthenticatedUser authenticatedUser,
-            @QueryParam('firstName') String firstName,
-            @QueryParam('lastName') String lastName,
-            @QueryParam('fullName') String fullName,
-            @QueryParam('primaryAffiliation') String primaryAffiliation,
-            @QueryParam('jobTitle') String jobTitle,
-            @QueryParam('department') String department,
-            @QueryParam('departmentMailingAddress') String departmentMailingAddress,
-            @QueryParam('homePhoneNumber') String homePhoneNumber,
-            @QueryParam('homeAddress') String homeAddress,
-            @QueryParam('officePhoneNumber') String officePhoneNumber,
-            @QueryParam('officeAddress') String officeAddress,
-            @QueryParam('faxNumber') String faxNumber,
-            @QueryParam('emailAddress') String emailAddress,
-            @QueryParam('username') String username) {
+            @QueryParam('q') String searchQuery) {
         ResponseBuilder responseBuilder
-        List<DirectoryEntity> directoryEntityList = directoryEntityDAO.getByParameters(
-                givenname: firstName,
-                sn: lastName,
-                cn: fullName,
-                osuprimaryaffiliation: primaryAffiliation,
-                title: jobTitle,
-                osudepartment: department,
-                postaladdress: departmentMailingAddress,
-                homephone: homePhoneNumber,
-                homepostaladdress: homeAddress,
-                telephonenumber: officePhoneNumber,
-                osuofficeaddress: officeAddress,
-                facsimiletelephonenumber: faxNumber,
-                mail: emailAddress,
-                uid: username)
-        if (directoryEntityList) {
-            responseBuilder = ok(directoryEntityList)
+        if (searchQuery == null || searchQuery.isEmpty()) {
+            responseBuilder = badRequest('Missing query parameter.')
         } else {
-            responseBuilder = notFound()
+            List<DirectoryEntity> directoryEntityList = directoryEntityDAO.getBySearchQuery(searchQuery)
+            responseBuilder = ok(directoryEntityList)
         }
         responseBuilder.build()
     }

@@ -20,39 +20,37 @@ class DirectoryEntityDAO {
         BASE_DN = ldapConfiguration.get('base')
     }
 
-    /**
-     * Returns all directory entities matching map of input parameters.
-     */
-    public List<DirectoryEntity> getByParameters(Map parameters) {
-        List<DirectoryEntity> result = searchLDAP(filter(parameters))
-        if (!result.isEmpty()) {
-            return result
-        } else {
-            return null
+    public List<DirectoryEntity> getBySearchQuery(String searchQuery) {
+        String filter = '(|'
+        for (String searchTerm : split(sanitize(searchQuery))) {
+            filter += '(cn=*' + searchTerm + '*)' +
+                      '(uid=*' + searchTerm + '*)' +
+                      '(mail=*' + searchTerm + '*)'
         }
+        filter += ')'
+        searchLDAP(filter)
     }
 
     /**
      * Returns directory entity matching input id.
      */
     public DirectoryEntity getByOSUUID(Long osuuid) {
-        List<DirectoryEntity> result = searchLDAP(filter(osuuid: osuuid))
-        if (!result.isEmpty()) {
+        String filter = '(osuuid=' + osuuid + ')'
+        List<DirectoryEntity> result = searchLDAP(filter)
+        if (result) {
             return result.get(0)
         } else {
             return null
         }
     }
 
-    private static String filter(Map parameters) {
-        String filter = '(&'
-        for (Map.Entry<String,String> parameter : parameters.entrySet()) {
-            if (parameter.value != null) {
-                filter += '(' + parameter.key + '=' + parameter.value + ')'
-            }
-        }
-        filter += ')'
-        filter
+    private static String sanitize(String searchQuery) {
+        // FIXME
+        searchQuery
+    }
+
+    private static String[] split(String string) {
+        string.split(' +')
     }
 
     /**
