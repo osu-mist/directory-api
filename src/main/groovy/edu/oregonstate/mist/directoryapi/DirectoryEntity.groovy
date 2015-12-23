@@ -19,4 +19,13 @@ class DirectoryEntity {
     String emailAddress
     String username
     Long osuuid
+
+    @Override
+    public boolean equals(Object that) {
+        if (that instanceof DirectoryEntity) {
+            return (this.osuuid == that.osuuid)
+        } else {
+            return false
+        }
+    }
 }

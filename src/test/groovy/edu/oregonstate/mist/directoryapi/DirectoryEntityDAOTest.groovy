@@ -42,4 +42,15 @@ class DirectoryEntityDAOTest {
         assertFalse(directoryEntityDAO.getBySearchQuery(goodUID + ' ' + badUID).isEmpty())
         assertFalse(directoryEntityDAO.getBySearchQuery(badUID + ' ' + goodUID).isEmpty())
     }
+
+    @Test
+    public void testGetBySearchQuerySanitize() {
+        List<DirectoryEntity> expected = directoryEntityDAO.getBySearchQuery(goodUID)
+        assertEquals(expected, directoryEntityDAO.getBySearchQuery(goodUID + '('))
+        assertEquals(expected, directoryEntityDAO.getBySearchQuery(goodUID + ')'))
+        assertEquals(expected, directoryEntityDAO.getBySearchQuery(goodUID + '*'))
+        assertEquals(expected, directoryEntityDAO.getBySearchQuery(goodUID + '&'))
+        assertEquals(expected, directoryEntityDAO.getBySearchQuery(goodUID + '#'))
+        assertEquals(expected, directoryEntityDAO.getBySearchQuery('#' + goodUID))
+    }
 }

@@ -23,9 +23,11 @@ class DirectoryEntityDAO {
     public List<DirectoryEntity> getBySearchQuery(String searchQuery) {
         String filter = '(|'
         for (String searchTerm : split(sanitize(searchQuery))) {
-            filter += '(cn=*' + searchTerm + '*)' +
-                      '(uid=*' + searchTerm + '*)' +
-                      '(mail=*' + searchTerm + '*)'
+            if (searchTerm) {
+                filter += '(cn=*' + searchTerm + '*)' +
+                        '(uid=*' + searchTerm + '*)' +
+                        '(mail=*' + searchTerm + '*)'
+            }
         }
         filter += ')'
         searchLDAP(filter)
@@ -45,8 +47,19 @@ class DirectoryEntityDAO {
     }
 
     private static String sanitize(String searchQuery) {
-        // FIXME
-        searchQuery
+        String illegalCharacters = '''(?x)                # this extended regex defines
+                                      (?!                 # any character that is not
+                                         [
+                                          a-zA-Z          # a letter,
+                                          0-9             # a number,
+                                          -               # a hyphen,
+                                          _               # an underscore,
+                                          \\.             # a period, or
+                                          @               # an at sign
+                                         ])
+                                      .                   # to be an illegal character.
+                                   '''
+        searchQuery.replaceAll(illegalCharacters, ' ')
     }
 
     private static String[] split(String string) {
