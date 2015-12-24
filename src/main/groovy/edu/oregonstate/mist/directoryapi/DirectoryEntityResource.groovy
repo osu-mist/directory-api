@@ -3,6 +3,7 @@ package edu.oregonstate.mist.directoryapi
 import edu.oregonstate.mist.api.Resource
 import edu.oregonstate.mist.api.AuthenticatedUser
 import io.dropwizard.auth.Auth
+import org.ldaptive.LdapException
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.PathParam
@@ -35,8 +36,12 @@ class DirectoryEntityResource extends Resource {
         if (searchQuery == null || searchQuery.isEmpty()) {
             responseBuilder = badRequest('Missing query parameter.')
         } else {
-            List<DirectoryEntity> directoryEntityList = directoryEntityDAO.getBySearchQuery(searchQuery)
-            responseBuilder = ok(directoryEntityList)
+            try {
+                List<DirectoryEntity> directoryEntityList = directoryEntityDAO.getBySearchQuery(searchQuery)
+                responseBuilder = ok(directoryEntityList)
+            } catch (LdapException ldapException) {
+                responseBuilder = internalServerError('LDAP Exception')
+            }
         }
         responseBuilder.build()
     }
@@ -48,11 +53,15 @@ class DirectoryEntityResource extends Resource {
             @Auth AuthenticatedUser authenticatedUser,
             @PathParam('osuuid') Long osuuid) {
         ResponseBuilder responseBuilder
-        DirectoryEntity directoryEntity = directoryEntityDAO.getByOSUUID(osuuid)
-        if (directoryEntity != null) {
-            responseBuilder = ok(directoryEntity)
-        } else {
-            responseBuilder = notFound()
+        try {
+            DirectoryEntity directoryEntity = directoryEntityDAO.getByOSUUID(osuuid)
+            if (directoryEntity != null) {
+                responseBuilder = ok(directoryEntity)
+            } else {
+                responseBuilder = notFound()
+            }
+        } catch (LdapException ldapException) {
+            responseBuilder = internalServerError('LDAP Exception')
         }
         responseBuilder.build()
     }

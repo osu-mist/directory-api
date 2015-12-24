@@ -3,6 +3,7 @@ package edu.oregonstate.mist.directoryapi
 import org.ldaptive.DefaultConnectionFactory
 import org.ldaptive.Connection
 import org.ldaptive.LdapEntry
+import org.ldaptive.LdapException
 import org.ldaptive.Response
 import org.ldaptive.SearchOperation
 import org.ldaptive.SearchRequest
@@ -20,7 +21,8 @@ class DirectoryEntityDAO {
         BASE_DN = ldapConfiguration.get('base')
     }
 
-    public List<DirectoryEntity> getBySearchQuery(String searchQuery) {
+    public List<DirectoryEntity> getBySearchQuery(String searchQuery)
+            throws LdapException {
         String filter = '(|'
         for (String searchTerm : split(sanitize(searchQuery))) {
             if (searchTerm) {
@@ -36,7 +38,8 @@ class DirectoryEntityDAO {
     /**
      * Returns directory entity matching input id.
      */
-    public DirectoryEntity getByOSUUID(Long osuuid) {
+    public DirectoryEntity getByOSUUID(Long osuuid)
+            throws LdapException {
         String filter = '(osuuid=' + osuuid + ')'
         List<DirectoryEntity> result = searchLDAP(filter)
         if (result) {
@@ -72,7 +75,8 @@ class DirectoryEntityDAO {
      * @param filter
      * @return directoryEntityList
      */
-    private List<DirectoryEntity> searchLDAP(String filter) {
+    private List<DirectoryEntity> searchLDAP(String filter)
+            throws LdapException {
         List<DirectoryEntity> directoryEntityList = new ArrayList<DirectoryEntity>()
         Connection connection = DefaultConnectionFactory.getConnection(LDAP_URL)
         try {
