@@ -3,6 +3,7 @@ package edu.oregonstate.mist.directoryapi
 import org.ldaptive.DefaultConnectionFactory
 import org.ldaptive.Connection
 import org.ldaptive.LdapEntry
+import org.ldaptive.LdapException
 import org.ldaptive.Response
 import org.ldaptive.SearchOperation
 import org.ldaptive.SearchRequest
@@ -20,39 +21,52 @@ class DirectoryEntityDAO {
         BASE_DN = ldapConfiguration.get('base')
     }
 
-    /**
-     * Returns all directory entities matching map of input parameters.
-     */
-    public List<DirectoryEntity> getByParameters(Map parameters) {
-        List<DirectoryEntity> result = searchLDAP(filter(parameters))
-        if (!result.isEmpty()) {
-            return result
-        } else {
-            return null
+    public List<DirectoryEntity> getBySearchQuery(String searchQuery)
+            throws LdapException {
+        String filter = '(|'
+        for (String searchTerm : split(sanitize(searchQuery))) {
+            if (searchTerm) {
+                filter += '(cn=*' + searchTerm + '*)' +
+                        '(uid=*' + searchTerm + '*)' +
+                        '(mail=*' + searchTerm + '*)'
+            }
         }
+        filter += ')'
+        searchLDAP(filter)
     }
 
     /**
      * Returns directory entity matching input id.
      */
-    public DirectoryEntity getByOSUUID(Long osuuid) {
-        List<DirectoryEntity> result = searchLDAP(filter(osuuid: osuuid))
-        if (!result.isEmpty()) {
+    public DirectoryEntity getByOSUUID(Long osuuid)
+            throws LdapException {
+        String filter = '(osuuid=' + osuuid + ')'
+        List<DirectoryEntity> result = searchLDAP(filter)
+        if (result) {
             return result.get(0)
         } else {
             return null
         }
     }
 
-    private static String filter(Map parameters) {
-        String filter = '(&'
-        for (Map.Entry<String,String> parameter : parameters.entrySet()) {
-            if (parameter.value != null) {
-                filter += '(' + parameter.key + '=' + parameter.value + ')'
-            }
-        }
-        filter += ')'
-        filter
+    private static String sanitize(String searchQuery) {
+        String illegalCharacters = '''(?x)                # this extended regex defines
+                                      (?!                 # any character that is not
+                                         [
+                                          a-zA-Z          # a letter,
+                                          0-9             # a number,
+                                          -               # a hyphen,
+                                          _               # an underscore,
+                                          \\.             # a period, or
+                                          @               # an at sign
+                                         ])
+                                      .                   # to be an illegal character.
+                                   '''
+        searchQuery.replaceAll(illegalCharacters, ' ')
+    }
+
+    private static String[] split(String string) {
+        string.split(' +')
     }
 
     /**
@@ -61,7 +75,8 @@ class DirectoryEntityDAO {
      * @param filter
      * @return directoryEntityList
      */
-    private List<DirectoryEntity> searchLDAP(String filter) {
+    private List<DirectoryEntity> searchLDAP(String filter)
+            throws LdapException {
         List<DirectoryEntity> directoryEntityList = new ArrayList<DirectoryEntity>()
         Connection connection = DefaultConnectionFactory.getConnection(LDAP_URL)
         try {
