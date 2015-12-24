@@ -1,7 +1,7 @@
 package edu.oregonstate.mist.directoryapi
 
 /**
- * DirectoryEntity representation class.
+ * Directory entity representation class.
  */
 class DirectoryEntity {
     String firstName

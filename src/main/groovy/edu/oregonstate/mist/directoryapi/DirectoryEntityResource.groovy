@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response.ResponseBuilder
 import javax.ws.rs.core.MediaType
 
 /**
- * DirectoryEntity Resource class.
+ * Directory entity resource class.
  */
 @Path('/directory')
 class DirectoryEntityResource extends Resource {
@@ -22,11 +22,20 @@ class DirectoryEntityResource extends Resource {
 
     /**
      * Constructs the object after receiving and storing directoryEntityDAO instance.
+     *
+     * @param directoryEntityDAO
      */
     public DirectoryEntityResource(DirectoryEntityDAO directoryEntityDAO) {
         this.directoryEntityDAO = directoryEntityDAO
     }
 
+    /**
+     * Responds to GET requests by returning array of directory entity objects matching search query parameter.
+     *
+     * @param authenticatedUser
+     * @param searchQuery
+     * @return array of directory entity objects
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getBySearchQuery(
@@ -46,6 +55,13 @@ class DirectoryEntityResource extends Resource {
         responseBuilder.build()
     }
 
+    /**
+     * Responds to GET requests by returning directory entity object matching argument id.
+     *
+     * @param authenticatedUser
+     * @param osuuid
+     * @return directory entity object
+     */
     @GET
     @Path('/{osuuid: \\d+}')
     @Produces(MediaType.APPLICATION_JSON)

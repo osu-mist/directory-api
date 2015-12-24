@@ -16,11 +16,23 @@ class DirectoryEntityDAO {
     private final String LDAP_URL
     private final String BASE_DN
 
+    /**
+     * Constructs the directory entity data access object with given LDAP configuration.
+     *
+     * @param ldapConfiguration
+     */
     public DirectoryEntityDAO(Map<String,String> ldapConfiguration) {
         LDAP_URL = ldapConfiguration.get('url')
         BASE_DN = ldapConfiguration.get('base')
     }
 
+    /**
+     * Returns list of directory entities matching search query.
+     *
+     * @param searchQuery
+     * @return list of directory entities
+     * @throws LdapException
+     */
     public List<DirectoryEntity> getBySearchQuery(String searchQuery)
             throws LdapException {
         String filter = '(|'
@@ -37,6 +49,10 @@ class DirectoryEntityDAO {
 
     /**
      * Returns directory entity matching input id.
+     *
+     * @param osuuid
+     * @return directory entity
+     * @throws LdapException
      */
     public DirectoryEntity getByOSUUID(Long osuuid)
             throws LdapException {
@@ -49,6 +65,12 @@ class DirectoryEntityDAO {
         }
     }
 
+    /**
+     * Sanitizes the search query string by replacing illegal characters with spaces.
+     *
+     * @param searchQuery
+     * @return sanitized search query
+     */
     private static String sanitize(String searchQuery) {
         String illegalCharacters = '''(?x)                # this extended regex defines
                                       (?!                 # any character that is not
@@ -65,6 +87,12 @@ class DirectoryEntityDAO {
         searchQuery.replaceAll(illegalCharacters, ' ')
     }
 
+    /**
+     * Splits the search query string delimited by spaces.
+     *
+     * @param string
+     * @return
+     */
     private static String[] split(String string) {
         string.split(' +')
     }
@@ -122,10 +150,23 @@ class DirectoryEntityDAO {
         )
     }
 
+    /**
+     * Gets the named attribute of LdapEntry instance.
+     *
+     * @param ldapEntry
+     * @param name
+     * @return attribute value
+     */
     private static String get(LdapEntry ldapEntry, String name) {
         ldapEntry.getAttribute(name)?.getStringValue()
     }
 
+    /**
+     * Expands affiliation abbreviation.
+     *
+     * @param abbreviation
+     * @return affiliation
+     */
     private static String affiliation(String abbreviation) {
         switch (abbreviation) {
             case 'E':
