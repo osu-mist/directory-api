@@ -53,7 +53,7 @@ class DirectoryEntityDAO {
         for (String searchTerm : split(sanitize(searchQuery))) {
             if (searchTerm) {
                 filter += '(cn=*' + searchTerm + '*)' +
-                        '(uid=*' + searchTerm + '*)' +
+                         '(uid=*' + searchTerm + '*)' +
                         '(mail=*' + searchTerm + '*)'
             }
         }
