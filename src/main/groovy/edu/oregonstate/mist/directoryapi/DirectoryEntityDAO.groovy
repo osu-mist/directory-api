@@ -8,6 +8,7 @@ import org.ldaptive.Response
 import org.ldaptive.SearchOperation
 import org.ldaptive.SearchRequest
 import org.ldaptive.SearchResult
+import java.util.regex.Pattern
 
 /**
  * Directory entity data access object.
@@ -15,6 +16,19 @@ import org.ldaptive.SearchResult
 class DirectoryEntityDAO {
     private final String LDAP_URL
     private final String BASE_DN
+    private static final Pattern illegalCharacterPattern = Pattern.compile(
+            '''(?x)       # this extended regex defines
+               (?!        # any character that is not
+                  [
+                   a-zA-Z # a letter,
+                   0-9    # a number,
+                   -      # a hyphen,
+                   _      # an underscore,
+                   \\.    # a period, or
+                   @      # an at sign
+                  ])
+               .          # to be an illegal character.
+            ''')
 
     /**
      * Constructs the directory entity data access object with given LDAP configuration.
@@ -72,19 +86,7 @@ class DirectoryEntityDAO {
      * @return sanitized search query
      */
     private static String sanitize(String searchQuery) {
-        String illegalCharacters = '''(?x)                # this extended regex defines
-                                      (?!                 # any character that is not
-                                         [
-                                          a-zA-Z          # a letter,
-                                          0-9             # a number,
-                                          -               # a hyphen,
-                                          _               # an underscore,
-                                          \\.             # a period, or
-                                          @               # an at sign
-                                         ])
-                                      .                   # to be an illegal character.
-                                   '''
-        searchQuery.replaceAll(illegalCharacters, ' ')
+        illegalCharacterPattern.matcher(searchQuery).replaceAll(' ')
     }
 
     /**
