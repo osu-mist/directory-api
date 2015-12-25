@@ -125,10 +125,10 @@ class DirectoryEntityDAO {
     }
 
     /**
-     * Converts LdapEntry to DirectoryEntity.
+     * Converts LDAP entry to directory entity.
      *
      * @param ldapEntry
-     * @return DirectoryEntity
+     * @return directoryEntity
      */
     private static DirectoryEntity convert(LdapEntry ldapEntry) {
         new DirectoryEntity(
@@ -151,7 +151,7 @@ class DirectoryEntityDAO {
     }
 
     /**
-     * Gets the named attribute of LdapEntry instance.
+     * Gets the named attribute of LDAP entry.
      *
      * @param ldapEntry
      * @param name
