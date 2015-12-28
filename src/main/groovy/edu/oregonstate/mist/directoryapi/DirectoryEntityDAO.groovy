@@ -193,8 +193,9 @@ class DirectoryEntityDAO {
             case 'O':
                 return 'Other'
             case 'U':
-            default:
                 return 'Unknown'
+            default:
+                null
         }
     }
 }
