@@ -46,3 +46,9 @@ authentication:
 ldap:
   url: ldap://directory.example.com
   base: ou=Directory, o=example.com
+  maxPoolSize: 10
+  minPoolSize: 3
+  validateOnCheckIn: false
+  validateOnCheckOut: false
+  validatePeriod: 1800
+  validatePeriodically: false

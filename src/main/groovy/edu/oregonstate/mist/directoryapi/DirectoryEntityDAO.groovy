@@ -8,6 +8,9 @@ import org.ldaptive.Response
 import org.ldaptive.SearchOperation
 import org.ldaptive.SearchRequest
 import org.ldaptive.SearchResult
+import org.ldaptive.pool.PooledConnectionFactory
+import org.ldaptive.pool.SoftLimitConnectionPool
+import org.ldaptive.pool.PoolConfig
 import java.util.regex.Pattern
 
 /**
@@ -16,6 +19,7 @@ import java.util.regex.Pattern
 class DirectoryEntityDAO {
     private final String LDAP_URL
     private final String BASE_DN
+    private final PooledConnectionFactory pooledConnectionFactory
     private static final Pattern illegalCharacterPattern = Pattern.compile(
             '''(?x)       # this extended regex defines
                (?!        # any character that is not
@@ -35,9 +39,21 @@ class DirectoryEntityDAO {
      *
      * @param ldapConfiguration
      */
-    public DirectoryEntityDAO(Map<String,String> ldapConfiguration) {
-        LDAP_URL = ldapConfiguration.get('url')
-        BASE_DN = ldapConfiguration.get('base')
+    public DirectoryEntityDAO(Map<String,Object> ldapConfiguration) {
+        LDAP_URL = (String)ldapConfiguration.get('url')
+        BASE_DN = (String)ldapConfiguration.get('base')
+        DefaultConnectionFactory defaultConnectionFactory = new DefaultConnectionFactory(LDAP_URL)
+        PoolConfig poolConfig = new PoolConfig(
+                maxPoolSize: (int)ldapConfiguration.get('maxPoolSize'),
+                minPoolSize: (int)ldapConfiguration.get('minPoolSize'),
+                validateOnCheckIn: (boolean)ldapConfiguration.get('validateOnCheckIn'),
+                validateOnCheckOut: (boolean)ldapConfiguration.get('validateOnCheckOut'),
+                validatePeriod: (long)ldapConfiguration.get('validatePeriod'),
+                validatePeriodically: (boolean)ldapConfiguration.get('validatePeriodically')
+        )
+        SoftLimitConnectionPool pool = new SoftLimitConnectionPool(poolConfig, defaultConnectionFactory)
+        pool.initialize()
+        pooledConnectionFactory = new PooledConnectionFactory(pool)
     }
 
     /**
@@ -108,9 +124,8 @@ class DirectoryEntityDAO {
     private List<DirectoryEntity> searchLDAP(String filter)
             throws LdapException {
         List<DirectoryEntity> directoryEntityList = new ArrayList<DirectoryEntity>()
-        Connection connection = DefaultConnectionFactory.getConnection(LDAP_URL)
+        Connection connection = pooledConnectionFactory.getConnection()
         try {
-            connection.open()
             SearchOperation operation = new SearchOperation(connection)
             SearchRequest request = new SearchRequest(BASE_DN, filter)
             Response<SearchResult> response = operation.execute(request)
