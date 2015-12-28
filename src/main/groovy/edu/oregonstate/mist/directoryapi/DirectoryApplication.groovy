@@ -32,6 +32,7 @@ class DirectoryApplication extends Application<DirectoryApplicationConfiguration
     public void run(DirectoryApplicationConfiguration configuration, Environment environment) {
         Resource.loadProperties('resource.properties')
         final DirectoryEntityDAO directoryEntityDAO = new DirectoryEntityDAO(configuration.getLdapConfiguration())
+        environment.healthChecks().register('LDAP', new LDAPHealthCheck(directoryEntityDAO))
         environment.jersey().register(new DirectoryEntityResource(directoryEntityDAO))
         environment.jersey().register(new InfoResource())
         environment.jersey().register(
