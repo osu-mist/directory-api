@@ -155,11 +155,11 @@ class DirectoryEntityDAO {
                 primaryAffiliation:       affiliation(get(ldapEntry, 'osuprimaryaffiliation')),
                 jobTitle:                 get(ldapEntry, 'title'),
                 department:               get(ldapEntry, 'osudepartment'),
-                departmentMailingAddress: get(ldapEntry, 'postaladdress'),
+                departmentMailingAddress: address(get(ldapEntry, 'postaladdress')),
                 homePhoneNumber:          get(ldapEntry, 'homephone'),
-                homeAddress:              get(ldapEntry, 'homepostaladdress'),
+                homeAddress:              address(get(ldapEntry, 'homepostaladdress')),
                 officePhoneNumber:        get(ldapEntry, 'telephonenumber'),
-                officeAddress:            get(ldapEntry, 'osuofficeaddress'),
+                officeAddress:            address(get(ldapEntry, 'osuofficeaddress')),
                 faxNumber:                get(ldapEntry, 'facsimiletelephonenumber'),
                 emailAddress:             get(ldapEntry, 'mail'),
                 username:                 get(ldapEntry, 'uid'),
@@ -196,6 +196,18 @@ class DirectoryEntityDAO {
                 return 'Unknown'
             default:
                 null
+        }
+    }
+
+    /**
+     * Formats mailing address.
+     *
+     * @param address
+     * @return formatted address
+     */
+    private static String address(String address) {
+        if (address) {
+            address.replaceAll('\\$', '\n')
         }
     }
 }
