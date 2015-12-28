@@ -135,9 +135,7 @@ class DirectoryEntityDAO {
                 directoryEntityList.add(convert(entry))
             }
         } finally {
-            // TODO: http://www.ldaptive.org/docs/guide/connections/pooling.html
-            // TODO: read parameters from config file
-            connection.close()
+            connection.close() // return connection to pool
         }
         directoryEntityList
     }
