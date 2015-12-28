@@ -33,6 +33,7 @@ class DirectoryEntityDAO {
                   ])
                .          # to be an illegal character.
             ''')
+    private static final Pattern spacesPattern = Pattern.compile(' +')
     private static final Pattern dollarSignPattern = Pattern.compile('\\$')
 
     /**
@@ -113,7 +114,7 @@ class DirectoryEntityDAO {
      * @return
      */
     private static String[] split(String string) {
-        string.split(' +')
+        spacesPattern.split(string)
     }
 
     /**
