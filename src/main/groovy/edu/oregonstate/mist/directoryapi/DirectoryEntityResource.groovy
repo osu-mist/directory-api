@@ -49,7 +49,7 @@ class DirectoryEntityResource extends Resource {
                 List<DirectoryEntity> directoryEntityList = directoryEntityDAO.getBySearchQuery(searchQuery)
                 responseBuilder = ok(directoryEntityList)
             } catch (LdapException ldapException) {
-                responseBuilder = internalServerError('LDAP exception.')
+                responseBuilder = internalServerError(ldapException.message)
             }
         }
         responseBuilder.build()
@@ -77,7 +77,7 @@ class DirectoryEntityResource extends Resource {
                 responseBuilder = notFound()
             }
         } catch (LdapException ldapException) {
-            responseBuilder = internalServerError('LDAP exception.')
+            responseBuilder = internalServerError(ldapException.message)
         }
         responseBuilder.build()
     }
