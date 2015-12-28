@@ -33,6 +33,7 @@ class DirectoryEntityDAO {
                   ])
                .          # to be an illegal character.
             ''')
+    private static final Pattern dollarSignPattern = Pattern.compile('\\$')
 
     /**
      * Constructs the directory entity data access object with given LDAP configuration.
@@ -207,7 +208,7 @@ class DirectoryEntityDAO {
      */
     private static String address(String address) {
         if (address) {
-            address.replaceAll('\\$', '\n')
+            dollarSignPattern.matcher(address).replaceAll('\n')
         }
     }
 }
