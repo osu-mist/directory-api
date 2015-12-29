@@ -42,7 +42,7 @@ class DirectoryEntityResource extends Resource {
             @Auth AuthenticatedUser authenticatedUser,
             @QueryParam('q') String searchQuery) {
         ResponseBuilder responseBuilder
-        if (searchQuery == null || searchQuery.isEmpty()) {
+        if (!searchQuery) {
             responseBuilder = badRequest('Missing query parameter.')
         } else {
             try {
