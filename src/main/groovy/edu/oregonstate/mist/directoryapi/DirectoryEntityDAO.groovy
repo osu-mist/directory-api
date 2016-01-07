@@ -12,6 +12,7 @@ import org.ldaptive.pool.PooledConnectionFactory
 import org.ldaptive.pool.SoftLimitConnectionPool
 import org.ldaptive.pool.PoolConfig
 import java.util.regex.Pattern
+import edu.oregonstate.mist.directoryapi.ResourceObject
 
 /**
  * Directory entity data access object.
@@ -209,5 +210,15 @@ class DirectoryEntityDAO {
         if (address) {
             dollarSignPattern.matcher(address).replaceAll('\n')
         }
+    }
+
+    public ResourceObject convertDirectoryEntity(List<DirectoryEntity> directoryEntities) {
+        ArrayList resourceObjects = new ArrayList<ResourceObject>()
+
+        directoryEntities.each {
+            resourceObjects.add(convert(it))
+        }
+
+        resourceObjects
     }
 }
