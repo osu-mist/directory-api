@@ -216,7 +216,7 @@ class DirectoryEntityDAO {
         ArrayList resourceObjects = new ArrayList<ResourceObject>()
 
         directoryEntities.each {
-            resourceObjects.add(convert(it))
+            resourceObjects.add(DirectoryEntityMapper.map(it))
         }
 
         resourceObjects
