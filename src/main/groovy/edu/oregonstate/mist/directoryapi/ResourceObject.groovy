@@ -1,7 +1,6 @@
 package edu.oregonstate.mist.directoryapi
 
-import edu.oregonstate.mist.directoryapi.DirectoryEntity
-
+// FIXME: Add to edu.oregonstate.mist.api
 class ResourceObject {
     String id
     String type
