@@ -75,7 +75,7 @@ class DirectoryEntityResource extends Resource {
                 ResourceObject resourceObject = new ResourceObject(
                         id: osuuid,
                         type: "directory",
-                        directoryEntity: directoryEntity)
+                        attributes: directoryEntity)
                 responseBuilder = ok(resourceObject)
             } else {
                 responseBuilder = notFound()

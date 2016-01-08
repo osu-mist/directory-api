@@ -4,5 +4,5 @@ package edu.oregonstate.mist.directoryapi
 class ResourceObject {
     String id
     String type
-    DirectoryEntity directoryEntity
+    DirectoryEntity attributes
 }
