@@ -72,7 +72,11 @@ class DirectoryEntityResource extends Resource {
         try {
             DirectoryEntity directoryEntity = directoryEntityDAO.getByOSUUID(osuuid)
             if (directoryEntity != null) {
-                responseBuilder = ok(directoryEntity)
+                ResourceObject resourceObject = new ResourceObject(
+                        id: osuuid,
+                        type: "directory",
+                        directoryEntity: directoryEntity)
+                responseBuilder = ok(resourceObject)
             } else {
                 responseBuilder = notFound()
             }
