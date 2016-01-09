@@ -30,11 +30,11 @@ class DirectoryEntityResource extends Resource {
     }
 
     /**
-     * Responds to GET requests by returning array of directory entity objects matching search query parameter.
+     * Responds to GET requests by returning array of resultObject objects matching search query parameter.
      *
      * @param authenticatedUser
      * @param searchQuery
-     * @return array of directory entity objects
+     * @return resultObject object
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -65,11 +65,11 @@ class DirectoryEntityResource extends Resource {
     }
 
     /**
-     * Responds to GET requests by returning directory entity object matching argument id.
+     * Responds to GET requests by returning resultObject object matching argument id.
      *
      * @param authenticatedUser
      * @param osuuid
-     * @return directory entity object
+     * @return resultObject object
      */
     @GET
     @Path('/{osuuid: \\d+}')
