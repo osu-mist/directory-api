@@ -55,8 +55,11 @@ class DirectoryEntityResource extends Resource {
                             attributes: it)
                     )
                 }
-
-                responseBuilder = ok(resourceObjectList)
+                ResultObject resultObject = new ResultObject(
+                        links: null,
+                        data: directoryEntityList
+                )
+                responseBuilder = ok(resultObject)
             } catch (LdapException ldapException) {
                 responseBuilder = internalServerError(ldapException.message)
             }
@@ -84,8 +87,13 @@ class DirectoryEntityResource extends Resource {
                 ResourceObject resourceObject = new ResourceObject(
                         id: osuuid,
                         type: "directory",
-                        attributes: directoryEntity)
-                responseBuilder = ok(resourceObject)
+                        attributes: directoryEntity
+                )
+                ResultObject resultObject = new ResultObject(
+                        links: null,
+                        data: resourceObject
+                )
+                responseBuilder = ok(resultObject)
             } else {
                 responseBuilder = notFound()
             }
