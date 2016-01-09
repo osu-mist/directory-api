@@ -57,7 +57,7 @@ class DirectoryEntityResource extends Resource {
                 }
                 ResultObject resultObject = new ResultObject(
                         links: null,
-                        data: directoryEntityList
+                        data: resourceObjectList
                 )
                 responseBuilder = ok(resultObject)
             } catch (LdapException ldapException) {
