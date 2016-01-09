@@ -47,7 +47,16 @@ class DirectoryEntityResource extends Resource {
         } else {
             try {
                 List<DirectoryEntity> directoryEntityList = directoryEntityDAO.getBySearchQuery(searchQuery)
-                responseBuilder = ok(directoryEntityList)
+                List<ResourceObject> resourceObjectList = new ArrayList<ResourceObject>()
+                directoryEntityList.each {
+                    resourceObjectList.add(new ResourceObject(
+                            id: it.osuuid,
+                            type: "directory",
+                            attributes: it)
+                    )
+                }
+
+                responseBuilder = ok(resourceObjectList)
             } catch (LdapException ldapException) {
                 responseBuilder = internalServerError(ldapException.message)
             }
