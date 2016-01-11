@@ -19,6 +19,7 @@ import javax.ws.rs.core.MediaType
 @Path('/directory')
 class DirectoryEntityResource extends Resource {
     private final DirectoryEntityDAO directoryEntityDAO
+    private final String RESOURCETYPE = "directory"
 
     /**
      * Constructs the object after receiving and storing directoryEntityDAO instance.
@@ -51,7 +52,7 @@ class DirectoryEntityResource extends Resource {
                 directoryEntityList.each {
                     resourceObjectList.add(new ResourceObject(
                             id: it.osuuid,
-                            type: "directory",
+                            type: RESOURCETYPE,
                             attributes: it)
                     )
                 }
@@ -86,7 +87,7 @@ class DirectoryEntityResource extends Resource {
             if (directoryEntity != null) {
                 ResourceObject resourceObject = new ResourceObject(
                         id: osuuid,
-                        type: "directory",
+                        type: RESOURCETYPE,
                         attributes: directoryEntity
                 )
                 ResultObject resultObject = new ResultObject(
