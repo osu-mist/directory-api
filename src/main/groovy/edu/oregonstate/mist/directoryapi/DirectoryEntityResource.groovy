@@ -19,6 +19,7 @@ import javax.ws.rs.core.MediaType
 @Path('/directory')
 class DirectoryEntityResource extends Resource {
     private final DirectoryEntityDAO directoryEntityDAO
+    private final String RESOURCETYPE = "directory"
 
     /**
      * Constructs the object after receiving and storing directoryEntityDAO instance.
@@ -30,11 +31,11 @@ class DirectoryEntityResource extends Resource {
     }
 
     /**
-     * Responds to GET requests by returning array of directory entity objects matching search query parameter.
+     * Responds to GET requests by returning array of resultObject objects matching search query parameter.
      *
      * @param authenticatedUser
      * @param searchQuery
-     * @return array of directory entity objects
+     * @return resultObject object
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -47,7 +48,19 @@ class DirectoryEntityResource extends Resource {
         } else {
             try {
                 List<DirectoryEntity> directoryEntityList = directoryEntityDAO.getBySearchQuery(searchQuery)
-                responseBuilder = ok(directoryEntityList)
+                List<ResourceObject> resourceObjectList = new ArrayList<ResourceObject>()
+                directoryEntityList.each {
+                    resourceObjectList.add(new ResourceObject(
+                            id: it.osuuid,
+                            type: RESOURCETYPE,
+                            attributes: it)
+                    )
+                }
+                ResultObject resultObject = new ResultObject(
+                        links: null,
+                        data: resourceObjectList
+                )
+                responseBuilder = ok(resultObject)
             } catch (LdapException ldapException) {
                 responseBuilder = internalServerError(ldapException.message)
             }
@@ -56,11 +69,11 @@ class DirectoryEntityResource extends Resource {
     }
 
     /**
-     * Responds to GET requests by returning directory entity object matching argument id.
+     * Responds to GET requests by returning resultObject object matching argument id.
      *
      * @param authenticatedUser
      * @param osuuid
-     * @return directory entity object
+     * @return resultObject object
      */
     @GET
     @Path('/{osuuid: \\d+}')
@@ -72,7 +85,16 @@ class DirectoryEntityResource extends Resource {
         try {
             DirectoryEntity directoryEntity = directoryEntityDAO.getByOSUUID(osuuid)
             if (directoryEntity != null) {
-                responseBuilder = ok(directoryEntity)
+                ResourceObject resourceObject = new ResourceObject(
+                        id: osuuid,
+                        type: RESOURCETYPE,
+                        attributes: directoryEntity
+                )
+                ResultObject resultObject = new ResultObject(
+                        links: null,
+                        data: resourceObject
+                )
+                responseBuilder = ok(resultObject)
             } else {
                 responseBuilder = notFound()
             }
