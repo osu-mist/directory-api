@@ -24,7 +24,7 @@ class DirectoryEntityDAO {
             '''(?x)       # this extended regex defines
                (?!        # any character that is not
                   [
-                   a-zA-Z # a letter,
+                   \\p{IsLatin} # a unicode letter,
                    0-9    # a number,
                    -      # a hyphen,
                    _      # an underscore,
