@@ -133,7 +133,7 @@ class DirectoryEntityDAO {
             SearchRequest request = new SearchRequest(BASE_DN, filter)
             Response<SearchResult> response = operation.execute(request)
             if (response.getResultCode() == ResultCode.SIZE_LIMIT_EXCEEDED) {
-                throw new LdapException('size limit exceeded', ResultCode.SIZE_LIMIT_EXCEEDED)
+                throw new LdapException('Size limit exceeded.', ResultCode.SIZE_LIMIT_EXCEEDED)
             } else {
                 SearchResult result = response.getResult()
                 for (LdapEntry entry : result.getEntries()) {
