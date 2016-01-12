@@ -13,6 +13,7 @@ class DirectoryEntityDAOTest {
     private static final Long badOSUUID = 0
     private static final String goodUID = 'browtayl'
     private static final String badUID = 'abcdef'
+    private static final String goodUnicodeUID = 'jimenjos'
 
     @ClassRule
     public static final DropwizardAppRule<DirectoryApplicationConfiguration> APPLICATION =
@@ -52,5 +53,11 @@ class DirectoryEntityDAOTest {
         assertEquals(expected, directoryEntityDAO.getBySearchQuery(goodUID + '&'))
         assertEquals(expected, directoryEntityDAO.getBySearchQuery(goodUID + '#'))
         assertEquals(expected, directoryEntityDAO.getBySearchQuery('#' + goodUID))
+    }
+
+    @Test
+    public void getGetBySearchQuerySanitizeUnicode() {
+        List<DirectoryEntity> expected = directoryEntityDAO.getBySearchQuery(goodUnicodeUID)
+        assertEquals(expected, directoryEntityDAO.getBySearchQuery('jiménez'))
     }
 }
