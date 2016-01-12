@@ -21,17 +21,17 @@ class DirectoryEntityDAO {
     private final String BASE_DN
     private final PooledConnectionFactory pooledConnectionFactory
     private static final Pattern illegalCharacterPattern = Pattern.compile(
-            '''(?x)       # this extended regex defines
-               (?!        # any character that is not
+            '''(?x)             # this extended regex defines
+               (?!              # any character that is not
                   [
-                   a-zA-Z # a letter,
-                   0-9    # a number,
-                   -      # a hyphen,
-                   _      # an underscore,
-                   \\.    # a period, or
-                   @      # an at sign
+                   \\p{IsLatin} # a unicode letter,
+                   0-9          # a number,
+                   -            # a hyphen,
+                   _            # an underscore,
+                   \\.          # a period, or
+                   @            # an at sign
                   ])
-               .          # to be an illegal character.
+               .                # to be an illegal character.
             ''')
     private static final Pattern spacesPattern = Pattern.compile(' +')
     private static final Pattern dollarSignPattern = Pattern.compile('\\$')
