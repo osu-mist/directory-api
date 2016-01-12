@@ -5,6 +5,7 @@ import org.ldaptive.Connection
 import org.ldaptive.LdapEntry
 import org.ldaptive.LdapException
 import org.ldaptive.Response
+import org.ldaptive.ResultCode
 import org.ldaptive.SearchOperation
 import org.ldaptive.SearchRequest
 import org.ldaptive.SearchResult
@@ -131,9 +132,13 @@ class DirectoryEntityDAO {
             SearchOperation operation = new SearchOperation(connection)
             SearchRequest request = new SearchRequest(BASE_DN, filter)
             Response<SearchResult> response = operation.execute(request)
-            SearchResult result = response.getResult()
-            for (LdapEntry entry : result.getEntries()) {
-                directoryEntityList.add(convert(entry))
+            if (response.getResultCode() == ResultCode.SIZE_LIMIT_EXCEEDED) {
+                throw new LdapException('size limit exceeded', ResultCode.SIZE_LIMIT_EXCEEDED)
+            } else {
+                SearchResult result = response.getResult()
+                for (LdapEntry entry : result.getEntries()) {
+                    directoryEntityList.add(convert(entry))
+                }
             }
         } finally {
             connection.close() // return connection to pool
