@@ -56,7 +56,7 @@ class DirectoryEntityDAOTest {
     }
 
     @Test
-    public void getGetBySearchQuerySanitizeUnicode() {
+    public void testGetBySearchQuerySanitizeUnicode() {
         List<DirectoryEntity> expected = directoryEntityDAO.getBySearchQuery(goodUnicodeUID)
         assertEquals(expected, directoryEntityDAO.getBySearchQuery('jiménez'))
     }
