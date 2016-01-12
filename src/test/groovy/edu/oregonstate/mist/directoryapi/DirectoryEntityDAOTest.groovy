@@ -2,6 +2,8 @@ package edu.oregonstate.mist.directoryapi
 
 import io.dropwizard.testing.junit.DropwizardAppRule
 import io.dropwizard.testing.ResourceHelpers
+import org.ldaptive.LdapException
+import org.ldaptive.ResultCode
 import org.junit.Test
 import org.junit.ClassRule
 import org.junit.BeforeClass
@@ -14,6 +16,7 @@ class DirectoryEntityDAOTest {
     private static final String goodUID = 'browtayl'
     private static final String badUID = 'abcdef'
     private static final String goodUnicodeUID = 'jimenjos'
+    private static final String overlyBroadSearchTerm = 'John'
 
     @ClassRule
     public static final DropwizardAppRule<DirectoryApplicationConfiguration> APPLICATION =
@@ -59,5 +62,16 @@ class DirectoryEntityDAOTest {
     public void testGetBySearchQuerySanitizeUnicode() {
         List<DirectoryEntity> expected = directoryEntityDAO.getBySearchQuery(goodUnicodeUID)
         assertEquals(expected, directoryEntityDAO.getBySearchQuery('jiménez'))
+    }
+
+    @Test
+    public void testGetBySearchQuerySizeLimitExceeded() {
+        try {
+            directoryEntityDAO.getBySearchQuery(overlyBroadSearchTerm)
+        } catch (LdapException ldapException) {
+            assertTrue(ldapException.getResultCode() == ResultCode.SIZE_LIMIT_EXCEEDED)
+            return
+        }
+        assertTrue(false)
     }
 }
