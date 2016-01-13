@@ -17,6 +17,8 @@ class DirectoryEntityDAOTest {
     private static final String badUID = 'abcdef'
     private static final String goodUnicodeUID = 'jimenjos'
     private static final String overlyBroadSearchTerm = 'John'
+    private static final String goodFirstName = 'Taylor'
+    private static final String goodLastName = 'Brown'
 
     @ClassRule
     public static final DropwizardAppRule<DirectoryApplicationConfiguration> APPLICATION =
@@ -43,8 +45,8 @@ class DirectoryEntityDAOTest {
 
     @Test
     public void testGetBySearchQuerySplit() {
-        assertFalse(directoryEntityDAO.getBySearchQuery(goodUID + ' ' + badUID).isEmpty())
-        assertFalse(directoryEntityDAO.getBySearchQuery(badUID + ' ' + goodUID).isEmpty())
+        assertFalse(directoryEntityDAO.getBySearchQuery(goodFirstName + ' ' + goodLastName).isEmpty())
+        assertFalse(directoryEntityDAO.getBySearchQuery(goodLastName + ' ' + goodFirstName).isEmpty())
     }
 
     @Test
@@ -73,5 +75,16 @@ class DirectoryEntityDAOTest {
             return
         }
         assertTrue(false)
+    }
+
+    @Test
+    public void testGetBySearchQuerySizeLimit() {
+        try {
+            directoryEntityDAO.getBySearchQuery(goodFirstName + ' ' + goodLastName)
+        } catch (LdapException ldapException) {
+            if (ldapException.getResultCode() == ResultCode.SIZE_LIMIT_EXCEEDED) {
+                fail()
+            }
+        }
     }
 }

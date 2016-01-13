@@ -68,12 +68,12 @@ class DirectoryEntityDAO {
      */
     public List<DirectoryEntity> getBySearchQuery(String searchQuery)
             throws LdapException {
-        String filter = '(|'
+        String filter = '(&'
         for (String searchTerm : split(sanitize(searchQuery))) {
             if (searchTerm) {
-                filter += '(cn=*' + searchTerm + '*)' +
-                         '(uid=*' + searchTerm + '*)' +
-                        '(mail=*' + searchTerm + '*)'
+                filter += '(|' + '(cn=*' + searchTerm + '*)' +
+                                '(uid=*' + searchTerm + '*)' +
+                               '(mail=*' + searchTerm + '*)' + ')'
             }
         }
         filter += ')'
