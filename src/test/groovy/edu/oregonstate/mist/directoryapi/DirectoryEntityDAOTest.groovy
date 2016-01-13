@@ -75,7 +75,7 @@ class DirectoryEntityDAOTest {
             assertTrue(ldapException.getResultCode() == ResultCode.SIZE_LIMIT_EXCEEDED)
             return
         }
-        assertTrue(false)
+        fail()
     }
 
     @Test
