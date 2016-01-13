@@ -16,6 +16,7 @@ class DirectoryEntityDAOTest {
     private static final String goodUID = 'browtayl'
     private static final String badUID = 'abcdef'
     private static final String goodUnicodeUID = 'jimenjos'
+    private static final String goodUnicodeSearchTerm = 'jiménez'
     private static final String overlyBroadSearchTerm = 'John'
     private static final String goodFirstName = 'Taylor'
     private static final String goodLastName = 'Brown'
@@ -63,7 +64,7 @@ class DirectoryEntityDAOTest {
     @Test
     public void testGetBySearchQuerySanitizeUnicode() {
         List<DirectoryEntity> expected = directoryEntityDAO.getBySearchQuery(goodUnicodeUID)
-        assertEquals(expected, directoryEntityDAO.getBySearchQuery('jiménez'))
+        assertEquals(expected, directoryEntityDAO.getBySearchQuery(goodUnicodeSearchTerm))
     }
 
     @Test
