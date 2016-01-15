@@ -30,7 +30,7 @@ paths:
       tags:
         - directory
       operationId: getBySearchQuery
-      description: Get entries in directory matching search query
+      description: Get entries in directory matching all terms in search query
       produces:
         - application/json
       parameters:
