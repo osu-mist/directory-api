@@ -1,22 +1,20 @@
 swagger: '2.0'
 info:
-  title: Web API Skeleton
-  description: Skeleton for Dropwizard Web APIs
-  version: '0.0'
+  title: OSU Directory Web API
+  description: Web API to search the OSU Online Directory
+  version: "1"
   license:
     name: GNU Affero General Public License Version 3
     url: http://www.gnu.org/licenses/agpl-3.0.en.html
 externalDocs:
   description: GitHub Repository
-  url: https://github.com/osu-mist/web-api-skeleton
+  url: https://github.com/osu-mist/directory-api
 host: localhost
 schemes:
-  - http
-basePath: /api/v0
-consumes:
-  - text/plain
+  - https
+basePath: /api/v1
 produces:
-  - text/plain
+  - application/json
 paths:
   /:
     get:
@@ -27,38 +25,107 @@ paths:
           description: Object containing information
           schema:
             $ref: '#/definitions/Info'
-  /sample:
+  /directory:
     get:
-      summary: Get message
-      description: This is a sample resource that returns a short message.
-      responses:
-        200:
-          description: A short message
-          schema:
-            type: string
-        404:
-          description: Not found
-          schema:
-            $ref: '#/definitions/Error'
-    post:
-      summary: Post message
-      description: This is a sample resource that returns the message it receives.
+      tags:
+        - directory
+      operationId: getBySearchQuery
+      description: Get entries in directory matching all terms in search query
+      produces:
+        - application/json
       parameters:
-        - name: message
-          in: body
-          schema:
-            type: string
+        - name: q
+          in: query
+          description: Search query
+          type: string
           required: true
       responses:
-        200:
-          description: The message received
+        "200":
+          description: Array of directory entities
           schema:
-            type: string
-        404:
+            type: array
+            items:
+              $ref: "#/definitions/DirectoryEntity"
+        "400":
+          description: Bad request
+          schema:
+            $ref: "#/definitions/Error"
+        "404":
           description: Not found
           schema:
-            $ref: '#/definitions/Error'
+            $ref: "#/definitions/Error"
+      security:
+        - directory_api_key: []
+  /directory/{osuuid}:
+    get:
+      tags:
+      - directory
+      operationId: getByOSUUID
+      description: Get entries in directory filtered by query parameters
+      parameters:
+        - name: osuuid
+          in: path
+          description: "OSUUID of the person to be fetched."
+          type: integer
+          format: int64
+          required: true
+      responses:
+        "200":
+          description: Directory entity
+          schema:
+           $ref: "#/definitions/DirectoryEntity"
+        "400":
+          description: Bad request
+          schema:
+            $ref: "#/definitions/Error"
+        "404":
+          description: Not found
+          schema:
+            $ref: "#/definitions/Error"
+      security:
+        - directory_api_key: []
+securityDefinitions:
+  directory_api_key:
+    type: apiKey
+    name: directory_api_key
+    in: query
 definitions:
+  Email:
+    type: string
+    format: email
+  DirectoryEntity:
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      fullName:
+        type: string
+      primaryAffiliation:
+        type: string
+      jobTitle:
+        type: string
+      department:
+        type: string
+      departmentMailingAddress:
+        type: string
+      homePhoneNumber:
+        type: string
+      homeAddress:
+        type: string
+      officePhoneNumber:
+        type: string
+      officeAddress:
+        type: string
+      faxNumber:
+        type: string
+      emailAddress:
+        $ref: "#/definitions/Email"
+      username:
+        type: string
+      osuuid:
+        type: integer
+        format: int64
   Info:
     properties:
       name:
@@ -70,9 +137,11 @@ definitions:
       documentation:
         type: string
   Error:
+    type: object
     properties:
       status:
         type: integer
+        format: int32
       developerMessage:
         type: string
       userMesage:

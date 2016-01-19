@@ -1,11 +1,9 @@
-package edu.oregonstate.mist.webapiskeleton
+package edu.oregonstate.mist.directoryapi
 
-import edu.oregonstate.mist.api.Configuration
 import edu.oregonstate.mist.api.Resource
 import edu.oregonstate.mist.api.InfoResource
 import edu.oregonstate.mist.api.AuthenticatedUser
 import edu.oregonstate.mist.api.BasicAuthenticator
-import edu.oregonstate.mist.webapiskeleton.resources.SampleResource
 import io.dropwizard.Application
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
@@ -15,14 +13,14 @@ import io.dropwizard.auth.basic.BasicAuthFactory
 /**
  * Main application class.
  */
-class SkeletonApplication extends Application<Configuration> {
+class DirectoryApplication extends Application<DirectoryApplicationConfiguration> {
     /**
      * Initializes application bootstrap.
      *
      * @param bootstrap
      */
     @Override
-    public void initialize(Bootstrap<Configuration> bootstrap) {}
+    public void initialize(Bootstrap<DirectoryApplicationConfiguration> bootstrap) {}
 
     /**
      * Parses command-line arguments and runs the application.
@@ -31,15 +29,17 @@ class SkeletonApplication extends Application<Configuration> {
      * @param environment
      */
     @Override
-    public void run(Configuration configuration, Environment environment) {
+    public void run(DirectoryApplicationConfiguration configuration, Environment environment) {
         Resource.loadProperties('resource.properties')
-        environment.jersey().register(new SampleResource())
+        final DirectoryEntityDAO directoryEntityDAO = new DirectoryEntityDAO(configuration.getLdapConfiguration())
+        environment.healthChecks().register('LDAP', new LDAPHealthCheck(directoryEntityDAO))
+        environment.jersey().register(new DirectoryEntityResource(directoryEntityDAO))
         environment.jersey().register(new InfoResource())
         environment.jersey().register(
                 AuthFactory.binder(
                         new BasicAuthFactory<AuthenticatedUser>(
                                 new BasicAuthenticator(configuration.getCredentialsList()),
-                                'SkeletonApplication',
+                                'DirectoryApplication',
                                 AuthenticatedUser.class)))
     }
 
@@ -50,6 +50,6 @@ class SkeletonApplication extends Application<Configuration> {
      * @throws Exception
      */
     public static void main(String[] arguments) throws Exception {
-        new SkeletonApplication().run(arguments)
+        new DirectoryApplication().run(arguments)
     }
 }

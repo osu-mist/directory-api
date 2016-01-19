@@ -41,6 +41,7 @@ dependencies {
     compile "io.dropwizard:dropwizard-auth:${dropwizardVersion}"
     // compile "io.dropwizard:dropwizard-jdbi:${dropwizardVersion}"
     // compile ':ojdbc6_g:'
+    compile 'org.ldaptive:ldaptive:1.1.0'
 }
 
 codenarc {
