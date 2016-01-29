@@ -124,7 +124,7 @@ This resource returns an object representing the directory entity matching the o
       --insecure \
       --user "username:password" \
       'https://localhost:8080/api/v1/directory/51646559347'
-    {"firstName":"Taylor","lastName":"Brown","fullName":"Brown, Taylor Alexander","primaryAffiliation":"Student","jobTitle":null,"department":"Computer Science","departmentMailingAddress":null,"homePhoneNumber":null,"homeAddress":null,"officePhoneNumber":null,"officeAddress":null,"faxNumber":null,"emailAddress":"browtayl@oregonstate.edu","username":"browtayl","osuuid":51646559347}
+    {"links":null,"data":{"id":51646559347,"type":"directory","attributes":{"firstName":"Taylor","lastName":"Brown","fullName":"Brown, Taylor Alexander","primaryAffiliation":"Student","jobTitle":null,"department":"Computer Science","departmentMailingAddress":null,"homePhoneNumber":null,"homeAddress":null,"officePhoneNumber":null,"officeAddress":null,"faxNumber":null,"emailAddress":"browtayl@oregonstate.edu","username":"browtayl","osuuid":51646559347}}}
 
 An error is returned if no directory entities match:
 
@@ -150,7 +150,7 @@ Search terms match names, email addresses, and usernames. An empty array is retu
       --insecure \
       --user "username:password" \
       'https://localhost:8080/api/v1/directory/?q=foobar'
-    []
+    {"links":null,"data":[]}
 
 An error is returned if the request is invalid:
 
