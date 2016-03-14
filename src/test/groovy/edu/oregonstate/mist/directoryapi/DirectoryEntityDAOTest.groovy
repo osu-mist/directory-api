@@ -25,7 +25,7 @@ class DirectoryEntityDAOTest {
     public static final DropwizardAppRule<DirectoryApplicationConfiguration> APPLICATION =
             new DropwizardAppRule<DirectoryApplicationConfiguration>(
                     DirectoryApplication.class,
-                    ResourceHelpers.resourceFilePath('configuration.yaml')) // FIXME: src/main/resources
+                    new File("configuration.yaml").absolutePath)
 
     @BeforeClass
     public static void setUpClass() {
