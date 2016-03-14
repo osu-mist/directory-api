@@ -5,4 +5,5 @@ class ResourceObject {
     Long id
     String type
     DirectoryEntity attributes
+    def links
 }

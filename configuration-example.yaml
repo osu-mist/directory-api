@@ -52,3 +52,4 @@ ldap:
   validateOnCheckOut: false
   validatePeriod: 1800
   validatePeriodically: false
+  apiEndpointUrl: https://api.example.com/v1/directory
