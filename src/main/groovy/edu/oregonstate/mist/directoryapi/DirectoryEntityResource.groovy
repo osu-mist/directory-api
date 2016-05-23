@@ -53,7 +53,9 @@ class DirectoryEntityResource extends Resource {
                     resourceObjectList.add(new ResourceObject(
                             id: it.osuuid,
                             type: RESOURCETYPE,
-                            attributes: it)
+                            attributes: it,
+                            links: getLinks(it)
+                    )
                     )
                 }
                 ResultObject resultObject = new ResultObject(
@@ -88,7 +90,8 @@ class DirectoryEntityResource extends Resource {
                 ResourceObject resourceObject = new ResourceObject(
                         id: osuuid,
                         type: RESOURCETYPE,
-                        attributes: directoryEntity
+                        attributes: directoryEntity,
+                        links: getLinks(directoryEntity)
                 )
                 ResultObject resultObject = new ResultObject(
                         links: null,
@@ -102,5 +105,15 @@ class DirectoryEntityResource extends Resource {
             responseBuilder = internalServerError(ldapException.message)
         }
         responseBuilder.build()
+    }
+
+    /**
+     * Returns the jsonapi links to be displayed within a single resource object.
+     *
+     * @param directoryEntity
+     * @return
+     */
+    private LinkedHashMap<String, String> getLinks(DirectoryEntity directoryEntity) {
+        ['self': directoryEntityDAO.apiEndpointUrl + "/" + directoryEntity.osuuid]
     }
 }

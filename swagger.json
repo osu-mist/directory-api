@@ -1,0 +1,287 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "OSU Directory Web API",
+        "description": "Web API to search the OSU Online Directory",
+        "version": "1",
+        "license": {
+            "name": "GNU Affero General Public License Version 3",
+            "url": "http://www.gnu.org/licenses/agpl-3.0.en.html"
+        }
+    },
+    "externalDocs": {
+        "description": "GitHub Repository",
+        "url": "https://github.com/osu-mist/directory-api"
+    },
+    "host": "api.oregonstate.edu",
+    "schemes": [
+        "https"
+    ],
+    "basePath": "/v1",
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/directory": {
+            "get": {
+                "tags": [
+                    "directory"
+                ],
+                "operationId": "getBySearchQuery",
+                "description": "Get entries in directory matching all terms in search query",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search query",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Specify 'Bearer ' and your access token.",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Array of directory entities",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DirectoryEntity"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "directory_oauth": []
+                    }
+                ]
+            }
+        },
+        "/directory/{osuuid}": {
+            "get": {
+                "tags": [
+                    "directory"
+                ],
+                "operationId": "getByOSUUID",
+                "description": "Get entries in directory filtered by query parameters",
+                "parameters": [
+                    {
+                        "name": "osuuid",
+                        "in": "path",
+                        "description": "OSUUID of the person to be fetched.",
+                        "type": "integer",
+                        "format": "int64",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Directory entity",
+                        "schema": {
+                            "$ref": "#/definitions/DirectoryEntity"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "directory_oauth": []
+                    }
+                ]
+            }
+        },
+        "/directory/token": {
+            "post": {
+                "tags": [
+                    "directory"
+                ],
+                "operationId": "getAccessToken",
+                "description": "Get access token to make API calls. Part of oAuth2 client credentials flow.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "client_id",
+                        "in": "formData",
+                        "description": "Client id from registered application.",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "client_secret",
+                        "in": "formData",
+                        "description": "Client secret from registered application.",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "grant_type",
+                        "in": "formData",
+                        "description": "Specify 'client_credentials'.",
+                        "type": "string",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Directory entity",
+                        "schema": {
+                            "$ref": "#/definitions/DirectoryEntity"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "directory_oauth": []
+                    }
+                ]
+            }
+        }
+    },
+    "securityDefinitions": {
+        "directory_oauth": {
+            "type": "oauth2",
+            "tokenUrl": "https://api.oregonstate.edu/v1/locations/token",
+            "flow": "application",
+            "scopes": {}
+        }
+    },
+    "definitions": {
+        "Email": {
+            "type": "string",
+            "format": "email"
+        },
+        "DirectoryEntity": {
+            "properties": {
+                "firstName": {
+                    "type": "string"
+                },
+                "lastName": {
+                    "type": "string"
+                },
+                "fullName": {
+                    "type": "string"
+                },
+                "primaryAffiliation": {
+                    "type": "string"
+                },
+                "jobTitle": {
+                    "type": "string"
+                },
+                "department": {
+                    "type": "string"
+                },
+                "departmentMailingAddress": {
+                    "type": "string"
+                },
+                "homePhoneNumber": {
+                    "type": "string"
+                },
+                "homeAddress": {
+                    "type": "string"
+                },
+                "officePhoneNumber": {
+                    "type": "string"
+                },
+                "officeAddress": {
+                    "type": "string"
+                },
+                "faxNumber": {
+                    "type": "string"
+                },
+                "emailAddress": {
+                    "$ref": "#/definitions/Email"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "osuuid": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "Info": {
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "time": {
+                    "type": "integer"
+                },
+                "commit": {
+                    "type": "string"
+                },
+                "documentation": {
+                    "type": "string"
+                }
+            }
+        },
+        "Error": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "developerMessage": {
+                    "type": "string"
+                },
+                "userMesage": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "integer"
+                },
+                "details": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

@@ -37,6 +37,8 @@ class DirectoryEntityDAO {
     private static final Pattern spacesPattern = Pattern.compile(' +')
     private static final Pattern dollarSignPattern = Pattern.compile('\\$')
 
+    String apiEndpointUrl
+
     /**
      * Constructs the directory entity data access object with given LDAP configuration.
      *
@@ -57,6 +59,7 @@ class DirectoryEntityDAO {
         SoftLimitConnectionPool pool = new SoftLimitConnectionPool(poolConfig, defaultConnectionFactory)
         pool.initialize()
         pooledConnectionFactory = new PooledConnectionFactory(pool)
+        apiEndpointUrl = ldapConfiguration.get("apiEndpointUrl")
     }
 
     /**
