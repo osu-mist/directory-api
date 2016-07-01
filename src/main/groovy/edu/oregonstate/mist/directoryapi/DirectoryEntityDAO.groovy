@@ -71,7 +71,7 @@ class DirectoryEntityDAO {
      */
     public List<DirectoryEntity> getBySearchQuery(String searchQuery)
             throws LdapException {
-        String filter = '(&(objectclass=person)(&'
+        String filter = '(&(objectclass=person)'
         for (String searchTerm : split(sanitize(searchQuery))) {
             if (searchTerm) {
                 filter += '(|' + '(cn=*' + searchTerm + '*)' +
@@ -79,7 +79,7 @@ class DirectoryEntityDAO {
                                '(mail=*' + searchTerm + '*)' + ')'
             }
         }
-        filter += '))'
+        filter += ')'
         searchLDAP(filter)
     }
 
