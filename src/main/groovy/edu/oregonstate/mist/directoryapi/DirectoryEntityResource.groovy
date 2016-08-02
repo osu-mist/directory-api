@@ -4,6 +4,9 @@ import edu.oregonstate.mist.api.Resource
 import edu.oregonstate.mist.api.AuthenticatedUser
 import io.dropwizard.auth.Auth
 import org.ldaptive.LdapException
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 import javax.ws.rs.GET
 import javax.ws.rs.Path
 import javax.ws.rs.PathParam
@@ -18,6 +21,8 @@ import javax.ws.rs.core.MediaType
  */
 @Path('/directory')
 class DirectoryEntityResource extends Resource {
+    Logger logger = LoggerFactory.getLogger(DirectoryEntityResource.class)
+
     private final DirectoryEntityDAO directoryEntityDAO
     private final String RESOURCETYPE = "directory"
 
@@ -64,6 +69,7 @@ class DirectoryEntityResource extends Resource {
                 )
                 responseBuilder = ok(resultObject)
             } catch (LdapException ldapException) {
+                logger.error("Ldap Exception thrown when getting by search query", ldapException)
                 responseBuilder = internalServerError(ldapException.message)
             }
         }
@@ -102,6 +108,7 @@ class DirectoryEntityResource extends Resource {
                 responseBuilder = notFound()
             }
         } catch (LdapException ldapException) {
+            logger.error("Ldap Exception thrown when getting by OSUUID", ldapException)
             responseBuilder = internalServerError(ldapException.message)
         }
         responseBuilder.build()
