@@ -1,9 +1,14 @@
 package edu.oregonstate.mist.directoryapi
 
+import edu.oregonstate.mist.api.BuildInfoManager
+import edu.oregonstate.mist.api.Configuration
 import edu.oregonstate.mist.api.Resource
 import edu.oregonstate.mist.api.InfoResource
 import edu.oregonstate.mist.api.AuthenticatedUser
 import edu.oregonstate.mist.api.BasicAuthenticator
+import edu.oregonstate.mist.api.jsonapi.GenericExceptionMapper
+import edu.oregonstate.mist.api.jsonapi.IOExceptionMapper
+
 import io.dropwizard.Application
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
@@ -23,6 +28,21 @@ class DirectoryApplication extends Application<DirectoryApplicationConfiguration
     public void initialize(Bootstrap<DirectoryApplicationConfiguration> bootstrap) {}
 
     /**
+     * Registers lifecycle managers and Jersey exception mappers
+     *
+     * @param environment
+     * @param buildInfoManager
+     */
+    protected void registerAppManagerLogic(Environment environment,
+                                           BuildInfoManager buildInfoManager) {
+
+        environment.lifecycle().manage(buildInfoManager)
+
+        environment.jersey().register(new IOExceptionMapper())
+        environment.jersey().register(new GenericExceptionMapper())
+    }
+
+    /**
      * Parses command-line arguments and runs the application.
      *
      * @param configuration
@@ -30,11 +50,18 @@ class DirectoryApplication extends Application<DirectoryApplicationConfiguration
      */
     @Override
     public void run(DirectoryApplicationConfiguration configuration, Environment environment) {
-        Resource.loadProperties('resource.properties')
-        final DirectoryEntityDAO directoryEntityDAO = new DirectoryEntityDAO(configuration.getLdapConfiguration())
-        environment.healthChecks().register('LDAP', new LDAPHealthCheck(directoryEntityDAO))
-        environment.jersey().register(new DirectoryEntityResource(directoryEntityDAO))
-        environment.jersey().register(new InfoResource())
+        Resource.loadProperties()
+        BuildInfoManager buildInfoManager = new BuildInfoManager()
+        registerAppManagerLogic(environment, buildInfoManager)
+
+        final DirectoryEntityDAO DIRECTORYENTITYDAO = new DirectoryEntityDAO(
+                configuration.getLdapConfiguration()
+        )
+
+        environment.healthChecks().register('LDAP', new LDAPHealthCheck(DIRECTORYENTITYDAO))
+
+        environment.jersey().register(new DirectoryEntityResource(DIRECTORYENTITYDAO))
+        environment.jersey().register(new InfoResource(buildInfoManager.getInfo()))
         environment.jersey().register(
                 AuthFactory.binder(
                         new BasicAuthFactory<AuthenticatedUser>(

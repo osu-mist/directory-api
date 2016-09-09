@@ -56,7 +56,10 @@ class DirectoryEntityDAO {
                 validatePeriod: (long)ldapConfiguration.get('validatePeriod'),
                 validatePeriodically: (boolean)ldapConfiguration.get('validatePeriodically')
         )
-        SoftLimitConnectionPool pool = new SoftLimitConnectionPool(poolConfig, defaultConnectionFactory)
+        SoftLimitConnectionPool pool = new SoftLimitConnectionPool(
+                poolConfig, defaultConnectionFactory
+        )
+
         pool.initialize()
         pooledConnectionFactory = new PooledConnectionFactory(pool)
         apiEndpointUrl = ldapConfiguration.get("apiEndpointUrl")

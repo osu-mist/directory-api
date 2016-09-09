@@ -36,7 +36,7 @@ class DirectoryEntityResource extends Resource {
     }
 
     /**
-     * Responds to GET requests by returning array of resultObject objects matching search query parameter.
+     * Responds to GET requests by returning array of resultObjects matching search query parameter.
      *
      * @param authenticatedUser
      * @param searchQuery
@@ -52,9 +52,12 @@ class DirectoryEntityResource extends Resource {
             responseBuilder = badRequest('Missing query parameter.')
         } else {
             try {
-                List<DirectoryEntity> directoryEntityList = directoryEntityDAO.getBySearchQuery(searchQuery)
+                List<DirectoryEntity> directoryEntities = directoryEntityDAO.getBySearchQuery(
+                        searchQuery
+                )
+
                 List<ResourceObject> resourceObjectList = new ArrayList<ResourceObject>()
-                directoryEntityList.each {
+                directoryEntities.each {
                     resourceObjectList.add(new ResourceObject(
                             id: it.osuuid,
                             type: RESOURCETYPE,
