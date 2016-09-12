@@ -8,9 +8,6 @@ import javax.ws.rs.core.Response
 import javax.ws.rs.ext.ExceptionMapper
 import javax.ws.rs.ext.Provider
 
-/**
- * Created by georgecrary on 8/4/16.
- */
 @Provider
 class IOExceptionMapper implements ExceptionMapper<IOException> {
     Logger logger = LoggerFactory.getLogger(IOExceptionMapper.class)
