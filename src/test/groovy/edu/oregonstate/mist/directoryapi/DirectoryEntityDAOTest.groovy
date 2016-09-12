@@ -29,7 +29,9 @@ class DirectoryEntityDAOTest {
 
     @BeforeClass
     public static void setUpClass() {
-        directoryEntityDAO = new DirectoryEntityDAO(APPLICATION.configuration.getLdapConfiguration())
+        directoryEntityDAO = new DirectoryEntityDAO(
+                APPLICATION.configuration.getLdapConfiguration()
+        )
     }
 
     @Test
@@ -46,8 +48,11 @@ class DirectoryEntityDAOTest {
 
     @Test
     public void testGetBySearchQuerySplit() {
-        assertFalse(directoryEntityDAO.getBySearchQuery(goodFirstName + ' ' + goodLastName).isEmpty())
-        assertFalse(directoryEntityDAO.getBySearchQuery(goodLastName + ' ' + goodFirstName).isEmpty())
+        assertFalse(directoryEntityDAO.getBySearchQuery(
+                goodFirstName + ' ' + goodLastName).isEmpty())
+
+        assertFalse(directoryEntityDAO.getBySearchQuery(
+                goodLastName + ' ' + goodFirstName).isEmpty())
     }
 
     @Test
