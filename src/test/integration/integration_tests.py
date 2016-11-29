@@ -31,6 +31,11 @@ class gateway_tests(unittest.TestCase):
         response = basic_request(middle_name_url, access_token)
         self.assertEquals(response.status_code, 200)
 
+    def test_partial_mail_search_term(self):
+        partial_mail_url = request_url + "?q=" + urllib.quote(config_json["partial_email"])
+        response = basic_request(partial_mail_url, access_token)
+        self.assertEquals(response.status_code, 200)
+
     def test_osuuid_found(self):
         osuuid_url = request_url + "/" + config_json["good_osuuid"]
         response = basic_request(osuuid_url, access_token)
