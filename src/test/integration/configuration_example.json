@@ -1,0 +1,16 @@
+{
+    "hostname": "https://example.com/",
+    "version": "v1",
+
+    "api": "/directory/",
+
+    "token_endpoint": "token",
+
+    "client_id": "secret",
+    "client_secret": "sauce",
+
+    "good_name": "Mark Baldwin",
+    "good_osuuid": "51646559347",
+    "middle_cn_search": "Michael Takumi",
+    "partial_email": "ldwin@oregonstate.edu"
+}
