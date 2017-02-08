@@ -2,6 +2,7 @@ package edu.oregonstate.mist.directoryapi
 
 import org.ldaptive.DefaultConnectionFactory
 import org.ldaptive.Connection
+import org.ldaptive.LdapAttribute
 import org.ldaptive.LdapEntry
 import org.ldaptive.LdapException
 import org.ldaptive.Response
@@ -174,7 +175,7 @@ class DirectoryEntityDAO {
                 faxNumber:                get(ldapEntry, 'facsimiletelephonenumber'),
                 emailAddress:             get(ldapEntry, 'mail'),
                 username:                 get(ldapEntry, 'uid'),
-                osuuid:                   Long.parseLong(get(ldapEntry, 'osuuid'))
+                osuuid:                   getOSUUid(ldapEntry)
         )
     }
 
@@ -186,7 +187,28 @@ class DirectoryEntityDAO {
      * @return attribute value
      */
     private static String get(LdapEntry ldapEntry, String name) {
+//        if (name == 'osuuid') {
+//            ldapEntry.removeAttribute(name)
+//            ldapEntry.addAttribute(new LdapAttribute('osuuid'))
+//        }
         ldapEntry.getAttribute(name)?.getStringValue()
+    }
+
+    /**
+     * Gets an osuuid as a long
+     *
+     * @param ldapEntry
+     * @return Long osuuid
+     */
+    private static Long getOSUUid(LdapEntry ldapEntry) {
+        String osuuidString = get(ldapEntry, 'osuuid')
+        Long osuuid
+
+        if (osuuidString) {
+            osuuid = Long.parseLong(osuuidString)
+        }
+
+        osuuid
     }
 
     /**
