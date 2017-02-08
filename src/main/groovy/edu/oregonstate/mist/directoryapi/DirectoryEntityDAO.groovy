@@ -2,7 +2,6 @@ package edu.oregonstate.mist.directoryapi
 
 import org.ldaptive.DefaultConnectionFactory
 import org.ldaptive.Connection
-import org.ldaptive.LdapAttribute
 import org.ldaptive.LdapEntry
 import org.ldaptive.LdapException
 import org.ldaptive.Response
@@ -187,10 +186,6 @@ class DirectoryEntityDAO {
      * @return attribute value
      */
     private static String get(LdapEntry ldapEntry, String name) {
-//        if (name == 'osuuid') {
-//            ldapEntry.removeAttribute(name)
-//            ldapEntry.addAttribute(new LdapAttribute('osuuid'))
-//        }
         ldapEntry.getAttribute(name)?.getStringValue()
     }
 
