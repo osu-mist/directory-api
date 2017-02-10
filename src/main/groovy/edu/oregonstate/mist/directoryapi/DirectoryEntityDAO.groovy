@@ -197,9 +197,9 @@ class DirectoryEntityDAO {
      */
     private static Long getOSUUid(LdapEntry ldapEntry) {
         String osuuidString = get(ldapEntry, 'osuuid')
-        Long osuuid
+        Long osuuid = 0
 
-        if (osuuidString) {
+        if (osuuidString && osuuidString.matches("[0-9]+")) {
             osuuid = Long.parseLong(osuuidString)
         }
 
