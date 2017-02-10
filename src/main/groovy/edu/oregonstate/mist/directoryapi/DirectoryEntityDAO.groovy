@@ -174,7 +174,7 @@ class DirectoryEntityDAO {
                 faxNumber:                get(ldapEntry, 'facsimiletelephonenumber'),
                 emailAddress:             get(ldapEntry, 'mail'),
                 username:                 get(ldapEntry, 'uid'),
-                osuuid:                   Long.parseLong(get(ldapEntry, 'osuuid'))
+                osuuid:                   getOSUUid(ldapEntry)
         )
     }
 
@@ -187,6 +187,23 @@ class DirectoryEntityDAO {
      */
     private static String get(LdapEntry ldapEntry, String name) {
         ldapEntry.getAttribute(name)?.getStringValue()
+    }
+
+    /**
+     * Gets an osuuid as a long
+     *
+     * @param ldapEntry
+     * @return Long osuuid
+     */
+    private static Long getOSUUid(LdapEntry ldapEntry) {
+        String osuuidString = get(ldapEntry, 'osuuid')
+        Long osuuid = 0
+
+        if (osuuidString && osuuidString.matches("[0-9]+")) {
+            osuuid = Long.parseLong(osuuidString)
+        }
+
+        osuuid
     }
 
     /**
