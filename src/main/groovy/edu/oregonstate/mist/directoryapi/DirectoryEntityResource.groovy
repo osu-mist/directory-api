@@ -59,19 +59,18 @@ class DirectoryEntityResource extends Resource {
                         searchQuery
                 )
 
-                List<ResourceObject> resourceObjectList = new ArrayList<ResourceObject>()
-                directoryEntities.each {
-                    resourceObjectList.add(new ResourceObject(
+                ResultObject resultObject = new ResultObject(
+                    links: null,
+                    data: directoryEntities.collect {
+                        new ResourceObject(
                             id: it.osuuid,
                             type: RESOURCETYPE,
                             attributes: it,
                             links: getLinks(it)
-                    ))
-                }
-                ResultObject resultObject = new ResultObject(
-                        links: null,
-                        data: resourceObjectList
+                        )
+                    }
                 )
+
                 responseBuilder = ok(resultObject)
             } catch (LdapException ldapException) {
                 logger.error("Ldap Exception thrown when getting by search query", ldapException)
