@@ -1,8 +1,7 @@
 package edu.oregonstate.mist.directoryapi
 
 import edu.oregonstate.mist.api.Resource
-import edu.oregonstate.mist.api.AuthenticatedUser
-import io.dropwizard.auth.Auth
+import javax.annotation.security.PermitAll
 import org.ldaptive.LdapException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -21,6 +20,7 @@ import javax.ws.rs.core.UriBuilder
  * Directory entity resource class.
  */
 @Path('/directory')
+@PermitAll
 class DirectoryEntityResource extends Resource {
     Logger logger = LoggerFactory.getLogger(DirectoryEntityResource.class)
 
@@ -49,9 +49,7 @@ class DirectoryEntityResource extends Resource {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getBySearchQuery(
-            @Auth AuthenticatedUser authenticatedUser,
-            @QueryParam('q') String searchQuery) {
+    public Response getBySearchQuery(@QueryParam('q') String searchQuery) {
         ResponseBuilder responseBuilder
         if (!searchQuery) {
             responseBuilder = badRequest('Missing query parameter.')
@@ -93,9 +91,7 @@ class DirectoryEntityResource extends Resource {
     @GET
     @Path('/{osuuid: \\d+}')
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getByOSUUID(
-            @Auth AuthenticatedUser authenticatedUser,
-            @PathParam('osuuid') Long osuuid) {
+    public Response getByOSUUID(@PathParam('osuuid') Long osuuid) {
         ResponseBuilder responseBuilder
         try {
             DirectoryEntity directoryEntity = directoryEntityDAO.getByOSUUID(osuuid)
