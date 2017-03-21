@@ -18,11 +18,12 @@ class DirectoryApplication extends Application<DirectoryApplicationConfiguration
         this.setup(configuration, environment)
 
         final DirectoryEntityDAO DIRECTORYENTITYDAO = new DirectoryEntityDAO(
-                configuration.getLdapConfiguration()
+                configuration.ldapConfiguration,
         )
 
+        def endpointUri = configuration.api.endpointUri
         environment.healthChecks().register('LDAP', new LDAPHealthCheck(DIRECTORYENTITYDAO))
-        environment.jersey().register(new DirectoryEntityResource(DIRECTORYENTITYDAO))
+        environment.jersey().register(new DirectoryEntityResource(DIRECTORYENTITYDAO, endpointUri))
     }
 
     /**

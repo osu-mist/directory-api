@@ -52,10 +52,9 @@ ldap:
   validateOnCheckOut: false
   validatePeriod: 1800
   validatePeriodically: false
-  apiEndpointUrl: https://api.example.com/v1/directory
 
 api:
-  endpointUri: https://api.oregonstate.edu/v1/directory-api/
+  endpointUri: https://api.oregonstate.edu/v1/
 
 #
 ## Example Oracle configuration

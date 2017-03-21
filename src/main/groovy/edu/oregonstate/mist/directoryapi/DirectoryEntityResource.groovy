@@ -15,6 +15,7 @@ import javax.ws.rs.QueryParam
 import javax.ws.rs.core.Response
 import javax.ws.rs.core.Response.ResponseBuilder
 import javax.ws.rs.core.MediaType
+import javax.ws.rs.core.UriBuilder
 
 /**
  * Directory entity resource class.
@@ -26,13 +27,17 @@ class DirectoryEntityResource extends Resource {
     private final DirectoryEntityDAO directoryEntityDAO
     private final String RESOURCETYPE = "directory"
 
+    private String endpointUri
+
     /**
      * Constructs the object after receiving and storing directoryEntityDAO instance.
      *
      * @param directoryEntityDAO
      */
-    public DirectoryEntityResource(DirectoryEntityDAO directoryEntityDAO) {
+    public DirectoryEntityResource(DirectoryEntityDAO directoryEntityDAO, URI endpointUri) {
         this.directoryEntityDAO = directoryEntityDAO
+        this.setEndpointUri(endpointUri)
+        this.@endpointUri = endpointUri
     }
 
     /**
@@ -63,8 +68,7 @@ class DirectoryEntityResource extends Resource {
                             type: RESOURCETYPE,
                             attributes: it,
                             links: getLinks(it)
-                    )
-                    )
+                    ))
                 }
                 ResultObject resultObject = new ResultObject(
                         links: null,
@@ -124,6 +128,9 @@ class DirectoryEntityResource extends Resource {
      * @return
      */
     private LinkedHashMap<String, String> getLinks(DirectoryEntity directoryEntity) {
-        ['self': directoryEntityDAO.apiEndpointUrl + "/" + directoryEntity.osuuid]
+        UriBuilder builder = UriBuilder.fromUri(endpointUri).path(this.class).path("{id}")
+        [
+            'self': builder.build(directoryEntity.osuuid)
+        ]
     }
 }
