@@ -74,7 +74,7 @@ class DirectoryEntityResource extends Resource {
                 responseBuilder = ok(resultObject)
             } catch (LdapException ldapException) {
                 logger.error("Ldap Exception thrown when getting by search query", ldapException)
-                responseBuilder = internalServerError(ldapException.message)
+                responseBuilder = badRequest(ldapException.message)
             }
         }
         responseBuilder.build()
