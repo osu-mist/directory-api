@@ -48,7 +48,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/DirectoryEntity"
+              $ref: "#/definitions/ResultObject"
         "400":
           description: Bad request
           schema:
@@ -77,7 +77,7 @@ paths:
         "200":
           description: Directory entity
           schema:
-           $ref: "#/definitions/DirectoryEntity"
+           $ref: "#/definitions/ResultObject"
         "400":
           description: Bad request
           schema:
@@ -103,10 +103,23 @@ parameters:
     description: If true, JSON response will be pretty-printed
 
 definitions:
-  Email:
-    type: string
-    format: email
-  DirectoryEntity:
+  ResultObject:
+    properties:
+      data:
+        type: array
+        items:
+          $ref: "#/definitions/ResourceObject"
+  ResourceObject:
+    properties:
+      id:
+        type: string
+      type:
+        type: string
+      attributes:
+        $ref: "#/definitions/Attributes"
+      links:
+        $ref: "#/definitions/ResourceLinks"
+  Attributes:
     properties:
       firstName:
         type: string
@@ -133,12 +146,17 @@ definitions:
       faxNumber:
         type: string
       emailAddress:
-        $ref: "#/definitions/Email"
+        type: string
+        format: email
       username:
         type: string
       osuuid:
         type: integer
         format: int64
+  ResourceLinks:
+    properties:
+      self:
+        type: string
   Info:
     properties:
       name:
