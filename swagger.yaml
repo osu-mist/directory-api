@@ -119,6 +119,8 @@ definitions:
         $ref: "#/definitions/Attributes"
       links:
         $ref: "#/definitions/ResourceLinks"
+      relationships:
+        $ref: "#/definitions/Relationships"
   Attributes:
     properties:
       firstName:
@@ -153,6 +155,14 @@ definitions:
       osuuid:
         type: integer
         format: int64
+  Relationships:
+    properties:
+      academic:
+        properties:
+          links:
+            properties:
+              related:
+                type: string
   ResourceLinks:
     properties:
       self:
