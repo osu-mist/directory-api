@@ -77,11 +77,10 @@ if __name__ == '__main__':
     request_url = url
 
     # Get Access Token
-    access_token_url = config_json["hostname"] + config_json["token_endpoint"]
     post_data = {'client_id': config_json["client_id"],
          'client_secret': config_json["client_secret"],
          'grant_type': 'client_credentials'}
-    request = requests.post(access_token_url, data=post_data)
+    request = requests.post(config_json["token_api"], data=post_data)
     response = request.json()
     access_token = 'Bearer ' + response["access_token"]
 
