@@ -77,7 +77,7 @@ if __name__ == '__main__':
     request_url = url
 
     # Get Access Token
-    access_token_url = url + config_json["token_endpoint"]
+    access_token_url = config_json["hostname"] + config_json["token_endpoint"]
     post_data = {'client_id': config_json["client_id"],
          'client_secret': config_json["client_secret"],
          'grant_type': 'client_credentials'}
