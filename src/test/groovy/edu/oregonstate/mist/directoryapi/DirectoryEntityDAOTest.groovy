@@ -15,8 +15,8 @@ class DirectoryEntityDAOTest {
     private static final Long badOSUUID = 0
     private static final String goodUID = 'browtayl'
     private static final String badUID = 'abcdef'
-    private static final String goodUnicodeUID = 'jimenjos'
-    private static final String goodUnicodeSearchTerm = 'jiménez'
+    private static final String goodUnicodeUID = 'Daniel Gilberto'
+    private static final String goodUnicodeSearchTerm = 'Hernández'
     private static final String overlyBroadSearchTerm = 'John'
     private static final String goodFirstName = 'Taylor'
     private static final String goodLastName = 'Brown'
