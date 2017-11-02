@@ -11,8 +11,8 @@ class gateway_tests(unittest.TestCase):
 
     def test_overly_broad_search_term(self):
         response = basic_request(request_url + '?q=John', access_token)
-        self.assertEqual(response.status_code, 500)
-    
+        self.assertEqual(response.status_code, 400)
+
     def test_user_found_search_term(self):
         good_name_url = request_url + '?q=' + urllib.quote(config_json["good_name"])
         response = basic_request(good_name_url, access_token)
@@ -59,7 +59,7 @@ class gateway_tests(unittest.TestCase):
 if __name__ == '__main__':
     options_tpl = ('-i', 'config_path')
     del_list = []
-    
+
     for i,config_path in enumerate(sys.argv):
         if config_path in options_tpl:
             del_list.append(i)
