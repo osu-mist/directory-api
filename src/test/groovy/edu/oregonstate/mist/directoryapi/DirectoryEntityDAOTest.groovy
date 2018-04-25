@@ -42,40 +42,42 @@ class DirectoryEntityDAOTest {
 
     @Test
     public void testGetBySearchQuery() {
-        assertTrue(directoryEntityDAO.getBySearchQuery(badUID).isEmpty())
-        assertFalse(directoryEntityDAO.getBySearchQuery(goodUID).isEmpty())
+        assertTrue(directoryEntityDAO.getBySearchQuery([searchQuery: badUID]).isEmpty())
+        assertFalse(directoryEntityDAO.getBySearchQuery([searchQuery: goodUID]).isEmpty())
     }
 
     @Test
     public void testGetBySearchQuerySplit() {
         assertFalse(directoryEntityDAO.getBySearchQuery(
-                goodFirstName + ' ' + goodLastName).isEmpty())
+                [searchQuery: goodFirstName + ' ' + goodLastName]).isEmpty())
 
         assertFalse(directoryEntityDAO.getBySearchQuery(
-                goodLastName + ' ' + goodFirstName).isEmpty())
+                [searchQuery: goodLastName + ' ' + goodFirstName]).isEmpty())
     }
 
     @Test
     public void testGetBySearchQuerySanitize() {
-        List<DirectoryEntity> expected = directoryEntityDAO.getBySearchQuery(goodUID)
-        assertEquals(expected, directoryEntityDAO.getBySearchQuery(goodUID + '('))
-        assertEquals(expected, directoryEntityDAO.getBySearchQuery(goodUID + ')'))
-        assertEquals(expected, directoryEntityDAO.getBySearchQuery(goodUID + '*'))
-        assertEquals(expected, directoryEntityDAO.getBySearchQuery(goodUID + '&'))
-        assertEquals(expected, directoryEntityDAO.getBySearchQuery(goodUID + '#'))
-        assertEquals(expected, directoryEntityDAO.getBySearchQuery('#' + goodUID))
+        List<DirectoryEntity> expected = directoryEntityDAO.getBySearchQuery([searchQuery: goodUID])
+        assertEquals(expected, directoryEntityDAO.getBySearchQuery([searchQuery: goodUID + '(']))
+        assertEquals(expected, directoryEntityDAO.getBySearchQuery([searchQuery: goodUID + ')']))
+        assertEquals(expected, directoryEntityDAO.getBySearchQuery([searchQuery: goodUID + '*']))
+        assertEquals(expected, directoryEntityDAO.getBySearchQuery([searchQuery: goodUID + '&']))
+        assertEquals(expected, directoryEntityDAO.getBySearchQuery([searchQuery: goodUID + '#']))
+        assertEquals(expected, directoryEntityDAO.getBySearchQuery([searchQuery: '#' + goodUID]))
     }
 
     @Test
     public void testGetBySearchQuerySanitizeUnicode() {
-        List<DirectoryEntity> expected = directoryEntityDAO.getBySearchQuery(goodUnicodeUID)
-        assertEquals(expected, directoryEntityDAO.getBySearchQuery(goodUnicodeSearchTerm))
+        List<DirectoryEntity> expected = directoryEntityDAO.getBySearchQuery(
+                [searchQuery: goodUnicodeUID])
+        assertEquals(expected, directoryEntityDAO.getBySearchQuery(
+                [searchQuery: goodUnicodeSearchTerm]))
     }
 
     @Test
     public void testGetBySearchQuerySizeLimitExceeded() {
         try {
-            directoryEntityDAO.getBySearchQuery(overlyBroadSearchTerm)
+            directoryEntityDAO.getBySearchQuery([searchQuery: overlyBroadSearchTerm])
         } catch (LdapException ldapException) {
             assertTrue(ldapException.getResultCode() == ResultCode.SIZE_LIMIT_EXCEEDED)
             return
@@ -86,7 +88,7 @@ class DirectoryEntityDAOTest {
     @Test
     public void testGetBySearchQuerySizeLimit() {
         try {
-            directoryEntityDAO.getBySearchQuery(goodFirstName + ' ' + goodLastName)
+            directoryEntityDAO.getBySearchQuery([searchQuery: goodFirstName + ' ' + goodLastName])
         } catch (LdapException ldapException) {
             if (ldapException.getResultCode() == ResultCode.SIZE_LIMIT_EXCEEDED) {
                 fail()

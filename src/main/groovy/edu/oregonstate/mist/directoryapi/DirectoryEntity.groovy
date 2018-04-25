@@ -18,6 +18,7 @@ class DirectoryEntity {
     String faxNumber
     String emailAddress
     String username
+    String alternatePhoneNumber
     Long osuuid
 
     @Override
