@@ -9,24 +9,13 @@ info:
 externalDocs:
   description: GitHub Repository
   url: https://github.com/osu-mist/directory-api
-host: localhost
+host: api.oregonstate.edu
 schemes:
   - https
-basePath: /api/v1
+basePath: /v1
 produces:
   - application/json
 paths:
-  /:
-    get:
-      summary: Get information
-      description: Build and runtime information about the application.
-      parameters:
-        - $ref: '#/parameters/pretty'
-      responses:
-        200:
-          description: Object containing information
-          schema:
-            $ref: '#/definitions/Info'
   /directory:
     get:
       tags:
@@ -38,9 +27,67 @@ paths:
       parameters:
         - name: q
           in: query
-          description: Search query
+          description: |
+            For basic directory searches. Searches by username, full name,
+            and email address.
           type: string
-          required: true
+          required: false
+        - name: primaryAffiliation
+          in: query
+          description: Filter by primary affiliation
+          type: string
+          required: false
+          enum:
+            - Employee
+            - Other
+            - Retiree
+            - Student
+            - Unknown
+        - name: lastName
+          in: query
+          description: Filter by last name
+          type: string
+          required: false
+        - name: emailAddress
+          in: query
+          description: Filter by email address
+          type: string
+          required: false
+        - name: officePhoneNumber
+          in: query
+          description: Filter by office phone number
+          type: string
+          required: false
+        - name: alternatePhoneNumber
+          in: query
+          description: Filter by alternate phone number
+          type: string
+          required: false
+        - name: homePhoneNumber
+          in: query
+          description: Filter by home phone number
+          type: string
+          required: false
+        - name: phoneNumber
+          in: query
+          description: Filter by any phone number
+          type: string
+          required: false
+        - name: faxNumber
+          in: query
+          description: Filter by fax number
+          type: string
+          required: false
+        - name: officeAddress
+          in: query
+          description: Filter by office address
+          type: string
+          required: false
+        - name: department
+          in: query
+          description: Filter by department
+          type: string
+          required: false
         - $ref: '#/parameters/pretty'
       responses:
         "200":
@@ -53,12 +100,6 @@ paths:
           description: Bad request
           schema:
             $ref: "#/definitions/Error"
-        "404":
-          description: Not found
-          schema:
-            $ref: "#/definitions/Error"
-      security:
-        - directory_api_key: []
   /directory/{osuuid}:
     get:
       tags:
@@ -78,21 +119,10 @@ paths:
           description: Directory entity
           schema:
            $ref: "#/definitions/ResultObject"
-        "400":
-          description: Bad request
-          schema:
-            $ref: "#/definitions/Error"
         "404":
           description: Not found
           schema:
             $ref: "#/definitions/Error"
-      security:
-        - directory_api_key: []
-securityDefinitions:
-  directory_api_key:
-    type: apiKey
-    name: directory_api_key
-    in: query
 
 parameters:
   pretty:
@@ -112,9 +142,10 @@ definitions:
   ResourceObject:
     properties:
       id:
-        type: string
+        type: integer
       type:
         type: string
+        example: "directory"
       attributes:
         $ref: "#/definitions/Attributes"
       links:
@@ -152,6 +183,8 @@ definitions:
         format: email
       username:
         type: string
+      alternatePhoneNumber:
+        type: string
       osuuid:
         type: integer
         format: int64
@@ -167,23 +200,6 @@ definitions:
     properties:
       self:
         type: string
-  Info:
-    properties:
-      name:
-        type: string
-        description: Name of the API.
-      time:
-        type: string
-        description: Build time in ISO 8601 format.
-      unixTime:
-        type: integer
-        description: Build time as milliseconds since the unix epoch.
-      commit:
-        type: string
-        description: Git commit hash of the revision which was built.
-      documentation:
-        type: string
-        description: Filename of the swagger specification for the API.
   Error:
     type: object
     properties:
