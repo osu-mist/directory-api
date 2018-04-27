@@ -49,7 +49,7 @@ class DirectoryEntityResourceTest {
         Response response = resource.getBySearchQuery(null, null, null, null, null, null, null,
                 null, null, null, null)
 
-        assertEquals(response.status, 400)
+        assertEquals(400, response.status)
     }
 
     @Test
