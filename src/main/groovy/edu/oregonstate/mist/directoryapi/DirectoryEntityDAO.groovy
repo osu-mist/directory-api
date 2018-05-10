@@ -105,9 +105,10 @@ class DirectoryEntityDAO {
         if (searchParameters['searchQuery']) {
             for (String searchTerm : split(sanitize(searchParameters['searchQuery']))) {
                 if (searchTerm) {
-                    filter += "(|(${ldapFields['fullName']}=*$searchTerm*)" +
+                    filter += "(|(${ldapFields['firstName']}=$searchTerm*)" +
+                            "(${ldapFields['lastName']}=$searchTerm*)" +
                             "(${ldapFields['username']}=$searchTerm)" +
-                            "(${ldapFields['emailAddress']}=*$searchTerm*))"
+                            "(${ldapFields['emailAddress']}=$searchTerm*))"
                 }
             }
         }
@@ -116,11 +117,11 @@ class DirectoryEntityDAO {
                     "${affiliationAbbreviation(searchParameters['primaryAffiliation'])})"
         }
         if (searchParameters['lastName']) {
-            filter += "(${ldapFields['lastName']}=*${searchParameters['lastName']}*)"
+            filter += "(${ldapFields['lastName']}=${searchParameters['lastName']}*)"
         }
         if (searchParameters['emailAddress']) {
             // Should this really be a wild card search?
-            filter += "(${ldapFields['emailAddress']}=*${searchParameters['emailAddress']}*)"
+            filter += "(${ldapFields['emailAddress']}=${searchParameters['emailAddress']}*)"
         }
         if (searchParameters['officePhoneNumber']) {
             filter += "(${ldapFields['officePhoneNumber']}=" +
