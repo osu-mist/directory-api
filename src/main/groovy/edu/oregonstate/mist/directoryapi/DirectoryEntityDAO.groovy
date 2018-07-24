@@ -71,24 +71,12 @@ class DirectoryEntityDAO {
      *
      * @param ldapConfiguration
      */
-    public DirectoryEntityDAO(Map<String,Object> ldapConfiguration) {
+    public DirectoryEntityDAO(Map<String,Object> ldapConfiguration,
+                              PooledConnectionFactory ldapConnectionPool) {
+
         LDAP_URL = (String)ldapConfiguration.get('url')
         BASE_DN = (String)ldapConfiguration.get('base')
-        DefaultConnectionFactory defaultConnectionFactory = new DefaultConnectionFactory(LDAP_URL)
-        PoolConfig poolConfig = new PoolConfig(
-                maxPoolSize: (int)ldapConfiguration.get('maxPoolSize'),
-                minPoolSize: (int)ldapConfiguration.get('minPoolSize'),
-                validateOnCheckIn: (boolean)ldapConfiguration.get('validateOnCheckIn'),
-                validateOnCheckOut: (boolean)ldapConfiguration.get('validateOnCheckOut'),
-                validatePeriod: (long)ldapConfiguration.get('validatePeriod'),
-                validatePeriodically: (boolean)ldapConfiguration.get('validatePeriodically')
-        )
-        SoftLimitConnectionPool pool = new SoftLimitConnectionPool(
-                poolConfig, defaultConnectionFactory
-        )
-
-        pool.initialize()
-        pooledConnectionFactory = new PooledConnectionFactory(pool)
+        pooledConnectionFactory = ldapConnectionPool
     }
 
     /**

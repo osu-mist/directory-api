@@ -2,6 +2,10 @@ package edu.oregonstate.mist.directoryapi
 
 import edu.oregonstate.mist.api.Application
 import io.dropwizard.setup.Environment
+import org.ldaptive.DefaultConnectionFactory
+import org.ldaptive.pool.PoolConfig
+import org.ldaptive.pool.PooledConnectionFactory
+import org.ldaptive.pool.SoftLimitConnectionPool
 
 /**
  * Main application class.
@@ -17,8 +21,11 @@ class DirectoryApplication extends Application<DirectoryApplicationConfiguration
     public void run(DirectoryApplicationConfiguration configuration, Environment environment) {
         this.setup(configuration, environment)
 
+        def ldapConnectionPool = configureLdapPool(configuration.ldapConfiguration)
+
         final DirectoryEntityDAO DIRECTORYENTITYDAO = new DirectoryEntityDAO(
                 configuration.ldapConfiguration,
+                ldapConnectionPool
         )
 
         def endpointUri = configuration.api.endpointUri
@@ -26,6 +33,25 @@ class DirectoryApplication extends Application<DirectoryApplicationConfiguration
         environment.jersey().register(new DirectoryEntityResource(DIRECTORYENTITYDAO, endpointUri))
     }
 
+    private static configureLdapPool(Map<String,Object> ldapConfiguration) {
+        def ldapURL = (String) ldapConfiguration.get('url')
+        DefaultConnectionFactory defaultConnectionFactory = new DefaultConnectionFactory(ldapURL)
+
+        PoolConfig poolConfig = new PoolConfig(
+                maxPoolSize: (int)ldapConfiguration.get('maxPoolSize'),
+                minPoolSize: (int)ldapConfiguration.get('minPoolSize'),
+                validateOnCheckIn: (boolean)ldapConfiguration.get('validateOnCheckIn'),
+                validateOnCheckOut: (boolean)ldapConfiguration.get('validateOnCheckOut'),
+                validatePeriod: (long)ldapConfiguration.get('validatePeriod'),
+                validatePeriodically: (boolean)ldapConfiguration.get('validatePeriodically')
+        )
+        SoftLimitConnectionPool pool = new SoftLimitConnectionPool(
+                poolConfig, defaultConnectionFactory
+        )
+
+        pool.initialize()
+        new PooledConnectionFactory(pool)
+    }
     /**
      * Instantiates the application class with command-line arguments.
      *
