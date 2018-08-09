@@ -15,7 +15,6 @@ import java.util.regex.Pattern
  * Directory entity data access object.
  */
 class DirectoryEntityDAO {
-    private final String LDAP_URL
     private final String BASE_DN
     private final PooledConnectionFactory pooledConnectionFactory
     private static final Pattern illegalCharacterPattern = Pattern.compile(
@@ -71,7 +70,6 @@ class DirectoryEntityDAO {
     public DirectoryEntityDAO(Map<String,Object> ldapConfiguration,
                               PooledConnectionFactory ldapConnectionPool) {
 
-        LDAP_URL = (String)ldapConfiguration.get('url')
         BASE_DN = (String)ldapConfiguration.get('base')
         pooledConnectionFactory = ldapConnectionPool
     }
