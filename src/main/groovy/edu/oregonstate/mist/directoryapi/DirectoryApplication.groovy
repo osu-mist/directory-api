@@ -33,7 +33,7 @@ class DirectoryApplication extends Application<DirectoryApplicationConfiguration
         environment.jersey().register(new DirectoryEntityResource(DIRECTORYENTITYDAO, endpointUri))
     }
 
-    private static configureLdapPool(Map<String,Object> ldapConfiguration) {
+    private static PooledConnectionFactory configureLdapPool(Map<String,Object> ldapConfiguration) {
         def ldapURL = (String) ldapConfiguration.get('url')
         DefaultConnectionFactory defaultConnectionFactory = new DefaultConnectionFactory(ldapURL)
 
