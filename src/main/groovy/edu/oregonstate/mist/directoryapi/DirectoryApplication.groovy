@@ -34,7 +34,7 @@ class DirectoryApplication extends Application<DirectoryApplicationConfiguration
     }
 
     private static PooledConnectionFactory configureLdapPool(Map<String,Object> ldapConfiguration) {
-        def ldapURL = (String) ldapConfiguration.get('url')
+        def ldapURL = (String)ldapConfiguration.get('url')
         DefaultConnectionFactory defaultConnectionFactory = new DefaultConnectionFactory(ldapURL)
 
         PoolConfig poolConfig = new PoolConfig(
