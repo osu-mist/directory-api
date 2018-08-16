@@ -1,6 +1,5 @@
 package edu.oregonstate.mist.directoryapi
 
-import org.ldaptive.DefaultConnectionFactory
 import org.ldaptive.Connection
 import org.ldaptive.LdapEntry
 import org.ldaptive.LdapException
@@ -10,15 +9,12 @@ import org.ldaptive.SearchOperation
 import org.ldaptive.SearchRequest
 import org.ldaptive.SearchResult
 import org.ldaptive.pool.PooledConnectionFactory
-import org.ldaptive.pool.SoftLimitConnectionPool
-import org.ldaptive.pool.PoolConfig
 import java.util.regex.Pattern
 
 /**
  * Directory entity data access object.
  */
 class DirectoryEntityDAO {
-    private final String LDAP_URL
     private final String BASE_DN
     private final PooledConnectionFactory pooledConnectionFactory
     private static final Pattern illegalCharacterPattern = Pattern.compile(
@@ -71,24 +67,11 @@ class DirectoryEntityDAO {
      *
      * @param ldapConfiguration
      */
-    public DirectoryEntityDAO(Map<String,Object> ldapConfiguration) {
-        LDAP_URL = (String)ldapConfiguration.get('url')
-        BASE_DN = (String)ldapConfiguration.get('base')
-        DefaultConnectionFactory defaultConnectionFactory = new DefaultConnectionFactory(LDAP_URL)
-        PoolConfig poolConfig = new PoolConfig(
-                maxPoolSize: (int)ldapConfiguration.get('maxPoolSize'),
-                minPoolSize: (int)ldapConfiguration.get('minPoolSize'),
-                validateOnCheckIn: (boolean)ldapConfiguration.get('validateOnCheckIn'),
-                validateOnCheckOut: (boolean)ldapConfiguration.get('validateOnCheckOut'),
-                validatePeriod: (long)ldapConfiguration.get('validatePeriod'),
-                validatePeriodically: (boolean)ldapConfiguration.get('validatePeriodically')
-        )
-        SoftLimitConnectionPool pool = new SoftLimitConnectionPool(
-                poolConfig, defaultConnectionFactory
-        )
+    public DirectoryEntityDAO(Map<String,Object> ldapConfiguration,
+                              PooledConnectionFactory ldapConnectionPool) {
 
-        pool.initialize()
-        pooledConnectionFactory = new PooledConnectionFactory(pool)
+        BASE_DN = (String)ldapConfiguration.get('base')
+        pooledConnectionFactory = ldapConnectionPool
     }
 
     /**
