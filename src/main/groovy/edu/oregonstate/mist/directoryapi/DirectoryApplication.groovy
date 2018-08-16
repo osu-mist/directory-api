@@ -21,7 +21,8 @@ class DirectoryApplication extends Application<DirectoryApplicationConfiguration
     public void run(DirectoryApplicationConfiguration configuration, Environment environment) {
         this.setup(configuration, environment)
 
-        def ldapConnectionPool = configureLdapPool(configuration.ldapConfiguration)
+        PooledConnectionFactory ldapConnectionPool = configureLdapPool(
+                configuration.ldapConfiguration)
 
         final DirectoryEntityDAO DIRECTORYENTITYDAO = new DirectoryEntityDAO(
                 configuration.ldapConfiguration,
