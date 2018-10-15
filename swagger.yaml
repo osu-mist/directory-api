@@ -9,10 +9,10 @@ info:
 externalDocs:
   description: GitHub Repository
   url: https://github.com/osu-mist/directory-api
-host: localhost
+host: api.oregonstate.edu
 schemes:
   - https
-basePath: /api/v1
+basePath: /v1
 produces:
   - application/json
 paths:
