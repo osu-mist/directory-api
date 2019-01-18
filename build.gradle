@@ -45,8 +45,6 @@ dependencies {
     compile "io.dropwizard:dropwizard-auth:${dropwizardVersion}"
     compile "io.dropwizard:dropwizard-client:${dropwizardVersion}"
     compile "de.thomaskrille:dropwizard-template-config:1.4.0"
-    // compile "io.dropwizard:dropwizard-jdbi:${dropwizardVersion}"
-    // compile ':ojdbc6:'
     compile 'org.ldaptive:ldaptive:1.1.0'
 }
 
