@@ -1,8 +1,8 @@
 swagger: '2.0'
 info:
-  title: OSU Directory Web API
-  description: Web API to search the OSU Online Directory
-  version: "1"
+  title: Directory API
+  description: Web API to search the OSU Online Directory.
+  version: "2"
   license:
     name: GNU Affero General Public License Version 3
     url: http://www.gnu.org/licenses/agpl-3.0.en.html
@@ -12,7 +12,7 @@ externalDocs:
 host: api.oregonstate.edu
 schemes:
   - https
-basePath: /v1
+basePath: /v2
 produces:
   - application/json
 paths:
@@ -63,11 +63,6 @@ paths:
           description: Filter by alternate phone number
           type: string
           required: false
-        - name: homePhoneNumber
-          in: query
-          description: Filter by home phone number
-          type: string
-          required: false
         - name: phoneNumber
           in: query
           description: Filter by any phone number
@@ -94,9 +89,7 @@ paths:
         "200":
           description: Array of directory entities
           schema:
-            type: array
-            items:
-              $ref: "#/definitions/ResultObject"
+            $ref: "#/definitions/ResultObjects"
         "400":
           description: Bad request
           schema:
@@ -139,16 +132,20 @@ parameters:
     required: true
     description: '"Bearer [token]" where [token] is your OAuth2 access token'
 definitions:
-  ResultObject:
+  ResultObjects:
     properties:
       data:
         type: array
         items:
           $ref: "#/definitions/ResourceObject"
+  ResultObject:
+    properties:
+      data:
+        $ref: "#/definitions/ResourceObject"
   ResourceObject:
     properties:
       id:
-        type: integer
+        type: string
       type:
         type: string
         example: "directory"
@@ -172,10 +169,6 @@ definitions:
         type: string
       departmentMailingAddress:
         type: string
-      homePhoneNumber:
-        type: string
-      homeAddress:
-        type: string
       officePhoneNumber:
         type: string
       officeAddress:
@@ -197,21 +190,26 @@ definitions:
       self:
         type: string
   Error:
-    type: object
     properties:
-      status:
-        type: integer
-        format: int32
-        description: HTTP status code.
-      developerMessage:
-        type: string
-        description: An error string aimed at developers.
-      userMesage:
-        type: string
-        description: An error string aimed at end users.
-      code:
-        type: integer
-        description: Error code.
-      details:
-        type: string
-        description: A link to further information about the error.
+      errors:
+        type: array
+        items:
+          properties:
+            status:
+              type: string
+              description: HTTP status code.
+            links:
+              properties:
+                about:
+                  type: string
+                  format: url
+                  description: Link to further information about the error.
+            code:
+              type: string
+              description: Application specific error code.
+            title:
+              type: string
+              description: Short summary of the error.
+            detail:
+              type: string
+              description: A human-readable explanation specific to this occurrence of the problem.
