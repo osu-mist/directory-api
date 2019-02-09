@@ -1,11 +1,15 @@
-swagger: '2.0'
+swagger: "2.0"
 info:
   title: Directory API
   description: Web API to search the OSU Online Directory.
-  version: '2.0'
+  version: "v2"
   license:
     name: GNU Affero General Public License Version 3
     url: http://www.gnu.org/licenses/agpl-3.0.en.html
+  contact:
+    name: IS Data Architecture Team
+    url: https://is.oregonstate.edu/data-architecture
+    email: isdataarchitecture@oregonstate.edu
 externalDocs:
   description: GitHub Repository
   url: https://github.com/osu-mist/directory-api
@@ -83,17 +87,16 @@ paths:
           description: Filter by department
           type: string
           required: false
-        - $ref: '#/parameters/pretty'
-        - $ref: '#/parameters/authorization'
+        - $ref: "#/parameters/authorization"
       responses:
         "200":
           description: Array of directory entities
           schema:
-            $ref: "#/definitions/ResultObjects"
+            $ref: "#/definitions/DirectoryResultObjects"
         "400":
           description: Bad request
           schema:
-            $ref: "#/definitions/Error"
+            $ref: "#/definitions/Errors"
   /directory/{osuuid}:
     get:
       tags:
@@ -107,17 +110,16 @@ paths:
           type: integer
           format: int64
           required: true
-        - $ref: '#/parameters/pretty'
-        - $ref: '#/parameters/authorization'
+        - $ref: "#/parameters/authorization"
       responses:
         "200":
           description: Directory entity
           schema:
-           $ref: "#/definitions/ResultObject"
+           $ref: "#/definitions/DirectoryResultObject"
         "404":
           description: Not found
           schema:
-            $ref: "#/definitions/Error"
+            $ref: "#/definitions/Errors"
 parameters:
   authorization:
     name: Authorization
@@ -125,36 +127,24 @@ parameters:
     type: string
     required: true
     description: '"Bearer [token]" where [token] is your OAuth2 access token'
-  pretty:
-    name: pretty
-    in: query
-    type: boolean
-    required: false
-    description: If true, JSON response will be pretty-printed
-  authorization:
-    name: Authorization
-    in: header
-    type: string
-    required: true
-    description: '"Bearer [token]" where [token] is your OAuth2 access token'
 definitions:
-  ResultObjects:
+  DirectoryResultObjects:
     properties:
       data:
         type: array
         items:
-          $ref: "#/definitions/ResourceObject"
-  ResultObject:
+          $ref: "#/definitions/DirectoryResourceObject"
+  DirectoryResultObject:
     properties:
       data:
-        $ref: "#/definitions/ResourceObject"
-  ResourceObject:
+        $ref: "#/definitions/DirectoryResourceObject"
+  DirectoryResourceObject:
     properties:
       id:
         type: string
       type:
         type: string
-        example: "directory"
+        enum: [directory]
       attributes:
         $ref: "#/definitions/Attributes"
       links:
@@ -195,27 +185,34 @@ definitions:
     properties:
       self:
         type: string
+        format: url
   Error:
+    properties:
+      status:
+        type: string
+        description: HTTP status code
+        example: 123
+      title:
+        type: string
+        description: A short, user readable summary of the error
+        example: Not Found
+      code:
+        type: string
+        description: An application-specific error code
+        example: 1234
+      detail:
+        type: string
+        description: A long description of the error that may contain instance-specific details
+      links:
+        properties:
+          about:
+            type: string
+            format: url
+            description: A link to further information about the error
+            example: https://developer.oregonstate.edu/documentation/error-reference#1234
+  Errors:
     properties:
       errors:
         type: array
         items:
-          properties:
-            status:
-              type: string
-              description: HTTP status code.
-            links:
-              properties:
-                about:
-                  type: string
-                  format: url
-                  description: Link to further information about the error.
-            code:
-              type: string
-              description: Application specific error code.
-            title:
-              type: string
-              description: Short summary of the error.
-            detail:
-              type: string
-              description: A human-readable explanation specific to this occurrence of the problem.
+          $ref: '#/definitions/Error'
