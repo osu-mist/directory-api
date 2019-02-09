@@ -107,8 +107,7 @@ paths:
         - name: osuuid
           in: path
           description: "OSUUID of the person to be fetched."
-          type: integer
-          format: int64
+          type: string
           required: true
         - $ref: "#/parameters/authorization"
       responses:
@@ -179,8 +178,7 @@ definitions:
       alternatePhoneNumber:
         type: string
       osuuid:
-        type: integer
-        format: int64
+        type: string
   ResourceLinks:
     properties:
       self:
