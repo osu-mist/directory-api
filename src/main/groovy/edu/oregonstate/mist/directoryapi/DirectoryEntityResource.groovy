@@ -49,14 +49,36 @@ class DirectoryEntityResource extends Resource {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getBySearchQuery(@QueryParam('q') String searchQuery) {
+    public Response getBySearchQuery(@QueryParam('q') String searchQuery,
+                                     @QueryParam('primaryAffiliation') String primaryAffiliation,
+                                     @QueryParam('lastName') String lastName,
+                                     @QueryParam('emailAddress') String emailAddress,
+                                     @QueryParam('officePhoneNumber') String officePhoneNumber,
+                                     @QueryParam('alternatePhoneNumber') String
+                                                 alternatePhoneNumber,
+                                     @QueryParam('homePhoneNumber') String homePhoneNumber,
+                                     @QueryParam('phoneNumber') String phoneNumber,
+                                     @QueryParam('faxNumber') String faxNumber,
+                                     @QueryParam('officeAddress') String officeAddress,
+                                     @QueryParam('department') String department) {
         ResponseBuilder responseBuilder
-        if (!searchQuery) {
-            responseBuilder = badRequest('Missing query parameter.')
+
+        def queryMap = [
+                searchQuery: searchQuery, primaryAffiliation: primaryAffiliation,
+                lastName: lastName, emailAddress: emailAddress,
+                officePhoneNumber: officePhoneNumber, alternatePhoneNumber: alternatePhoneNumber,
+                homePhoneNumber: homePhoneNumber, phoneNumber: phoneNumber, faxNumber: faxNumber,
+                officeAddress: officeAddress, department: department
+        ]
+
+        def includedQueryParameters = queryMap.findAll { it.value }.collect { it.key }
+
+        if (includedQueryParameters.size() == 0) {
+            responseBuilder = badRequest('No search parameters provided.')
         } else {
             try {
                 List<DirectoryEntity> directoryEntities = directoryEntityDAO.getBySearchQuery(
-                        searchQuery
+                        queryMap.subMap(includedQueryParameters)
                 )
 
                 ResultObject resultObject = new ResultObject(
@@ -74,7 +96,7 @@ class DirectoryEntityResource extends Resource {
                 responseBuilder = ok(resultObject)
             } catch (LdapException ldapException) {
                 logger.error("Ldap Exception thrown when getting by search query", ldapException)
-                responseBuilder = internalServerError(ldapException.message)
+                responseBuilder = badRequest(ldapException.message)
             }
         }
         responseBuilder.build()

@@ -1,8 +1,11 @@
 package edu.oregonstate.mist.directoryapi
 
+import groovy.transform.EqualsAndHashCode
+
 /**
  * Directory entity representation class.
  */
+@EqualsAndHashCode
 class DirectoryEntity {
     String firstName
     String lastName
@@ -18,14 +21,6 @@ class DirectoryEntity {
     String faxNumber
     String emailAddress
     String username
+    String alternatePhoneNumber
     Long osuuid
-
-    @Override
-    public boolean equals(Object that) {
-        if (that instanceof DirectoryEntity) {
-            return (this.osuuid == that.osuuid)
-        } else {
-            return false
-        }
-    }
 }

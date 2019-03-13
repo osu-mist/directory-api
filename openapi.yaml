@@ -1,0 +1,216 @@
+swagger: "2.0"
+info:
+  title: Directory API
+  description: Web API to search the OSU Online Directory.
+  version: "v2"
+  license:
+    name: GNU Affero General Public License Version 3
+    url: http://www.gnu.org/licenses/agpl-3.0.en.html
+  contact:
+    name: IS Data Architecture Team
+    url: https://is.oregonstate.edu/data-architecture
+    email: isdataarchitecture@oregonstate.edu
+externalDocs:
+  description: GitHub Repository
+  url: https://github.com/osu-mist/directory-api
+host: api.oregonstate.edu
+schemes:
+  - https
+basePath: /v2
+produces:
+  - application/json
+paths:
+  /directory:
+    get:
+      tags:
+        - directory
+      operationId: getBySearchQuery
+      description: Get entries in directory matching all terms in search query
+      produces:
+        - application/json
+      parameters:
+        - name: q
+          in: query
+          description: |
+            For basic directory searches. Searches by username, full name,
+            and email address.
+          type: string
+          required: false
+        - name: primaryAffiliation
+          in: query
+          description: Filter by primary affiliation
+          type: string
+          required: false
+          enum:
+            - Employee
+            - Other
+            - Retiree
+            - Student
+            - Unknown
+        - name: lastName
+          in: query
+          description: Filter by last name
+          type: string
+          required: false
+        - name: emailAddress
+          in: query
+          description: Filter by email address
+          type: string
+          required: false
+        - name: officePhoneNumber
+          in: query
+          description: Filter by office phone number
+          type: string
+          required: false
+        - name: alternatePhoneNumber
+          in: query
+          description: Filter by alternate phone number
+          type: string
+          required: false
+        - name: phoneNumber
+          in: query
+          description: Filter by any phone number
+          type: string
+          required: false
+        - name: faxNumber
+          in: query
+          description: Filter by fax number
+          type: string
+          required: false
+        - name: officeAddress
+          in: query
+          description: Filter by office address
+          type: string
+          required: false
+        - name: department
+          in: query
+          description: Filter by department
+          type: string
+          required: false
+        - $ref: "#/parameters/authorization"
+      responses:
+        "200":
+          description: Array of directory entities
+          schema:
+            $ref: "#/definitions/DirectoryResultObjects"
+        "400":
+          description: Bad request
+          schema:
+            $ref: "#/definitions/Errors"
+  /directory/{osuuid}:
+    get:
+      tags:
+      - directory
+      operationId: getByOSUUID
+      description: Get entries in directory filtered by query parameters
+      parameters:
+        - name: osuuid
+          in: path
+          description: "OSUUID of the person to be fetched."
+          type: string
+          required: true
+        - $ref: "#/parameters/authorization"
+      responses:
+        "200":
+          description: Directory entity
+          schema:
+           $ref: "#/definitions/DirectoryResultObject"
+        "404":
+          description: Not found
+          schema:
+            $ref: "#/definitions/Errors"
+parameters:
+  authorization:
+    name: Authorization
+    in: header
+    type: string
+    required: true
+    description: '"Bearer [token]" where [token] is your OAuth2 access token'
+definitions:
+  DirectoryResultObjects:
+    properties:
+      data:
+        type: array
+        items:
+          $ref: "#/definitions/DirectoryResourceObject"
+  DirectoryResultObject:
+    properties:
+      data:
+        $ref: "#/definitions/DirectoryResourceObject"
+  DirectoryResourceObject:
+    properties:
+      id:
+        type: string
+      type:
+        type: string
+        enum: [directory]
+      attributes:
+        $ref: "#/definitions/Attributes"
+      links:
+        $ref: "#/definitions/ResourceLinks"
+  Attributes:
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      fullName:
+        type: string
+      primaryAffiliation:
+        type: string
+      jobTitle:
+        type: string
+      department:
+        type: string
+      departmentMailingAddress:
+        type: string
+      officePhoneNumber:
+        type: string
+      officeAddress:
+        type: string
+      faxNumber:
+        type: string
+      emailAddress:
+        type: string
+        format: email
+      username:
+        type: string
+      alternatePhoneNumber:
+        type: string
+      osuuid:
+        type: string
+  ResourceLinks:
+    properties:
+      self:
+        type: string
+        format: url
+  Error:
+    properties:
+      status:
+        type: string
+        description: HTTP status code
+        example: 123
+      title:
+        type: string
+        description: A short, user readable summary of the error
+        example: Not Found
+      code:
+        type: string
+        description: An application-specific error code
+        example: 1234
+      detail:
+        type: string
+        description: A long description of the error that may contain instance-specific details
+      links:
+        properties:
+          about:
+            type: string
+            format: url
+            description: A link to further information about the error
+            example: https://developer.oregonstate.edu/documentation/error-reference#1234
+  Errors:
+    properties:
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/Error'

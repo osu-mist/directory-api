@@ -22,6 +22,11 @@ abstract class Resource {
      */
     public static final Integer DEFAULT_PAGE_SIZE = 10
 
+    /**
+     * Default max page size used in pagination.
+     */
+    public static Integer MAX_PAGE_SIZE = 10000
+
     @Context
     UriInfo uriInfo
 
@@ -61,45 +66,111 @@ abstract class Resource {
     }
 
     /**
-     * Returns a builder for an HTTP 400 ("bad request") response with an error message as body.
+     * Returns a builder for an HTTP 202 ("accepted") response with the argument entity as body.
+     * @param entity
+     * @return
+     */
+    protected static ResponseBuilder accepted(Object entity) {
+        Response.status(Response.Status.ACCEPTED)
+                .entity(entity)
+    }
+
+    /**
+     * Returns a builder for an HTTP 204 ("no content") response.
+     * @param entity
+     * @return
+     */
+    protected static ResponseBuilder noContent() {
+        Response.status(Response.Status.NO_CONTENT)
+    }
+
+    /**
+     * Returns a builder for an HTTP 400 ("bad request") response with message argument as detail
      *
      * @param message
      * @return bad request response builder
      */
-    protected static ResponseBuilder badRequest(String message) {
+    protected static ResponseBuilder badRequest(String message='') {
         Response.status(Response.Status.BAD_REQUEST)
-                .entity(Error.badRequest(message))
+                .entity(new ErrorResultObject(
+                    errors:[Error.badRequest(message)])
+                )
     }
 
     /**
-     * Returns a builder for an HTTP 404 ("not found") response with an error message as body.
+     * Returns a builder for an HTTP 400 when page[size] exceeds MAX_PAGE_SIZE
+     *
+     * @return bad request response builder
+     */
+    protected static ResponseBuilder pageSizeExceededError() {
+        Response.status(Response.Status.BAD_REQUEST)
+                .entity(new ErrorResultObject(
+                    errors:[Error.badRequest("page[size] cannot exceed ${MAX_PAGE_SIZE}.")])
+                )
+    }
+
+    /**
+     * Returns a builder for an HTTP 403 ("forbidden") response with message argument as detail
+     *
+     * @return forbidden response builder
+     */
+    protected static ResponseBuilder forbidden(String message='') {
+        Response.status(Response.Status.FORBIDDEN)
+                .entity(new ErrorResultObject(
+                    errors:[Error.forbidden(message)])
+                )
+    }
+
+    /**
+     * Returns a builder for an HTTP 404 ("not found") response with message argument as detail
      *
      * @return not found response builder
      */
-    protected static ResponseBuilder notFound() {
+    protected static ResponseBuilder notFound(String message='') {
         Response.status(Response.Status.NOT_FOUND)
-                .entity(Error.notFound())
+                .entity(new ErrorResultObject(
+                    errors:[Error.notFound(message)])
+                )
     }
 
     /**
-     * Returns a builder for an HTTP 409 ("conflict") response with an error message as body.
+     * Returns a builder for an HTTP 409 ("conflict") response with message argument as detail
      *
      * @return conflict response builder
      */
-    protected static ResponseBuilder conflict() {
+    protected static ResponseBuilder conflict(String message='') {
         Response.status(Response.Status.CONFLICT)
-                .entity(Error.conflict())
+                .entity(new ErrorResultObject(
+                    errors:[Error.conflict(message)])
+                )
     }
 
     /**
-     * Returns a builder for an HTTP 500 ("internal server error") response with an error message
-     * as body.
+     * Returns a builder for an HTTP 500 ("internal server error") response
+     *    with message argument as detail
      *
      * @return internal server error response builder
      */
-    protected static ResponseBuilder internalServerError(String message) {
+    protected static ResponseBuilder internalServerError(String message='') {
         Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity(Error.internalServerError(message))
+                .entity(new ErrorResultObject(
+                    errors:[Error.internalServerError(message)])
+                )
+    }
+
+    /**
+     * Returns a builder for an error response with multiple errors in the errors object
+     *
+     * Usage: compoundError([Error.notFound(), Error.forbidden()], 400).build()
+     *
+     * @param errors is a list of Error objects
+     * @param status is the HTTP response code for the compound eror response. The developer
+     *      is responsible for supplying "the most generally applicable HTTP error code"
+     * @return compound error response builder
+     */
+    protected static ResponseBuilder compoundError(List<Error> errors, int status) {
+            Response.status(status)
+                    .entity(new ErrorResultObject(errors: errors))
     }
 
     /**
@@ -142,7 +213,7 @@ abstract class Resource {
      */
     protected Integer getPageNumber() {
         def pageNumber = uriInfo.getQueryParameters().getFirst('page[number]')
-        if (!pageNumber || !pageNumber.isInteger() || pageNumber.toInteger() < 0) {
+        if (!pageNumber || !pageNumber.isInteger() || pageNumber.toInteger() <= 0) {
             return DEFAULT_PAGE_NUMBER
         }
 
@@ -156,10 +227,19 @@ abstract class Resource {
      */
     protected Integer getPageSize() {
         def pageSize = uriInfo.getQueryParameters().getFirst('page[size]')
-        if (!pageSize || !pageSize.isInteger() || pageSize.toInteger() < 0) {
+        if (!pageSize || !pageSize.isInteger() || pageSize.toInteger() <= 0) {
             return DEFAULT_PAGE_SIZE
         }
 
         pageSize.toInteger()
+    }
+
+    /**
+     * Returns true if page[size] exceeds MAX_PAGE_SIZE
+     *
+     * @return
+     */
+    protected Boolean maxPageSizeExceeded() {
+        getPageSize() > MAX_PAGE_SIZE
     }
 }
