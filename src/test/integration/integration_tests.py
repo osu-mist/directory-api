@@ -77,7 +77,7 @@ class gateway_tests(unittest.TestCase):
             self.assertEquals(response.json()['data'][0]['attributes']['username'], good_uid)
 
     def test_unicode(self):
-        unicode_name = 'Vásquez Jiménez'
+        unicode_name = 'Vásquez'
         response = self._request("", q=unicode_name)
         self.assertEquals(response.status_code, 200)
         json = response.json()

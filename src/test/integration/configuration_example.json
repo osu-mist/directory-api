@@ -8,8 +8,8 @@
     "client_id": "secret",
     "client_secret": "sauce",
 
-    "good_name": "Mark Baldwin",
-    "good_osuuid": "51646559347",
-    "middle_cn_search": "Michael Takumi",
-    "partial_email": "ldwin@oregonstate.edu"
+    "good_name": "full-name",
+    "good_osuuid": "uid",
+    "middle_cn_search": "middle-name",
+    "partial_email": "full-email"
 }
