@@ -156,6 +156,8 @@ definitions:
         type: string
       fullName:
         type: string
+      givenName:
+        type: string
       primaryAffiliation:
         type: string
       jobTitle:
