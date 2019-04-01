@@ -1,6 +1,6 @@
 const appRoot = require('app-root-path');
 
-const petsDao = require('../../db/json/pets-dao-example');
+const directoryDao = require('../../db/ldap/directory-dao');
 
 const { errorBuilder, errorHandler } = appRoot.require('errors/errors');
 const { openapi: { paths } } = appRoot.require('utils/load-openapi');
@@ -11,9 +11,9 @@ const { openapi: { paths } } = appRoot.require('utils/load-openapi');
 const get = async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await petsDao.getPetById(id);
+    const result = await directoryDao.getDirectoryByUId(id);
     if (!result) {
-      errorBuilder(res, 404, 'A pet with the specified ID was not found.');
+      errorBuilder(res, 404, 'A directory with the specified UID was not found.');
     } else {
       res.send(result);
     }
@@ -22,6 +22,6 @@ const get = async (req, res) => {
   }
 };
 
-get.apiDoc = paths['/pets/{id}'].get;
+get.apiDoc = paths['/directory/{osuuid}'].get;
 
 module.exports = { get };
