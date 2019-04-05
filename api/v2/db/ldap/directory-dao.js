@@ -15,6 +15,7 @@ const getDirectories = endpointQuery => new Promise(async (resolve, reject) => {
     var client = ldap.createClient({
        url: ldapConfig.url
     });
+
     client.search('o=orst.edu', {filter: ldapQuery, scope: 'sub'} , function(err,res) {
        res.on('searchEntry', function(entry) {
            resolve(entry.object)
@@ -44,19 +45,34 @@ const getDirectories = endpointQuery => new Promise(async (resolve, reject) => {
    } = endpointQuery;
 
    const keyMap = new Map([
+      ['q', '|(uid'],   // begin 'or' condition
       ['primaryAffiliation', 'osuPrimaryAffiliation'],
       ['lastName', 'sn'],
       ['emailAddress', 'mail'],
       ['officePhoneNumber', 'telephoneNumber'],
       ['alternatePhoneNumber', ' osuAltPhoneNumber'],
       ['faxNumber', 'facsimileTelephoneNumber'],
-      ['phoneNumber', '|(telephoneNumber'],    // begin or condition for any type of number
+      ['phoneNumber', '|(telephoneNumber'],    // begin 'or' condition for any type of number
       ['officeAddress', 'osuOfficeAddress'],
       ['department', 'osuDepartment']
    ]);
 
    const valueOperations = (key, value) => {
        switch (key) {
+           case 'q':
+             var q_filters = `*${value}*)(mail=*${value}*)`;
+             valueTerms = value.split(/[ ,]+/);
+             for (i = 0; i <= valueTerms.length; i++) {
+                 var firstName = ''
+                 var lastName = ''
+                 for (j = 0; j < i; j++) firstName += `${valueTerms[j]} `;
+                 for (j = i; j < valueTerms.length; j++) lastName += `${valueTerms[j]} `;
+                 q_filters += `(cn=${firstName.slice(0,-1)}*, ${lastName.slice(0,-1)}*)`;
+                 q_filters += `(cn=${lastName.slice(0,-1)}*, ${firstName.slice(0,-1)}*)`;
+             }
+             return q_filters;
+           break;
+
            case 'primaryAffiliation':
              return new Map([
                ['Student', 'S',],
