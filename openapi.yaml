@@ -1,243 +1,218 @@
-openapi: 3.0.1
+swagger: "2.0"
 info:
   title: Directory API
   description: Web API to search the OSU Online Directory.
+  version: "v2"
+  license:
+    name: GNU Affero General Public License Version 3
+    url: http://www.gnu.org/licenses/agpl-3.0.en.html
   contact:
     name: IS Data Architecture Team
     url: https://is.oregonstate.edu/data-architecture
     email: isdataarchitecture@oregonstate.edu
-  license:
-    name: GNU Affero General Public License Version 3
-    url: http://www.gnu.org/licenses/agpl-3.0.en.html
-  version: v2
 externalDocs:
   description: GitHub Repository
   url: https://github.com/osu-mist/directory-api
-servers:
-- url: https://api.oregonstate.edu/v2
+host: api.oregonstate.edu
+schemes:
+  - https
+basePath: /v2
+produces:
+  - application/json
 paths:
   /directory:
     get:
       tags:
-      - directory
-      description: Get entries in directory matching all terms in search query
+        - directory
       operationId: getBySearchQuery
+      description: Get entries in directory matching all terms in search query
+      produces:
+        - application/json
       parameters:
-      - name: q
-        in: query
-        description: |
-          For basic directory searches. Searches by username, full name,
-          and email address.
-        schema:
+        - name: q
+          in: query
+          description: |
+            For basic directory searches. Searches by username, full name,
+            and email address.
           type: string
-      - name: primaryAffiliation
-        in: query
-        description: Filter by primary affiliation
-        schema:
+          required: false
+        - name: primaryAffiliation
+          in: query
+          description: Filter by primary affiliation
           type: string
+          required: false
           enum:
-          - Employee
-          - Other
-          - Retiree
-          - Student
-          - Unknown
-      - name: lastName
-        in: query
-        description: Filter by last name
-        schema:
+            - Employee
+            - Other
+            - Retiree
+            - Student
+            - Unknown
+        - name: lastName
+          in: query
+          description: Filter by last name
           type: string
-      - name: emailAddress
-        in: query
-        description: Filter by email address
-        schema:
+          required: false
+        - name: emailAddress
+          in: query
+          description: Filter by email address
           type: string
-      - name: officePhoneNumber
-        in: query
-        description: Filter by office phone number
-        schema:
+          required: false
+        - name: officePhoneNumber
+          in: query
+          description: Filter by office phone number
           type: string
-      - name: alternatePhoneNumber
-        in: query
-        description: Filter by alternate phone number
-        schema:
+          required: false
+        - name: alternatePhoneNumber
+          in: query
+          description: Filter by alternate phone number
           type: string
-      - name: phoneNumber
-        in: query
-        description: Filter by any phone number
-        schema:
+          required: false
+        - name: phoneNumber
+          in: query
+          description: Filter by any phone number
           type: string
-      - name: faxNumber
-        in: query
-        description: Filter by fax number
-        schema:
+          required: false
+        - name: faxNumber
+          in: query
+          description: Filter by fax number
           type: string
-      - name: officeAddress
-        in: query
-        description: Filter by office address
-        schema:
+          required: false
+        - name: officeAddress
+          in: query
+          description: Filter by office address
           type: string
-      - name: department
-        in: query
-        description: Filter by department
-        schema:
+          required: false
+        - name: department
+          in: query
+          description: Filter by department
           type: string
-      - name: Authorization
-        in: header
-        description: '"Bearer [token]" where [token] is your OAuth2 access token'
-        required: true
-        schema:
-          type: string
+          required: false
+        - $ref: "#/parameters/authorization"
       responses:
-        200:
+        "200":
           description: Array of directory entities
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DirectoryResultObjects'
-        400:
+          schema:
+            $ref: "#/definitions/DirectoryResultObjects"
+        "400":
           description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Errors'
+          schema:
+            $ref: "#/definitions/Errors"
   /directory/{osuuid}:
     get:
       tags:
       - directory
-      description: Get entries in directory filtered by query parameters
       operationId: getByOSUUID
+      description: Get entries in directory filtered by query parameters
       parameters:
-      - name: osuuid
-        in: path
-        description: OSUUID of the person to be fetched.
-        required: true
-        schema:
+        - name: osuuid
+          in: path
+          description: "OSUUID of the person to be fetched."
           type: string
-      - name: Authorization
-        in: header
-        description: '"Bearer [token]" where [token] is your OAuth2 access token'
-        required: true
-        schema:
-          type: string
+          required: true
+        - $ref: "#/parameters/authorization"
       responses:
-        200:
+        "200":
           description: Directory entity
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DirectoryResultObject'
-        404:
+          schema:
+           $ref: "#/definitions/DirectoryResultObject"
+        "404":
           description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Errors'
-components:
-  schemas:
-    Errors:
-      type: object
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/Error'
-    DirectoryResultObject:
-      type: object
-      properties:
-        data:
-          $ref: '#/components/schemas/DirectoryResourceObject'
-    DirectoryResourceObject:
-      type: object
-      properties:
-        id:
-          type: string
-        type:
-          type: string
-          enum:
-          - directory
-        attributes:
-          $ref: '#/components/schemas/Attributes'
-        links:
-          $ref: '#/components/schemas/ResourceLinks'
-    Attributes:
-      type: object
-      properties:
-        firstName:
-          type: string
-        lastName:
-          type: string
-        fullName:
-          type: string
-        givenName:
-          type: string
-        primaryAffiliation:
-          type: string
-        jobTitle:
-          type: string
-        department:
-          type: string
-        departmentMailingAddress:
-          type: string
-        officePhoneNumber:
-          type: string
-        officeAddress:
-          type: string
-        faxNumber:
-          type: string
-        emailAddress:
-          type: string
-          format: email
-        username:
-          type: string
-        alternatePhoneNumber:
-          type: string
-        osuuid:
-          type: string
-    ResourceLinks:
-      type: object
-      properties:
-        self:
-          type: string
-          format: url
-    Error:
-      type: object
-      properties:
-        status:
-          type: string
-          description: HTTP status code
-          example: "123"
-        title:
-          type: string
-          description: A short, user readable summary of the error
-          example: Not Found
-        code:
-          type: string
-          description: An application-specific error code
-          example: "1234"
-        detail:
-          type: string
-          description: A long description of the error that may contain instance-specific
-            details
-        links:
-          type: object
-          properties:
-            about:
-              type: string
-              description: A link to further information about the error
-              format: url
-              example: https://developer.oregonstate.edu/documentation/error-reference#1234
-    DirectoryResultObjects:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/DirectoryResourceObject'
-  parameters:
-    authorization:
-      name: Authorization
-      in: header
-      description: '"Bearer [token]" where [token] is your OAuth2 access token'
-      required: true
-      schema:
+          schema:
+            $ref: "#/definitions/Errors"
+parameters:
+  authorization:
+    name: Authorization
+    in: header
+    type: string
+    required: true
+    description: '"Bearer [token]" where [token] is your OAuth2 access token'
+definitions:
+  DirectoryResultObjects:
+    properties:
+      data:
+        type: array
+        items:
+          $ref: "#/definitions/DirectoryResourceObject"
+  DirectoryResultObject:
+    properties:
+      data:
+        $ref: "#/definitions/DirectoryResourceObject"
+  DirectoryResourceObject:
+    properties:
+      id:
         type: string
+      type:
+        type: string
+        enum: [directory]
+      attributes:
+        $ref: "#/definitions/Attributes"
+      links:
+        $ref: "#/definitions/ResourceLinks"
+  Attributes:
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+      fullName:
+        type: string
+      givenName:
+        type: string
+      primaryAffiliation:
+        type: string
+      jobTitle:
+        type: string
+      department:
+        type: string
+      departmentMailingAddress:
+        type: string
+      officePhoneNumber:
+        type: string
+      officeAddress:
+        type: string
+      faxNumber:
+        type: string
+      emailAddress:
+        type: string
+        format: email
+      username:
+        type: string
+      alternatePhoneNumber:
+        type: string
+      osuuid:
+        type: string
+  ResourceLinks:
+    properties:
+      self:
+        type: string
+        format: url
+  Error:
+    properties:
+      status:
+        type: string
+        description: HTTP status code
+        example: 123
+      title:
+        type: string
+        description: A short, user readable summary of the error
+        example: Not Found
+      code:
+        type: string
+        description: An application-specific error code
+        example: 1234
+      detail:
+        type: string
+        description: A long description of the error that may contain instance-specific details
+      links:
+        properties:
+          about:
+            type: string
+            format: url
+            description: A link to further information about the error
+            example: https://developer.oregonstate.edu/documentation/error-reference#1234
+  Errors:
+    properties:
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/Error'
