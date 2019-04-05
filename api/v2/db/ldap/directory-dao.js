@@ -15,7 +15,6 @@ const getDirectories = endpointQuery => new Promise(async (resolve, reject) => {
     var client = ldap.createClient({
        url: ldapConfig.url
     });
-    resolve(ldapQuery)
     client.search('o=orst.edu', {filter: ldapQuery, scope: 'sub'} , function(err,res) {
        res.on('searchEntry', function(entry) {
            resolve(entry.object)
@@ -51,7 +50,7 @@ const getDirectories = endpointQuery => new Promise(async (resolve, reject) => {
       ['officePhoneNumber', 'telephoneNumber'],
       ['alternatePhoneNumber', ' osuAltPhoneNumber'],
       ['faxNumber', 'facsimileTelephoneNumber'],
-      ['phoneNumber', '|(officePhoneNumber'],    // begin or condition for any type of number
+      ['phoneNumber', '|(telephoneNumber'],    // begin or condition for any type of number
       ['officeAddress', 'osuOfficeAddress'],
       ['department', 'osuDepartment']
    ]);
@@ -69,11 +68,11 @@ const getDirectories = endpointQuery => new Promise(async (resolve, reject) => {
            break;
 
            case 'phoneNumber':
-             return `${value})(osuAltPhoneNumber=${value})(facsimileTelephoneNumber=${value})`;
+             return `*${value}*)(osuAltPhoneNumber=*${value}*)(facsimileTelephoneNumber=*${value}*)`;
            break;
 
            default:
-             return value;
+             return `*${value}*`;
        }
    }
 
