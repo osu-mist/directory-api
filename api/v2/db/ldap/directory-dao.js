@@ -59,19 +59,20 @@ const getDirectories = endpointQuery => new Promise(async (resolve, reject) => {
 
    const valueOperations = (key, value) => {
        switch (key) {
-           case 'q':
-             var q_filters = `*${value}*)(mail=*${value}*)`;
-             valueTerms = value.split(/[ ,]+/);
-             for (i = 0; i <= valueTerms.length; i++) {
-                 var firstName = ''
-                 var lastName = ''
-                 for (j = 0; j < i; j++) firstName += `${valueTerms[j]} `;
-                 for (j = i; j < valueTerms.length; j++) lastName += `${valueTerms[j]} `;
-                 q_filters += `(cn=${firstName.slice(0,-1)}*, ${lastName.slice(0,-1)}*)`;
-                 q_filters += `(cn=${lastName.slice(0,-1)}*, ${firstName.slice(0,-1)}*)`;
-             }
-             return q_filters;
-           break;
+         case 'q':
+           var q_filters = `*${value}*)(mail=*${value}*)`;
+           valueTerms = value.split(/[ ,]+/);
+
+           for (commaIndex = 0; commaIndex <= valueTerms.length; commaIndex++) {
+             var firstName = '*';
+             var lastName = '*';
+             for (i = 0; i < commaIndex; i++) firstName += `${valueTerms[i]} `;
+             for (i = commaIndex; i < valueTerms.length; i++) lastName += `${valueTerms[i]} `;
+             q_filters += `(cn=${firstName.slice(0,-1)}*, ${lastName.slice(0,-1)}*)`;
+             q_filters += `(cn=${lastName.slice(0,-1)}*, ${firstName.slice(0,-1)}*)`;
+           }
+           return q_filters;
+         break;
 
            case 'primaryAffiliation':
              return new Map([
