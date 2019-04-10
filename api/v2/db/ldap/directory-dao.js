@@ -45,57 +45,61 @@ const getDirectories = endpointQuery => new Promise(async (resolve, reject) => {
    } = endpointQuery;
 
    const keyMap = new Map([
-      ['q', '|(uid'],   // begin 'or' condition
+      ['fuzzyName', 'cn'],
       ['primaryAffiliation', 'osuPrimaryAffiliation'],
+      ['onid', 'uid'],
       ['lastName', 'sn'],
       ['emailAddress', 'mail'],
       ['officePhoneNumber', 'telephoneNumber'],
-      ['alternatePhoneNumber', ' osuAltPhoneNumber'],
+      ['alternatePhoneNumber', 'osuAltPhoneNumber'],
       ['faxNumber', 'facsimileTelephoneNumber'],
-      ['phoneNumber', '|(telephoneNumber'],    // begin 'or' condition for any type of number
+      ['phoneNumber', 'telephoneNumber'],
       ['officeAddress', 'osuOfficeAddress'],
       ['department', 'osuDepartment']
    ]);
 
-   const valueOperations = (key, value) => {
+   const keyOperations = (key, value) => {
        switch (key) {
-         case 'q':
-           var q_filters = `*${value}*)(mail=*${value}*)`;
+         case 'fuzzyName':
+           var fuzzy_filters = '|';   // 'or' condition for all name orderings
            valueTerms = value.split(/[ ,]+/);
 
-           for (commaIndex = 0; commaIndex <= valueTerms.length; commaIndex++) {
+           // Loop through possible splits of query into first and last names
+           for (commaIndex = 1; commaIndex <= valueTerms.length; commaIndex++) {
              var firstName = '*';
              var lastName = '*';
              for (i = 0; i < commaIndex; i++) firstName += `${valueTerms[i]} `;
              for (i = commaIndex; i < valueTerms.length; i++) lastName += `${valueTerms[i]} `;
-             q_filters += `(cn=${firstName.slice(0,-1)}*, ${lastName.slice(0,-1)}*)`;
-             q_filters += `(cn=${lastName.slice(0,-1)}*, ${firstName.slice(0,-1)}*)`;
+             // Consider first, last ordering and last, first ordering
+             fuzzy_filters += `(${keyMap.get(key)}=${firstName.slice(0,-1)}*, ${lastName.slice(0,-1)}*)`;
+             fuzzy_filters += `(${keyMap.get(key)}=${lastName.slice(0,-1)}*, ${firstName.slice(0,-1)}*)`;
            }
-           return q_filters;
+           return fuzzy_filters;
          break;
 
            case 'primaryAffiliation':
-             return new Map([
+             return `${keyMap.get(key)}=${new Map([
                ['Student', 'S',],
                ['Employee', 'E',],
                ['Other', 'O',],
                ['Retiree', 'R',],
                ['Unknown', 'U',]
-             ]).get(value);
+             ]).get(value)}`;
            break;
 
            case 'phoneNumber':
-             return `*${value}*)(osuAltPhoneNumber=*${value}*)(facsimileTelephoneNumber=*${value}*)`;
+             return `|(${keyMap.get(key)}=*${value}*)(${keyMap.get('alternatePhoneNumber')}=*${value}*)` +
+                    `(${keyMap.get('faxNumber')}=*${value}*)`;
            break;
 
            default:
-             return `*${value}*`;
+             return `${keyMap.get(key)}=*${value}*`;
        }
    }
 
    var ldapQuery = '(&'    // begin requiring all conditions
    for (const [key, value] of Object.entries(endpointQuery)) {
-       ldapQuery += `(${keyMap.get(key)}=${valueOperations(key, value)})`;
+       ldapQuery += `(${keyOperations(key, value)})`;
    }
    ldapQuery += ')'     // end requiring all conditions
 
