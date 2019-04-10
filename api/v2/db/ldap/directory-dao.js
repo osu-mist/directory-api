@@ -13,12 +13,19 @@ const getDirectories = endpointQuery => new Promise(async (resolve, reject) => {
     const ldapQuery = mapQuery(endpointQuery);
 
     var client = ldap.createClient({
-       url: ldapConfig.url
+      url: ldapConfig.url
     });
 
+    searchResults = [];
     client.search('o=orst.edu', {filter: ldapQuery, scope: 'sub'} , function(err,res) {
        res.on('searchEntry', function(entry) {
-           resolve(entry.object)
+         searchResults.push(entry.object);
+       });
+       res.on('error', function(err) {
+         reject(err)
+       });
+       res.on('end', function(result) {
+         resolve(searchResults)
        });
     });
 
@@ -99,7 +106,7 @@ const getDirectories = endpointQuery => new Promise(async (resolve, reject) => {
 
    var ldapQuery = '(&'    // begin requiring all conditions
    for (const [key, value] of Object.entries(endpointQuery)) {
-       ldapQuery += `(${keyOperations(key, value)})`;
+     ldapQuery += `(${keyOperations(key, value)})`;
    }
    ldapQuery += ')'     // end requiring all conditions
 
