@@ -6,6 +6,31 @@ const { serializeDirectories, serializeDirectory } = require('../../serializers/
 var ldap = require('ldapjs');
 
 /**
+ * @summary Return a directory
+ * @function
+ * @returns {Promise} Promise object represents a directory
+ */
+const getDirectory = pathParameter => new Promise(async (resolve, reject) => {
+  try {
+    var client = ldap.createClient({
+      url: ldapConfig.url
+    });
+    console.log(`osuUID=${pathParameter}`);
+    client.search('o=orst.edu', {filter: `osuUID=${pathParameter}`, scope: 'sub'} , function(err,res) {
+       res.on('searchEntry', function(entry) {
+         resolve(serializeDirectory(entry.object));
+       });
+       res.on('error', function(err) {
+         reject(err);
+       });
+    });
+
+  } catch (err) {
+    reject(err);
+  }
+});
+
+/**
  * @summary Return a list of directories
  * @function
  * @returns {Promise} Promise object represents a list of directories
@@ -115,4 +140,4 @@ const getDirectories = endpointQuery => new Promise(async (resolve, reject) => {
    return ldapQuery;
  }
 
-module.exports = { getDirectories };
+module.exports = { getDirectory, getDirectories };
