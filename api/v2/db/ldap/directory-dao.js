@@ -1,6 +1,8 @@
 const config = require('config');
 const ldapConfig = config.get('dataSources').ldap;
 
+const { serializeDirectories, serializeDirectory } = require('../../serializers/directory-serializer');
+
 var ldap = require('ldapjs');
 
 /**
@@ -22,10 +24,10 @@ const getDirectories = endpointQuery => new Promise(async (resolve, reject) => {
          searchResults.push(entry.object);
        });
        res.on('error', function(err) {
-         reject(err)
+         reject(err);
        });
        res.on('end', function(result) {
-         resolve(searchResults)
+         resolve(serializeDirectories(searchResults, endpointQuery));
        });
     });
 
