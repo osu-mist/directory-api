@@ -137,6 +137,8 @@ definitions:
         type: array
         items:
           $ref: "#/definitions/DirectoryResourceObject"
+      links:
+        $ref: "#/definitions/ResourceLinks"
   DirectoryResultObject:
     properties:
       data:
