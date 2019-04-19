@@ -35,29 +35,24 @@ const getDirectory = pathParameter => new Promise(async (resolve, reject) => {
  * @returns {Promise} Promise object represents a list of directories
  */
 const getDirectories = endpointQuery => new Promise(async (resolve, reject) => {
-  try {
-    const ldapQuery = mapQuery(endpointQuery);
+  const ldapQuery = mapQuery(endpointQuery);
 
-    var client = ldap.createClient({
-      url: ldapConfig.url
-    });
+  var client = ldap.createClient({
+    url: ldapConfig.url
+  });
 
-    searchResults = [];
-    client.search('o=orst.edu', {filter: ldapQuery, scope: 'sub'} , function(err,res) {
-       res.on('searchEntry', function(entry) {
-         searchResults.push(entry.object);
-       });
-       res.on('error', function(err) {
-         reject(err);
-       });
-       res.on('end', function(result) {
-         resolve(serializeDirectories(searchResults, endpointQuery));
-       });
-    });
-
-  } catch (err) {
-    reject(err);
-  }
+  searchResults = [];
+  client.search('o=orst.edu', {filter: ldapQuery, scope: 'sub'} , function(err,res) {
+     res.on('searchEntry', function(entry) {
+       searchResults.push(entry.object);
+     });
+     res.on('error', function(error) {
+       reject(error);
+     });
+     res.on('end', function(result) {
+       resolve(serializeDirectories(searchResults, endpointQuery));
+     });
+  });
 });
 
 /**
@@ -94,6 +89,10 @@ const getDirectories = endpointQuery => new Promise(async (resolve, reject) => {
 
    const keyOperations = (key, value) => {
        switch (key) {
+         case 'firstName':
+            return `${keyMap.get(key)}=${value}*`;
+         case 'lastName':
+            return `${keyMap.get(key)}=${value}*`;
          case 'fuzzyName':
            var fuzzy_filters = '|';   // 'or' condition for all name orderings
            valueTerms = value.split(/[ ,]+/);

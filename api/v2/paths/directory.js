@@ -2,7 +2,7 @@ const appRoot = require('app-root-path');
 
 const directoryDao = require('../db/ldap/directory-dao');
 
-const { errorHandler } = appRoot.require('errors/errors');
+const { errorHandler, errorBuilder } = appRoot.require('errors/errors');
 const { openapi: { paths } } = appRoot.require('utils/load-openapi');
 
 /**
@@ -13,6 +13,12 @@ const get = async (req, res) => {
     const result = await directoryDao.getDirectories(req.query);
     return res.send(result);
   } catch (err) {
+    if ('lde_message' in err) {
+      if (err.lde_message.includes('Size Limit Exceeded')){
+        return errorBuilder(res, 400, ['Size Limit of 200 Results Exceeded (search too broad)']);
+      }
+      return errorHandler(res, [err['lde_message']])
+    }
     return errorHandler(res, err);
   }
 };
