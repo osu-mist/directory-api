@@ -15,10 +15,9 @@ const directoryResourcePath = 'directory';
 const directoryResourceUrl = resourcePathLink(apiBaseUrl, directoryResourcePath);
 
 var ldapKeyToResourceKey = attribute => new Map([
-   ['firstName', 'firstName'],
+   ['givenName', 'firstName'],
    ['sn', 'lastName'],
    ['cn', 'fullName'],
-   ['givenName', 'givenName'],
    ['osuPrimaryAffiliation', 'primaryAffiliation'],
    ['title', 'jobTitle'],
    ['osuDepartment', 'department'],
@@ -33,10 +32,9 @@ var ldapKeyToResourceKey = attribute => new Map([
 ]).get(attribute);
 
 var resourceKeyToLdapKey = attribute => new Map([
-   ['firstName', 'firstName'],
+   ['firstName', 'givenName'],
    ['lastName', 'sn'],
    ['fullName', 'cn'],
-   ['givenName', 'givenName'],
    ['primaryAffiliation', 'osuPrimaryAffiliation'],
    ['jobTitle', 'title'],
    ['department', 'osuDepartment'],
@@ -65,17 +63,26 @@ _.forEach(directoryResourceKeys, (key, index) => {
  * @returns {Object} Serialized directoryResources object
  */
 const serializeDirectories = (rawDirectories, query) => {
-  for (i = 0; i < rawDirectories.length; i++) {
-    rawDirectories[i].firstName = rawDirectories[i].givenName;
-  }
+  const pageQuery = {
+    size: query['page[size]'],
+    number: query['page[number]'],
+  };
+
+  const pagination = paginate(rawDirectories, pageQuery);
+  pagination.totalResults = rawDirectories.length;
+  rawDirectories = pagination.paginatedRows;
+
   const topLevelSelfLink = paramsLink(directoryResourceUrl, query);
+
   const serializerArgs = {
     identifierField: 'osuUID',
     resourceKeys: directoryResourceKeys,
+    pagination,
     resourcePath: directoryResourcePath,
     keyForAttribute: ldapKeyToResourceKey,
     topLevelSelfLink,
     enableDataLinks: true,
+    resourceType: directoryResourceType
   };
 
   return new JsonApiSerializer(
@@ -91,13 +98,13 @@ const serializeDirectories = (rawDirectories, query) => {
  * @returns {Object} Serialized directoryResource object
  */
 const serializeDirectory = (rawDirectory) => {
-  rawDirectory.firstName = rawDirectory.givenName;
   const serializerArgs = {
     identifierField: 'osuUID',
     resourceKeys: directoryResourceKeys,
     resourcePath: directoryResourcePath,
     keyForAttribute: ldapKeyToResourceKey,
-    enableDataLinks: true
+    enableDataLinks: true,
+    resourceType: directoryResourceType
   };
 
   return new JsonApiSerializer(

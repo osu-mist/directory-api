@@ -29,6 +29,8 @@ paths:
       produces:
         - application/json
       parameters:
+        - $ref: '#/parameters/pageNumber'
+        - $ref: '#/parameters/pageSize'
         - name: fuzzyName
           in: query
           description: |
@@ -130,7 +132,61 @@ parameters:
     type: string
     required: true
     description: '"Bearer [token]" where [token] is your OAuth2 access token'
+  pageNumber:
+    name: page[number]
+    in: query
+    type: integer
+    required: false
+    description: Page number of results
+    default: 1
+    minimum: 1
+  pageSize:
+    name: page[size]
+    in: query
+    type: integer
+    required: false
+    description: Number of results to return
+    default: 25
+    maximum: 500
+    minimum: 1
+
 definitions:
+  Meta:
+    properties:
+      totalResults:
+        type: integer
+        description: Total number of results
+        example: 10
+      totalPage:
+        type: integer
+        description: Total number of pages
+        example: 10
+      currentPageNumber:
+        type: integer
+        description: Page number of the returned results
+        example: 1
+      currentPageSize:
+        type: integer
+        description: Number of results per page
+        example: 25
+  PaginationLinks:
+   properties:
+     first:
+       type: string
+       format: url
+       description: The first page of data
+     last:
+       type: string
+       format: url
+       description: The last page of data
+     prev:
+       type: string
+       format: url
+       description: The previous page of data
+     next:
+       type: string
+       format: url
+       description: The next page of data
   DirectoryResultObjects:
     properties:
       data:
@@ -138,7 +194,11 @@ definitions:
         items:
           $ref: "#/definitions/DirectoryResourceObject"
       links:
-        $ref: "#/definitions/ResourceLinks"
+        allOf:
+          - $ref: '#/definitions/ResourceLinks'
+          - $ref: '#/definitions/PaginationLinks'
+      meta:
+        $ref: '#/definitions/Meta'
   DirectoryResultObject:
     properties:
       data:
@@ -161,8 +221,6 @@ definitions:
       lastName:
         type: string
       fullName:
-        type: string
-      givenName:
         type: string
       primaryAffiliation:
         type: string

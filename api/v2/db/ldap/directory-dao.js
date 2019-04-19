@@ -15,7 +15,6 @@ const getDirectory = pathParameter => new Promise(async (resolve, reject) => {
     var client = ldap.createClient({
       url: ldapConfig.url
     });
-    console.log(`osuUID=${pathParameter}`);
     client.search('o=orst.edu', {filter: `osuUID=${pathParameter}`, scope: 'sub'} , function(err,res) {
        res.on('searchEntry', function(entry) {
          resolve(serializeDirectory(entry.object));
@@ -80,9 +79,10 @@ const getDirectories = endpointQuery => new Promise(async (resolve, reject) => {
 
    const keyMap = new Map([
       ['fuzzyName', 'cn'],
+      ['lastName', 'sn'],
+      ['firstName', 'givenName'],
       ['primaryAffiliation', 'osuPrimaryAffiliation'],
       ['onid', 'uid'],
-      ['lastName', 'sn'],
       ['emailAddress', 'mail'],
       ['officePhoneNumber', 'telephoneNumber'],
       ['alternatePhoneNumber', 'osuAltPhoneNumber'],
@@ -133,7 +133,7 @@ const getDirectories = endpointQuery => new Promise(async (resolve, reject) => {
 
    var ldapQuery = '(&'    // begin requiring all conditions
    for (const [key, value] of Object.entries(endpointQuery)) {
-     ldapQuery += `(${keyOperations(key, value)})`;
+     if (keyMap.get(key)) ldapQuery += `(${keyOperations(key, value)})`;
    }
    ldapQuery += ')'     // end requiring all conditions
 
