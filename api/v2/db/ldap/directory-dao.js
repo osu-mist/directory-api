@@ -11,22 +11,20 @@ var ldap = require('ldapjs');
  * @returns {Promise} Promise object represents a directory
  */
 const getDirectory = pathParameter => new Promise(async (resolve, reject) => {
-  try {
-    var client = ldap.createClient({
-      url: ldapConfig.url
-    });
-    client.search('o=orst.edu', {filter: `osuUID=${pathParameter}`, scope: 'sub'} , function(err,res) {
-       res.on('searchEntry', function(entry) {
-         resolve(serializeDirectory(entry.object));
-       });
-       res.on('error', function(err) {
-         reject(err);
-       });
-    });
-
-  } catch (err) {
-    reject(err);
-  }
+  var client = ldap.createClient({
+    url: ldapConfig.url
+  });
+  client.search('o=orst.edu', {filter: `osuUID=${pathParameter}`, scope: 'sub'} , function(err,res) {
+     res.on('searchEntry', function(entry) {
+       resolve(serializeDirectory(entry.object));
+     });
+     res.on('error', function(err) {
+       reject(err);
+     });
+     res.on('end', function(result) {
+       resolve(null);
+     });
+  });
 });
 
 /**

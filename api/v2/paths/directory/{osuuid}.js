@@ -13,7 +13,7 @@ const get = async (req, res) => {
     const { osuuid } = req.params;
     const result = await directoryDao.getDirectory(osuuid);
     if (!result) {
-      errorBuilder(res, 404, 'A directory with the specified UID was not found.');
+      errorBuilder(res, 404, 'A directory with the specified osuUID was not found.');
     } else {
       res.send(result);
     }
