@@ -81,6 +81,7 @@ const serializeDirectories = (rawDirectories, query) => {
     resourcePath: directoryResourcePath,
     keyForAttribute: ldapKeyToResourceKey,
     topLevelSelfLink,
+    query: _.omit(query, 'page[size]', 'page[number]'),
     enableDataLinks: true,
     resourceType: directoryResourceType
   };
@@ -97,7 +98,7 @@ const serializeDirectories = (rawDirectories, query) => {
  * @param {Object} rawDirectory Raw data row from data source
  * @returns {Object} Serialized directoryResource object
  */
-const serializeDirectory = (rawDirectory) => {
+const serializeDirectory = rawDirectory => {
   const serializerArgs = {
     identifierField: 'osuUID',
     resourceKeys: directoryResourceKeys,
@@ -112,5 +113,18 @@ const serializeDirectory = (rawDirectory) => {
     serializerOptions(serializerArgs, directoryResourcePath),
   ).serialize(rawDirectory);
 };
+
+// /**
+//  * @summary Serialize LDAP errors to JSON API error
+//  * @function
+//  * @param {Object} rawErrors Raw errors from LDAP
+//  * @returns {Object} Serialized Error object
+//  */
+// const serializeErrors = rawErrors => {
+//     const serializerArgs = {
+//       resourcePath:
+//     };
+// }
+
 
 module.exports = { serializeDirectories, serializeDirectory };
