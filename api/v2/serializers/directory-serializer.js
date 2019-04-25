@@ -1,5 +1,4 @@
 const appRoot = require('app-root-path');
-const decamelize = require('decamelize');
 const JsonApiSerializer = require('jsonapi-serializer').Serializer;
 const _ = require('lodash');
 
@@ -14,45 +13,45 @@ const directoryResourceKeys = _.keys(directoryResourceProp.attributes.properties
 const directoryResourcePath = 'directory';
 const directoryResourceUrl = resourcePathLink(apiBaseUrl, directoryResourcePath);
 
-var ldapKeyToResourceKey = attribute => new Map([
-   ['givenName', 'firstName'],
-   ['sn', 'lastName'],
-   ['cn', 'fullName'],
-   ['osuPrimaryAffiliation', 'primaryAffiliation'],
-   ['title', 'jobTitle'],
-   ['osuDepartment', 'department'],
-   ['postalAddress', 'departmentMailingAddress'],
-   ['telephoneNumber', 'officePhoneNumber'],
-   ['osuOfficeAddress', 'officeAddress'],
-   ['facsimileTelephoneNumber', 'faxNumber'],
-   ['mail', 'emailAddress'],
-   ['uid', 'username'],
-   ['osuAltPhoneNumber', 'alternatePhoneNumber'],
-   ['osuUID', 'osuuid']
+const ldapKeyToResourceKey = attribute => new Map([
+  ['givenName', 'firstName'],
+  ['sn', 'lastName'],
+  ['cn', 'fullName'],
+  ['osuPrimaryAffiliation', 'primaryAffiliation'],
+  ['title', 'jobTitle'],
+  ['osuDepartment', 'department'],
+  ['postalAddress', 'departmentMailingAddress'],
+  ['telephoneNumber', 'officePhoneNumber'],
+  ['osuOfficeAddress', 'officeAddress'],
+  ['facsimileTelephoneNumber', 'faxNumber'],
+  ['mail', 'emailAddress'],
+  ['uid', 'username'],
+  ['osuAltPhoneNumber', 'alternatePhoneNumber'],
+  ['osuUID', 'osuuid'],
 ]).get(attribute);
 
-var resourceKeyToLdapKey = attribute => new Map([
-   ['firstName', 'givenName'],
-   ['lastName', 'sn'],
-   ['fullName', 'cn'],
-   ['primaryAffiliation', 'osuPrimaryAffiliation'],
-   ['jobTitle', 'title'],
-   ['department', 'osuDepartment'],
-   ['departmentMailingAddress', 'postalAddress'],
-   ['officePhoneNumber', 'telephoneNumber'],
-   ['officeAddress', 'osuOfficeAddress'],
-   ['faxNumber', 'facsimileTelephoneNumber'],
-   ['emailAddress', 'mail'],
-   ['username', 'uid'],
-   ['alternatePhoneNumber', 'osuAltPhoneNumber'],
-   ['osuuid', 'osuUID']
+const resourceKeyToLdapKey = attribute => new Map([
+  ['firstName', 'givenName'],
+  ['lastName', 'sn'],
+  ['fullName', 'cn'],
+  ['primaryAffiliation', 'osuPrimaryAffiliation'],
+  ['jobTitle', 'title'],
+  ['department', 'osuDepartment'],
+  ['departmentMailingAddress', 'postalAddress'],
+  ['officePhoneNumber', 'telephoneNumber'],
+  ['officeAddress', 'osuOfficeAddress'],
+  ['faxNumber', 'facsimileTelephoneNumber'],
+  ['emailAddress', 'mail'],
+  ['username', 'uid'],
+  ['alternatePhoneNumber', 'osuAltPhoneNumber'],
+  ['osuuid', 'osuUID'],
 ]).get(attribute);
 
 /**
  * The resourceKeys serializer argument requires LDAP keys
  */
 _.forEach(directoryResourceKeys, (key, index) => {
-    directoryResourceKeys[index] = resourceKeyToLdapKey(key);
+  directoryResourceKeys[index] = resourceKeyToLdapKey(key);
 });
 
 /**
@@ -83,7 +82,7 @@ const serializeDirectories = (rawDirectories, query) => {
     topLevelSelfLink,
     query: _.omit(query, 'page[size]', 'page[number]'),
     enableDataLinks: true,
-    resourceType: directoryResourceType
+    resourceType: directoryResourceType,
   };
 
   return new JsonApiSerializer(
@@ -98,14 +97,14 @@ const serializeDirectories = (rawDirectories, query) => {
  * @param {Object} rawDirectory Raw data row from data source
  * @returns {Object} Serialized directoryResource object
  */
-const serializeDirectory = rawDirectory => {
+const serializeDirectory = (rawDirectory) => {
   const serializerArgs = {
     identifierField: 'osuUID',
     resourceKeys: directoryResourceKeys,
     resourcePath: directoryResourcePath,
     keyForAttribute: ldapKeyToResourceKey,
     enableDataLinks: true,
-    resourceType: directoryResourceType
+    resourceType: directoryResourceType,
   };
 
   return new JsonApiSerializer(

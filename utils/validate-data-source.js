@@ -1,6 +1,7 @@
 const appRoot = require('app-root-path');
 const config = require('config');
 const _ = require('lodash');
+
 const { openapi } = appRoot.require('utils/load-openapi');
 
 const { dataSources } = config.get('dataSources');
@@ -27,7 +28,7 @@ const validateDataSource = () => {
     http: null, // TODO: add HTTP validation method
     json,
     oracledb,
-    ldap
+    ldap,
   };
 
   _.each(dataSources, (dataSourceType) => {
