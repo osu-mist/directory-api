@@ -1,9 +1,10 @@
+const appRoot = require('app-root-path');
 const config = require('config');
-const ldapConfig = config.get('dataSources').ldap;
 
 const { serializeDirectories, serializeDirectory } = require('../../serializers/directory-serializer');
 
-var ldap = require('ldapjs');
+const { openapi } = appRoot.require('utils/load-openapi');
+const conn = appRoot.require(`api/${openapi.basePath}/db/ldap/connection`);
 
 /**
  * @summary Return a directory
@@ -11,9 +12,7 @@ var ldap = require('ldapjs');
  * @returns {Promise} Promise object represents a directory
  */
 const getDirectory = pathParameter => new Promise(async (resolve, reject) => {
-  var client = ldap.createClient({
-    url: ldapConfig.url
-  });
+  var client = conn.getClient();
   client.search('o=orst.edu', {filter: `osuUID=${pathParameter}`, scope: 'sub'} , function(err,res) {
      res.on('searchEntry', function(entry) {
        resolve(serializeDirectory(entry.object));
@@ -35,9 +34,7 @@ const getDirectory = pathParameter => new Promise(async (resolve, reject) => {
 const getDirectories = endpointQuery => new Promise(async (resolve, reject) => {
   const ldapQuery = mapQuery(endpointQuery);
 
-  var client = ldap.createClient({
-    url: ldapConfig.url
-  });
+  var client = conn.getClient();
 
   searchResults = [];
   client.search('o=orst.edu', {filter: ldapQuery, scope: 'sub'} , function(err,res) {
