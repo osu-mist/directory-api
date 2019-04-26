@@ -1,0 +1,24 @@
+server:
+  protocol: https
+  hostname: localhost
+  port: 8080
+  adminPort: 8081
+  basePathPrefix: /api
+  keyPath: /Users/ian/certs/key.pem
+  certPath: /Users/ian/certs/server.crt
+  secureProtocol: TLSv1_2_method
+
+authentication:
+  username: username
+  password: password
+
+logger:
+  size: 10m
+  path: logs
+  pattern: YYYY-MM-DD
+  archive: true
+
+dataSources:
+  dataSources: ['ldap']
+  ldap:
+    url: 'ldap://directory.oregonstate.edu:389'
