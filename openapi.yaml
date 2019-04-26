@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 swagger: "2.0"
 info:
   title: Directory API
   description: Web API to search the OSU Online Directory.
   version: "v2"
+=======
+swagger: '2.0'
+info:
+  title: Express API Skeleton
+  description: Skeleton for Express APIs
+  version: v1
+>>>>>>> skeleton/master
   license:
     name: GNU Affero General Public License Version 3
     url: http://www.gnu.org/licenses/agpl-3.0.en.html
@@ -10,6 +18,7 @@ info:
     name: IS Data Architecture Team
     url: https://is.oregonstate.edu/data-architecture
     email: isdataarchitecture@oregonstate.edu
+<<<<<<< HEAD
 externalDocs:
   description: GitHub Repository
   url: https://github.com/osu-mist/directory-api
@@ -119,6 +128,74 @@ paths:
           description: Not found
           schema:
             $ref: "#/definitions/Errors"
+=======
+schemes:
+  - https
+host: api.oregonstate.edu
+basePath: /v1
+externalDocs:
+  description: GitHub Repository
+  url: https://github.com/osu-mist/express-api-skeleton
+produces:
+  - application/json
+paths:
+  /pets:
+    get:
+      summary: List all pets
+      tags:
+        - pets
+      description: Get all pets
+      operationId: getPets
+      parameters:
+        - $ref: '#/parameters/authorization'
+        - $ref: '#/parameters/pageNumber'
+        - $ref: '#/parameters/pageSize'
+        - in: query
+          name: species
+          description: Search by pet species
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/PetsResult'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/Errors'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/Errors'
+  /pets/{id}:
+    get:
+      summary: Info for a specific pet
+      tags:
+        - pets
+      description: Get pet by unique ID
+      operationId: getPetById
+      parameters:
+        - $ref: '#/parameters/authorization'
+        - name: id
+          in: path
+          description: Unique Pet ID
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/PetResult'
+        '404':
+          description: PetResource not found
+          schema:
+            $ref: '#/definitions/Errors'
+        '500':
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/Errors'
+>>>>>>> skeleton/master
 parameters:
   authorization:
     name: Authorization
@@ -126,6 +203,7 @@ parameters:
     type: string
     required: true
     description: '"Bearer [token]" where [token] is your OAuth2 access token'
+<<<<<<< HEAD
 definitions:
   DirectoryResultObjects:
     properties:
@@ -184,12 +262,120 @@ definitions:
       self:
         type: string
         format: url
+=======
+  pageNumber:
+    name: page[number]
+    in: query
+    type: integer
+    required: false
+    description: Page number of results
+    default: 1
+    minimum: 1
+  pageSize:
+    name: page[size]
+    in: query
+    type: integer
+    required: false
+    description: Number of results to return
+    default: 25
+    maximum: 500
+    minimum: 1
+definitions:
+  Meta:
+    properties:
+      totalResults:
+        type: integer
+        description: Total number of results
+        example: 10
+      totalPages:
+        type: integer
+        description: Total number of pages
+        example: 10
+      currentPageNumber:
+        type: integer
+        description: Page number of the returned results
+        example: 1
+      currentPageSize:
+        type: integer
+        description: Number of results per page
+        example: 25
+  SelfLink:
+    properties:
+      self:
+        type: string
+        format: url
+        description: Self-link of current resource
+  PaginationLinks:
+    properties:
+      first:
+        type: string
+        format: url
+        description: The first page of data
+      last:
+        type: string
+        format: url
+        description: The last page of data
+      prev:
+        type: string
+        format: url
+        description: The previous page of data
+      next:
+        type: string
+        format: url
+        description: The next page of data
+  PetResource:
+    properties:
+      id:
+        type: string
+        description: A unique ID of pet
+      type:
+        type: string
+        enum: [pet]
+      links:
+        $ref: '#/definitions/SelfLink'
+      attributes:
+        properties:
+          name:
+            type: string
+            description: Name of pet
+            example: Hedwig
+          owner:
+            type: string
+            description: Name of owner
+            example: Harry Potter
+          species:
+            type: string
+            description: Species of pet
+            example: Owl
+  PetResult:
+    properties:
+      links:
+        $ref: '#/definitions/SelfLink'
+      data:
+        $ref: '#/definitions/PetResource'
+  PetsResult:
+    properties:
+      links:
+        allOf:
+          - $ref: '#/definitions/SelfLink'
+          - $ref: '#/definitions/PaginationLinks'
+      meta:
+        $ref: '#/definitions/Meta'
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/PetResource'
+>>>>>>> skeleton/master
   Error:
     properties:
       status:
         type: string
         description: HTTP status code
+<<<<<<< HEAD
         example: 123
+=======
+        example: '123'
+>>>>>>> skeleton/master
       title:
         type: string
         description: A short, user readable summary of the error
@@ -197,7 +383,11 @@ definitions:
       code:
         type: string
         description: An application-specific error code
+<<<<<<< HEAD
         example: 1234
+=======
+        example: '1234'
+>>>>>>> skeleton/master
       detail:
         type: string
         description: A long description of the error that may contain instance-specific details
