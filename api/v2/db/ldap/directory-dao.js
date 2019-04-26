@@ -85,7 +85,6 @@ const mapQuery = (endpointQuery) => {
  */
 const getDirectory = pathParameter => new Promise(async (resolve, reject) => {
   const client = conn.getClient();
-
   client.search('o=orst.edu', { filter: `osuUID=${pathParameter}`, scope: 'sub' }, (err, res) => {
     res.on('searchEntry', (entry) => {
       resolve(serializeDirectory(entry.object));
@@ -106,20 +105,23 @@ const getDirectory = pathParameter => new Promise(async (resolve, reject) => {
  */
 const getDirectories = endpointQuery => new Promise(async (resolve, reject) => {
   const ldapQuery = mapQuery(endpointQuery);
-  const client = conn.getClient();
-
-  const searchResults = [];
-  client.search('o=orst.edu', { filter: ldapQuery, scope: 'sub' }, (err, res) => {
-    res.on('searchEntry', (entry) => {
-      searchResults.push(entry.object);
+  if (ldapQuery === '(&)') {
+    resolve(null);
+  } else {
+    const client = conn.getClient();
+    const searchResults = [];
+    client.search('o=orst.edu', { filter: ldapQuery, scope: 'sub' }, (err, res) => {
+      res.on('searchEntry', (entry) => {
+        searchResults.push(entry.object);
+      });
+      res.on('error', (error) => {
+        reject(error);
+      });
+      res.on('end', () => {
+        resolve(serializeDirectories(searchResults, endpointQuery));
+      });
     });
-    res.on('error', (error) => {
-      reject(error);
-    });
-    res.on('end', () => {
-      resolve(serializeDirectories(searchResults, endpointQuery));
-    });
-  });
+  }
 });
 
 module.exports = { getDirectory, getDirectories };

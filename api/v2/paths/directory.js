@@ -11,6 +11,9 @@ const { openapi: { paths } } = appRoot.require('utils/load-openapi');
 const get = async (req, res) => {
   try {
     const result = await directoryDao.getDirectories(req.query);
+    if (!result) {
+      return errorBuilder(res, 400, ['No query parameters specified.']);
+    }
     return res.send(result);
   } catch (err) {
     if ('lde_message' in err) {
