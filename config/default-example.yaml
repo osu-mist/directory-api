@@ -22,4 +22,3 @@ dataSources:
   dataSources: ['ldap']
   ldap:
     url: 'ldap://directory.oregonstate.edu:389'
-    s3ForcePathStyle: false
