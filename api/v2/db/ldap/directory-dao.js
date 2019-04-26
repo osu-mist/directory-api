@@ -70,9 +70,9 @@ const mapQuery = (endpointQuery) => {
   };
 
   let ldapQuery = '(&'; // begin requiring all conditions
-  for (const [key, value] in endpointQuery) {
-    if (keyMap.get(key)) ldapQuery += `(${keyOperations(key, value)})`;
-  }
+  Object.keys(endpointQuery).forEach((key) => {
+    if (keyMap.get(key)) ldapQuery += `(${keyOperations(key, endpointQuery[key])})`;
+  });
   ldapQuery += ')'; // end requiring all conditions
 
   return ldapQuery;
