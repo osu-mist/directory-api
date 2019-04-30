@@ -218,33 +218,54 @@ definitions:
     properties:
       firstName:
         type: string
+        example: "Benny"
       lastName:
         type: string
+        example: "Beaver"
       fullName:
         type: string
+        example: "Benny Beaver"
       primaryAffiliation:
         type: string
+        enum:
+          - "Student"
+          - "Employee"
+          - "Retiree"
+          - "Unknown"
       jobTitle:
         type: string
+        example: "Analyst Programmer"
       department:
         type: string
+        example: "Enterprise Computing Services"
       departmentMailingAddress:
         type: string
+        example: "1600 Pennsylvania Ave NW, Washington, DC 20500"
       officePhoneNumber:
         type: string
+        example: "+1 555 867 5309"
+        description: E.164 formatted phone number.
       officeAddress:
         type: string
+        example: "1600 Pennsylvania Ave NW, Washington, DC 20500"
       faxNumber:
         type: string
+        example: "+1 555 867 5309"
+        description: E.164 formatted phone number.
       emailAddress:
         type: string
+        example: "bennybeaver@oregonstate.edu"
         format: email
       username:
         type: string
+        example: "bennbeav"
       alternatePhoneNumber:
         type: string
-      osuuid:
+        example: "+1 555 867 5309"
+        description: E.164 formatted phone number.
+      osuUid:
         type: string
+        example: "55555555555"
   ResourceLinks:
     properties:
       self:

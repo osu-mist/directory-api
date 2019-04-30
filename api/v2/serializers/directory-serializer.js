@@ -113,17 +113,4 @@ const serializeDirectory = (rawDirectory) => {
   ).serialize(rawDirectory);
 };
 
-// /**
-//  * @summary Serialize LDAP errors to JSON API error
-//  * @function
-//  * @param {Object} rawErrors Raw errors from LDAP
-//  * @returns {Object} Serialized Error object
-//  */
-// const serializeErrors = rawErrors => {
-//     const serializerArgs = {
-//       resourcePath:
-//     };
-// }
-
-
 module.exports = { serializeDirectories, serializeDirectory };
