@@ -21,4 +21,4 @@ logger:
 dataSources:
   dataSources: ['ldap']
   ldap:
-    url: 'ldap://directory.oregonstate.edu:389'
+    url: 'ldaps://ldap.onid.orst.edu'
