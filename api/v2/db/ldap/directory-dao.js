@@ -26,7 +26,7 @@ const mapQuery = (endpointQuery) => {
     ['department', 'osuDepartment'],
   ]);
 
-  const keyOperations = (key, value) => {
+  const valueOperations = (key, value) => {
     switch (key) {
       case 'firstName': {
         return `${keyMap.get(key)}=${value}*`;
@@ -71,7 +71,7 @@ const mapQuery = (endpointQuery) => {
 
   let ldapQuery = '(&'; // begin requiring all conditions
   Object.keys(endpointQuery).forEach((key) => {
-    if (keyMap.get(key)) ldapQuery += `(${keyOperations(key, endpointQuery[key])})`;
+    if (keyMap.get(key)) ldapQuery += `(${valueOperations(key, endpointQuery[key])})`;
   });
   ldapQuery += ')'; // end requiring all conditions
 

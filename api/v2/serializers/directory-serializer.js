@@ -27,7 +27,7 @@ const ldapKeyToResourceKey = attribute => new Map([
   ['mail', 'emailAddress'],
   ['uid', 'username'],
   ['osuAltPhoneNumber', 'alternatePhoneNumber'],
-  ['osuUID', 'osuuid'],
+  ['osuUID', 'osuUid'],
 ]).get(attribute);
 
 const resourceKeyToLdapKey = attribute => new Map([
@@ -44,8 +44,37 @@ const resourceKeyToLdapKey = attribute => new Map([
   ['emailAddress', 'mail'],
   ['username', 'uid'],
   ['alternatePhoneNumber', 'osuAltPhoneNumber'],
-  ['osuuid', 'osuUID'],
+  ['osuUid', 'osuUID'],
 ]).get(attribute);
+
+const valueOperations = (key, value) => {
+  switch (key) {
+    case 'telephoneNumber':
+    case 'osuAltPhoneNumber':
+    case 'facsimileTelephoneNumber': {
+      return `+${value}`;
+    }
+
+    case 'osuPrimaryAffiliation': {
+      return new Map([
+        ['S', 'Student'],
+        ['E', 'Employee'],
+        ['O', 'Other'],
+        ['R', 'Retiree'],
+        ['U', 'Unknown'],
+      ]).get(value);
+    }
+
+    case 'osuOfficeAddress':
+    case 'postalAddress': {
+      return value.replace(/\$/g, ', ');
+    }
+
+    default: {
+      return value;
+    }
+  }
+};
 
 /**
  * The resourceKeys serializer argument requires LDAP keys
@@ -66,6 +95,12 @@ const serializeDirectories = (rawDirectories, query) => {
     size: query['page[size]'],
     number: query['page[number]'],
   };
+
+  rawDirectories.forEach((directory) => {
+    Object.keys(directory).forEach((key) => {
+      directory[key] = valueOperations(key, directory[key]);
+    });
+  });
 
   const pagination = paginate(rawDirectories, pageQuery);
   pagination.totalResults = rawDirectories.length;
