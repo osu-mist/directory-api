@@ -54,7 +54,6 @@ const valueOperations = (key, value) => {
     case 'facsimileTelephoneNumber': {
       return `+${value}`;
     }
-
     case 'osuPrimaryAffiliation': {
       return new Map([
         ['S', 'Student'],
@@ -64,12 +63,10 @@ const valueOperations = (key, value) => {
         ['U', 'Unknown'],
       ]).get(value);
     }
-
     case 'osuOfficeAddress':
     case 'postalAddress': {
       return value.replace(/\$/g, ', ');
     }
-
     default: {
       return value;
     }

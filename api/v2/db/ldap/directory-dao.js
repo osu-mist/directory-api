@@ -1,9 +1,6 @@
-const appRoot = require('app-root-path');
-
 const { serializeDirectories, serializeDirectory } = require('../../serializers/directory-serializer');
 
-const { openapi } = appRoot.require('utils/load-openapi');
-const conn = appRoot.require(`api/${openapi.basePath}/db/ldap/connection`);
+const conn = require('./connection');
 
 /**
  * @summary Map endpoint query to ldap query
@@ -11,29 +8,26 @@ const conn = appRoot.require(`api/${openapi.basePath}/db/ldap/connection`);
  * @returns {string} string representing search filter for ldap query
  */
 const mapQuery = (endpointQuery) => {
-  const keyMap = new Map([
-    ['fuzzyName', 'cn'],
-    ['lastName', 'sn'],
-    ['firstName', 'givenName'],
-    ['primaryAffiliation', 'osuPrimaryAffiliation'],
-    ['onid', 'uid'],
-    ['emailAddress', 'mail'],
-    ['officePhoneNumber', 'telephoneNumber'],
-    ['alternatePhoneNumber', 'osuAltPhoneNumber'],
-    ['faxNumber', 'facsimileTelephoneNumber'],
-    ['phoneNumber', 'telephoneNumber'],
-    ['officeAddress', 'osuOfficeAddress'],
-    ['department', 'osuDepartment'],
-  ]);
+  const keyMap = {
+    fuzzyName: 'cn',
+    lastName: 'sn',
+    firstName: 'givenName',
+    primaryAffiliation: 'osuPrimaryAffiliation',
+    onid: 'uid',
+    emailAddress: 'mail',
+    officePhoneNumber: 'telephoneNumber',
+    alternatePhoneNumber: 'osuAltPhoneNumber',
+    faxNumber: 'facsimileTelephoneNumber',
+    phoneNumber: 'telephoneNumber',
+    officeAddress: 'osuOfficeAddress',
+    department: 'osuDepartment',
+  };
 
   const valueOperations = (key, value) => {
     switch (key) {
-      case 'firstName': {
-        return `${keyMap.get(key)}=${value}*`;
-      }
       case 'fuzzyName': {
         let fuzzyFilters = '|'; // 'or' condition for all name orderings
-        const valueTerms = value.split(/[ ,]+/);
+        const valueTerms = value.split(/ ,+/);
 
         // Loop through possible splits of query into first and last names
         for (let commaIndex = 1; commaIndex <= valueTerms.length; commaIndex += 1) {
@@ -42,36 +36,37 @@ const mapQuery = (endpointQuery) => {
           for (let i = 0; i < commaIndex; i += 1) firstName += `${valueTerms[i]} `;
           for (let i = commaIndex; i < valueTerms.length; i += 1) lastName += `${valueTerms[i]} `;
           // Consider first, last ordering and last, first ordering
-          fuzzyFilters += `(${keyMap.get(key)}=${firstName.slice(0, -1)}*, ${lastName.slice(0, -1)}*)`;
-          fuzzyFilters += `(${keyMap.get(key)}=${lastName.slice(0, -1)}*, ${firstName.slice(0, -1)}*)`;
+          fuzzyFilters += `(${keyMap[key]}=${firstName.slice(0, -1)}*, ${lastName.slice(0, -1)}*)`;
+          fuzzyFilters += `(${keyMap[key]}=${lastName.slice(0, -1)}*, ${firstName.slice(0, -1)}*)`;
         }
         return fuzzyFilters;
       }
+      case 'firstName':
       case 'lastName': {
-        return `${keyMap.get(key)}=${value}*`;
+        return `${keyMap[key]}=${value}*`;
       }
       case 'phoneNumber': {
-        return `|(${keyMap.get(key)}=*${value}*)(${keyMap.get('alternatePhoneNumber')}=*${value}*)`
-          + `(${keyMap.get('faxNumber')}=*${value}*)`;
+        return `|(${keyMap[key]}=*${value}*)(${keyMap.alternatePhoneNumber}=*${value}*)`
+          + `(${keyMap.faxNumber}=*${value}*)`;
       }
       case 'primaryAffiliation': {
-        return `${keyMap.get(key)}=${new Map([
-          ['Student', 'S'],
-          ['Employee', 'E'],
-          ['Other', 'O'],
-          ['Retiree', 'R'],
-          ['Unknown', 'U'],
-        ]).get(value)}`;
+        return `${keyMap[key]}=${{
+          Student: 'S',
+          Employee: 'E',
+          Other: 'O',
+          Retiree: 'R',
+          Unknown: 'U',
+        }[value]}`;
       }
       default: {
-        return `${keyMap.get(key)}=*${value}*`;
+        return `${keyMap[key]}=*${value}*`;
       }
     }
   };
 
   let ldapQuery = '(&'; // begin requiring all conditions
   Object.keys(endpointQuery).forEach((key) => {
-    if (keyMap.get(key)) ldapQuery += `(${valueOperations(key, endpointQuery[key])})`;
+    if (keyMap[key]) ldapQuery += `(${valueOperations(key, endpointQuery[key])})`;
   });
   ldapQuery += ')'; // end requiring all conditions
 
