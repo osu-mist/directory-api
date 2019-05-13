@@ -13,22 +13,22 @@ const directoryResourceKeys = _.keys(directoryResourceProp.attributes.properties
 const directoryResourcePath = 'directory';
 const directoryResourceUrl = resourcePathLink(apiBaseUrl, directoryResourcePath);
 
-const ldapKeyToResourceKey = attribute => new Map([
-  ['givenName', 'firstName'],
-  ['sn', 'lastName'],
-  ['cn', 'fullName'],
-  ['osuPrimaryAffiliation', 'primaryAffiliation'],
-  ['title', 'jobTitle'],
-  ['osuDepartment', 'department'],
-  ['postalAddress', 'departmentMailingAddress'],
-  ['telephoneNumber', 'officePhoneNumber'],
-  ['osuOfficeAddress', 'officeAddress'],
-  ['facsimileTelephoneNumber', 'faxNumber'],
-  ['mail', 'emailAddress'],
-  ['uid', 'username'],
-  ['osuAltPhoneNumber', 'alternatePhoneNumber'],
-  ['osuUID', 'osuUid'],
-]).get(attribute);
+const ldapKeyToResourceKey = attribute => ({
+  givenName: 'firstName',
+  sn: 'lastName',
+  cn: 'fullName',
+  osuPrimaryAffiliation: 'primaryAffiliation',
+  title: 'jobTitle',
+  osuDepartment: 'department',
+  postalAddress: 'departmentMailingAddress',
+  telephoneNumber: 'officePhoneNumber',
+  osuOfficeAddress: 'officeAddress',
+  facsimileTelephoneNumber: 'faxNumber',
+  mail: 'emailAddress',
+  uid: 'username',
+  osuAltPhoneNumber: 'alternatePhoneNumber',
+  osuUID: 'osuUid',
+}[attribute]);
 
 const resourceKeyToLdapKey = attribute => new Map([
   ['firstName', 'givenName'],

@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const { serializeDirectories, serializeDirectory } = require('../../serializers/directory-serializer');
 
 const conn = require('./connection');
@@ -24,21 +25,26 @@ const mapQuery = (endpointQuery) => {
   };
 
   const valueOperations = (key, value) => {
+    const defaultOperation = `${keyMap[key]}=*${value}*`;
     switch (key) {
       case 'fuzzyName': {
         let fuzzyFilters = '|'; // 'or' condition for all name orderings
-        const valueTerms = value.split(/ ,+/);
 
-        // Loop through possible splits of query into first and last names
-        for (let commaIndex = 1; commaIndex <= valueTerms.length; commaIndex += 1) {
-          let firstName = '*';
-          let lastName = '*';
-          for (let i = 0; i < commaIndex; i += 1) firstName += `${valueTerms[i]} `;
-          for (let i = commaIndex; i < valueTerms.length; i += 1) lastName += `${valueTerms[i]} `;
-          // Consider first, last ordering and last, first ordering
-          fuzzyFilters += `(${keyMap[key]}=${firstName.slice(0, -1)}*, ${lastName.slice(0, -1)}*)`;
-          fuzzyFilters += `(${keyMap[key]}=${lastName.slice(0, -1)}*, ${firstName.slice(0, -1)}*)`;
-        }
+        const valueTerms = value.split(/[ ,]+/);
+
+        _.forEach(valueTerms, (_value, commaIndex) => {
+          let firstName = `${valueTerms.slice(0, commaIndex).join(' ')}`;
+          let lastName = `${valueTerms.slice(commaIndex).join(' ')}`;
+
+          // Add leading wildcard for non-null first and last names
+          firstName = (firstName ? `*${firstName}` : firstName);
+          lastName = (lastName ? `*${lastName}` : lastName);
+
+          // Consider first, last ordering and last, first ordering with trailing wildcard
+          fuzzyFilters += `(${keyMap[key]}=${firstName}*, ${lastName}*)`;
+          fuzzyFilters += `(${keyMap[key]}=${lastName}*, ${firstName}*)`;
+        });
+
         return fuzzyFilters;
       }
       case 'firstName':
@@ -46,7 +52,7 @@ const mapQuery = (endpointQuery) => {
         return `${keyMap[key]}=${value}*`;
       }
       case 'phoneNumber': {
-        return `|(${keyMap[key]}=*${value}*)(${keyMap.alternatePhoneNumber}=*${value}*)`
+        return `|(${defaultOperation})(${keyMap.alternatePhoneNumber}=*${value}*)`
           + `(${keyMap.faxNumber}=*${value}*)`;
       }
       case 'primaryAffiliation': {
@@ -59,7 +65,7 @@ const mapQuery = (endpointQuery) => {
         }[value]}`;
       }
       default: {
-        return `${keyMap[key]}=*${value}*`;
+        return defaultOperation;
       }
     }
   };
