@@ -70,12 +70,11 @@ const mapQuery = (endpointQuery) => {
     }
   };
 
-  let ldapQuery = '(&'; // begin requiring all conditions
-  Object.keys(endpointQuery).forEach((key) => {
+  let ldapQuery = '';
+  _.keys(endpointQuery).forEach((key) => {
     if (keyMap[key]) ldapQuery += `(${valueOperations(key, endpointQuery[key])})`;
   });
-  ldapQuery += ')'; // end requiring all conditions
-
+  if (ldapQuery) ldapQuery = `(&${ldapQuery})`;
   return ldapQuery;
 };
 
@@ -106,7 +105,7 @@ const getDirectory = pathParameter => new Promise(async (resolve, reject) => {
  */
 const getDirectories = endpointQuery => new Promise(async (resolve, reject) => {
   const ldapQuery = mapQuery(endpointQuery);
-  if (ldapQuery === '(&)') {
+  if (!ldapQuery) {
     resolve(null);
   } else {
     const client = conn.getClient();
