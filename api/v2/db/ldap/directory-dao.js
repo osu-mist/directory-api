@@ -81,7 +81,7 @@ const mapQuery = (endpointQuery) => {
 /**
  * @summary Return a directory
  * @function
- * @returns {Promise} Promise object represents a directory
+ * @returns {Promise<Object>} Promise object represents a serialized directory resource
  */
 const getDirectory = pathParameter => new Promise((resolve, reject) => {
   const client = conn.getClient();
@@ -93,7 +93,7 @@ const getDirectory = pathParameter => new Promise((resolve, reject) => {
       reject(error);
     });
     res.on('end', () => {
-      resolve(null);
+      resolve(undefined);
     });
   });
 });
@@ -101,12 +101,12 @@ const getDirectory = pathParameter => new Promise((resolve, reject) => {
 /**
  * @summary Return a list of directories
  * @function
- * @returns {Promise} Promise object represents a list of directories
+ * @returns {Promise<object>} Promise object represents a serilized list of directory resrouces
  */
 const getDirectories = endpointQuery => new Promise((resolve, reject) => {
   const ldapQuery = mapQuery(endpointQuery);
   if (!ldapQuery) {
-    resolve(null);
+    resolve(undefined);
   } else {
     const client = conn.getClient();
     const searchResults = [];
