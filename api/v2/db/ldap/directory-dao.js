@@ -83,7 +83,7 @@ const mapQuery = (endpointQuery) => {
  * @function
  * @returns {Promise} Promise object represents a directory
  */
-const getDirectory = pathParameter => new Promise(async (resolve, reject) => {
+const getDirectory = pathParameter => new Promise((resolve, reject) => {
   const client = conn.getClient();
   client.search('o=orst.edu', { filter: `osuUID=${pathParameter}`, scope: 'sub' }, (err, res) => {
     res.on('searchEntry', (entry) => {
@@ -103,7 +103,7 @@ const getDirectory = pathParameter => new Promise(async (resolve, reject) => {
  * @function
  * @returns {Promise} Promise object represents a list of directories
  */
-const getDirectories = endpointQuery => new Promise(async (resolve, reject) => {
+const getDirectories = endpointQuery => new Promise((resolve, reject) => {
   const ldapQuery = mapQuery(endpointQuery);
   if (!ldapQuery) {
     resolve(null);

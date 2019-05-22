@@ -16,12 +16,9 @@ const getClient = () => ldap.createClient({ url });
  * @throws Throws an error if unable to connect or search ldap
  */
 const validateLdap = async () => {
-  try {
-    const client = getClient();
-    client.search('o=orst.edu', () => {});
-  } catch (err) {
+  ldap.createClient({ url }).on('error', () => {
     throw new Error('Error connecting to ldap');
-  }
+  });
 };
 
 module.exports = { getClient, validateLdap };
