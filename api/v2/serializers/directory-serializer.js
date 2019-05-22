@@ -30,22 +30,22 @@ const ldapKeyToResourceKey = attribute => ({
   osuUID: 'osuUid',
 }[attribute]);
 
-const resourceKeyToLdapKey = attribute => new Map([
-  ['firstName', 'givenName'],
-  ['lastName', 'sn'],
-  ['fullName', 'cn'],
-  ['primaryAffiliation', 'osuPrimaryAffiliation'],
-  ['jobTitle', 'title'],
-  ['department', 'osuDepartment'],
-  ['departmentMailingAddress', 'postalAddress'],
-  ['officePhoneNumber', 'telephoneNumber'],
-  ['officeAddress', 'osuOfficeAddress'],
-  ['faxNumber', 'facsimileTelephoneNumber'],
-  ['emailAddress', 'mail'],
-  ['username', 'uid'],
-  ['alternatePhoneNumber', 'osuAltPhoneNumber'],
-  ['osuUid', 'osuUID'],
-]).get(attribute);
+const resourceKeyToLdapKey = attribute => ({
+  firstName: 'givenName',
+  lastName: 'sn',
+  fullName: 'cn',
+  primaryAffiliation: 'osuPrimaryAffiliation',
+  jobTitle: 'title',
+  department: 'osuDepartment',
+  departmentMailingAddress: 'postalAddress',
+  officePhoneNumber: 'telephoneNumber',
+  officeAddress: 'osuOfficeAddress',
+  faxNumber: 'facsimileTelephoneNumber',
+  emailAddress: 'mail',
+  username: 'uid',
+  alternatePhoneNumber: 'osuAltPhoneNumber',
+  osuUid: 'osuUID',
+}[attribute]);
 
 const valueOperations = (key, value) => {
   switch (key) {
@@ -55,13 +55,13 @@ const valueOperations = (key, value) => {
       return `+${value}`;
     }
     case 'osuPrimaryAffiliation': {
-      return new Map([
-        ['S', 'Student'],
-        ['E', 'Employee'],
-        ['O', 'Other'],
-        ['R', 'Retiree'],
-        ['U', 'Unknown'],
-      ]).get(value);
+      return {
+        S: 'Student',
+        E: 'Employee',
+        O: 'Other',
+        R: 'Retiree',
+        U: 'Unknown',
+      }[value];
     }
     case 'osuOfficeAddress':
     case 'postalAddress': {
