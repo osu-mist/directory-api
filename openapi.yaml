@@ -276,15 +276,15 @@ definitions:
       status:
         type: string
         description: HTTP status code
-        example: 123
+        example: "400"
       title:
         type: string
         description: A short, user readable summary of the error
-        example: Not Found
+        example: "Not Found"
       code:
         type: string
         description: An application-specific error code
-        example: 1234
+        example: "1400"
       detail:
         type: string
         description: A long description of the error that may contain instance-specific details
@@ -294,7 +294,7 @@ definitions:
             type: string
             format: url
             description: A link to further information about the error
-            example: https://developer.oregonstate.edu/documentation/error-reference#1234
+            example: "https://developer.oregonstate.edu/documentation/error-reference#1234"
   Errors:
     properties:
       errors:
