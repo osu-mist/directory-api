@@ -31,8 +31,7 @@ const mapQuery = (endpointQuery) => {
         let fuzzyFilters = '|'; // 'or' condition for all name orderings
 
         const valueTerms = value.split(/[ ,]+/);
-
-        _.forEach(valueTerms, (_value, commaIndex) => {
+        _.forEach(_.range(valueTerms.length), (commaIndex) => {
           let firstName = `${valueTerms.slice(0, commaIndex).join(' ')}`;
           let lastName = `${valueTerms.slice(commaIndex).join(' ')}`;
 
