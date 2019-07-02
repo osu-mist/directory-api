@@ -103,16 +103,16 @@ paths:
           description: Bad request
           schema:
             $ref: "#/definitions/Errors"
-  /directory/{osuuid}:
+  /directory/{osuUid}:
     get:
       tags:
       - directory
-      operationId: getByOSUUID
+      operationId: getByOsuUid
       description: Get entries in directory filtered by query parameters
       parameters:
-        - name: osuuid
+        - name: osuUid
           in: path
-          description: "OSUUID of the person to be fetched."
+          description: "osuUid of the person to be fetched."
           type: string
           required: true
         - $ref: "#/parameters/authorization"

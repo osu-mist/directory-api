@@ -96,7 +96,7 @@ const getDirectory = pathParameter => new Promise((resolve, reject) => {
 /**
  * @summary Return a list of directories
  * @function
- * @returns {Promise<object>} Promise object represents a serilized list of directory resrouces
+ * @returns {Promise<object>} Promise object represents a serialized list of directory resrouces
  */
 const getDirectories = endpointQuery => new Promise((resolve, reject) => {
   const ldapQuery = mapQuery(endpointQuery);
