@@ -25,7 +25,7 @@ const mapQuery = (endpointQuery) => {
   };
 
   const valueOperations = (key, value) => {
-    const ldapKey = keyMap[key]
+    const ldapKey = keyMap[key];
     const defaultOperation = `${ldapKey}=${value}`;
     switch (key) {
       case 'fuzzyName': {
@@ -49,9 +49,9 @@ const mapQuery = (endpointQuery) => {
       }
       case 'officePhoneNumber':
       case 'alternatePhoneNumber':
-      case 'faxNumber'
+      case 'faxNumber':
       case 'officeAddress': {
-        return `(${ldapKey}=*${value}*)`
+        return `(${ldapKey}=*${value}*)`;
       }
       case 'phoneNumber': {
         return `|(${ldapKey}=*${value}*)(${keyMap.alternatePhoneNumber}=*${value}*)`

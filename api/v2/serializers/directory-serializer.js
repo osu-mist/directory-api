@@ -13,7 +13,7 @@ const directoryResourceKeys = _.keys(directoryResourceProp.attributes.properties
 const directoryResourcePath = 'directory';
 const directoryResourceUrl = resourcePathLink(apiBaseUrl, directoryResourcePath);
 
-const ldapKeyToResourceKey = attribute => ({
+const ldapKeyToResourceKey = {
   givenName: 'firstName',
   sn: 'lastName',
   cn: 'fullName',
@@ -28,24 +28,9 @@ const ldapKeyToResourceKey = attribute => ({
   uid: 'username',
   osuAltPhoneNumber: 'alternatePhoneNumber',
   osuUID: 'osuUid',
-}[attribute]);
+};
 
-const resourceKeyToLdapKey = attribute => ({
-  firstName: 'givenName',
-  lastName: 'sn',
-  fullName: 'cn',
-  primaryAffiliation: 'osuPrimaryAffiliation',
-  jobTitle: 'title',
-  department: 'osuDepartment',
-  departmentMailingAddress: 'postalAddress',
-  officePhoneNumber: 'telephoneNumber',
-  officeAddress: 'osuOfficeAddress',
-  faxNumber: 'facsimileTelephoneNumber',
-  emailAddress: 'mail',
-  username: 'uid',
-  alternatePhoneNumber: 'osuAltPhoneNumber',
-  osuUid: 'osuUID',
-}[attribute]);
+const resourceKeyToLdapKey = _.invert(ldapKeyToResourceKey);
 
 const valueOperations = (key, value) => {
   switch (key) {
@@ -77,7 +62,7 @@ const valueOperations = (key, value) => {
  * The resourceKeys serializer argument requires LDAP keys
  */
 _.forEach(directoryResourceKeys, (key, index) => {
-  directoryResourceKeys[index] = resourceKeyToLdapKey(key);
+  directoryResourceKeys[index] = resourceKeyToLdapKey[key];
 });
 
 /**
@@ -110,7 +95,7 @@ const serializeDirectories = (rawDirectories, query) => {
     resourceKeys: directoryResourceKeys,
     pagination,
     resourcePath: directoryResourcePath,
-    keyForAttribute: ldapKeyToResourceKey,
+    keyForAttribute: attribute => (ldapKeyToResourceKey[attribute]),
     topLevelSelfLink,
     query: _.omit(query, 'page[size]', 'page[number]'),
     enableDataLinks: true,
@@ -130,11 +115,15 @@ const serializeDirectories = (rawDirectories, query) => {
  * @returns {Object} Serialized directoryResource object
  */
 const serializeDirectory = (rawDirectory) => {
+  Object.keys(rawDirectory).forEach((key) => {
+    rawDirectory[key] = valueOperations(key, rawDirectory[key]);
+  });
+
   const serializerArgs = {
     identifierField: 'osuUID',
     resourceKeys: directoryResourceKeys,
     resourcePath: directoryResourcePath,
-    keyForAttribute: ldapKeyToResourceKey,
+    keyForAttribute: attribute => (ldapKeyToResourceKey[attribute]),
     enableDataLinks: true,
     resourceType: directoryResourceType,
   };
