@@ -19,7 +19,7 @@ const get = async (req, res) => {
     const ldeMessage = err.lde_message;
     if (ldeMessage) {
       if (ldeMessage.includes('Size Limit Exceeded')) {
-        return errorBuilder(res, 400, ['Size Limit of 200 Results Exceeded (search too broad)']);
+        return errorBuilder(res, 400, ['Size Limit Exceeded (search too broad)']);
       }
       return errorHandler(res, [ldeMessage]);
     }
