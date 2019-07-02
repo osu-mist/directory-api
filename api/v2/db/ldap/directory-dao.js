@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const util = require('util');
 const { serializeDirectories, serializeDirectory, primaryAffiliationMap } = require('../../serializers/directory-serializer');
 const conn = require('./connection');
 
@@ -80,7 +81,8 @@ const mapQuery = (endpointQuery) => {
  */
 const getDirectory = pathParameter => new Promise((resolve, reject) => {
   const client = conn.getClient();
-  client.search('o=orst.edu', { filter: `osuUID=${pathParameter}`, scope: 'sub' }, (err, res) => {
+  client.promiseSearch = util.promisify(client.search);
+  client.promiseSearch('o=orst.edu', { filter: `osuUID=${pathParameter}`, scope: 'sub' }).then((res) => {
     res.on('searchEntry', (entry) => {
       resolve(serializeDirectory(entry.object));
     });
@@ -90,6 +92,8 @@ const getDirectory = pathParameter => new Promise((resolve, reject) => {
     res.on('end', () => {
       resolve(undefined);
     });
+  }).catch((error) => {
+    reject(error);
   });
 });
 
@@ -104,8 +108,9 @@ const getDirectories = endpointQuery => new Promise((resolve, reject) => {
     resolve(undefined);
   } else {
     const client = conn.getClient();
+    client.promiseSearch = util.promisify(client.search);
     const searchResults = [];
-    client.search('o=orst.edu', { filter: ldapQuery, scope: 'sub' }, (err, res) => {
+    client.promiseSearch('o=orst.edu', { filter: ldapQuery, scope: 'sub' }).then((res) => {
       res.on('searchEntry', (entry) => {
         searchResults.push(entry.object);
       });
@@ -115,6 +120,8 @@ const getDirectories = endpointQuery => new Promise((resolve, reject) => {
       res.on('end', () => {
         resolve(serializeDirectories(searchResults, endpointQuery));
       });
+    }).catch((error) => {
+      reject(error);
     });
   }
 });
