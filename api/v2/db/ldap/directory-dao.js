@@ -25,7 +25,8 @@ const mapQuery = (endpointQuery) => {
   };
 
   const valueOperations = (key, value) => {
-    const defaultOperation = `${keyMap[key]}=*${value}*`;
+    const ldapKey = keyMap[key]
+    const defaultOperation = `${ldapKey}=${value}`;
     switch (key) {
       case 'fuzzyName': {
         let fuzzyFilters = '|'; // 'or' condition for all name orderings
@@ -36,26 +37,28 @@ const mapQuery = (endpointQuery) => {
           let lastName = `${valueTerms.slice(commaIndex).join(' ')}`;
 
           // Add leading wildcard for non-null first and last names
-          firstName = (firstName ? `*${firstName}` : firstName);
-          lastName = (lastName ? `*${lastName}` : lastName);
+          firstName = firstName ? `*${firstName}` : firstName;
+          lastName = lastName ? `*${lastName}` : lastName;
 
           // Consider first, last ordering and last, first ordering with trailing wildcard
-          fuzzyFilters += `(${keyMap[key]}=${firstName}*, ${lastName}*)`;
-          fuzzyFilters += `(${keyMap[key]}=${lastName}*, ${firstName}*)`;
+          fuzzyFilters += `(${ldapKey}=${firstName}*, ${lastName}*)`;
+          fuzzyFilters += `(${ldapKey}=${lastName}*, ${firstName}*)`;
         });
 
         return fuzzyFilters;
       }
-      case 'firstName':
-      case 'lastName': {
-        return `${keyMap[key]}=${value}*`;
+      case 'officePhoneNumber':
+      case 'alternatePhoneNumber':
+      case 'faxNumber'
+      case 'officeAddress': {
+        return `(${ldapKey}=*${value}*)`
       }
       case 'phoneNumber': {
-        return `|(${defaultOperation})(${keyMap.alternatePhoneNumber}=*${value}*)`
+        return `|(${ldapKey}=*${value}*)(${keyMap.alternatePhoneNumber}=*${value}*)`
           + `(${keyMap.faxNumber}=*${value}*)`;
       }
       case 'primaryAffiliation': {
-        return `${keyMap[key]}=${{
+        return `${ldapKey}=${{
           Student: 'S',
           Employee: 'E',
           Other: 'O',
