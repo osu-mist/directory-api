@@ -10,10 +10,10 @@ const { openapi: { paths } } = appRoot.require('utils/load-openapi');
  */
 const get = async (req, res) => {
   try {
-    const { osuuid } = req.params;
-    const result = await directoryDao.getDirectory(osuuid);
+    const { osuUid } = req.params;
+    const result = await directoryDao.getDirectory(osuUid);
     if (!result) {
-      errorBuilder(res, 404, 'A directory with the specified osuUID was not found.');
+      errorBuilder(res, 404, 'A directory with the specified osuUid was not found.');
     } else {
       res.send(result);
     }
@@ -22,6 +22,6 @@ const get = async (req, res) => {
   }
 };
 
-get.apiDoc = paths['/directory/{osuuid}'].get;
+get.apiDoc = paths['/directory/{osuUid}'].get;
 
 module.exports = { get };
