@@ -13,6 +13,14 @@ const directoryResourceKeys = _.keys(directoryResourceProp.attributes.properties
 const directoryResourcePath = 'directory';
 const directoryResourceUrl = resourcePathLink(apiBaseUrl, directoryResourcePath);
 
+const primaryAffiliationMap = {
+  S: 'Student',
+  E: 'Employee',
+  O: 'Other',
+  R: 'Retiree',
+  U: 'Unknown',
+};
+
 const ldapKeyToResourceKey = {
   givenName: 'firstName',
   sn: 'lastName',
@@ -40,13 +48,7 @@ const valueOperations = (key, value) => {
       return `+${value}`;
     }
     case 'osuPrimaryAffiliation': {
-      return {
-        S: 'Student',
-        E: 'Employee',
-        O: 'Other',
-        R: 'Retiree',
-        U: 'Unknown',
-      }[value];
+      return primaryAffiliationMap[value];
     }
     case 'osuOfficeAddress':
     case 'postalAddress': {
@@ -134,4 +136,4 @@ const serializeDirectory = (rawDirectory) => {
   ).serialize(rawDirectory);
 };
 
-module.exports = { serializeDirectories, serializeDirectory };
+module.exports = { serializeDirectories, serializeDirectory, primaryAffiliationMap };

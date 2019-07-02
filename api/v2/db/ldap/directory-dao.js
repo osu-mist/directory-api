@@ -1,6 +1,5 @@
 const _ = require('lodash');
-const { serializeDirectories, serializeDirectory } = require('../../serializers/directory-serializer');
-
+const { serializeDirectories, serializeDirectory, primaryAffiliationMap } = require('../../serializers/directory-serializer');
 const conn = require('./connection');
 
 /**
@@ -58,13 +57,7 @@ const mapQuery = (endpointQuery) => {
           + `(${keyMap.faxNumber}=*${value}*)`;
       }
       case 'primaryAffiliation': {
-        return `${ldapKey}=${{
-          Student: 'S',
-          Employee: 'E',
-          Other: 'O',
-          Retiree: 'R',
-          Unknown: 'U',
-        }[value]}`;
+        return `${ldapKey}=${_.invert(primaryAffiliationMap)[value]}`;
       }
       default: {
         return defaultOperation;
