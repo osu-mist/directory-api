@@ -16,11 +16,15 @@ const getClient = () => ldap.createClient({ url });
  * @throws Throws an error if unable to connect or search ldap
  */
 const validateLdap = async () => {
-  const client = ldap.createClient({ url }).on('error', () => {
-    throw new Error('Error connecting to ldap');
-  }).on('connect', () => {
-    client.destroy();
-  });
+  try {
+    const client = ldap.createClient({ url }).on('error', () => {
+      throw new Error('Error connecting to ldap');
+    }).on('connect', () => {
+      client.destroy();
+    });
+  } catch (err) {
+    throw new Error('Invalid LDAP url');
+  }
 };
 
 module.exports = { getClient, validateLdap };
