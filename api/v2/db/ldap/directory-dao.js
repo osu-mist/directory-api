@@ -33,8 +33,8 @@ const mapQuery = (endpointQuery) => {
 
         const valueTerms = value.split(/[ ,]+/);
         _.forEach(_.range(valueTerms.length), (commaIndex) => {
-          let firstName = `${valueTerms.slice(0, commaIndex).join(' ')}`;
-          let lastName = `${valueTerms.slice(commaIndex).join(' ')}`;
+          let firstName = valueTerms.slice(0, commaIndex).join(' ');
+          let lastName = valueTerms.slice(commaIndex).join(' ');
 
           // Add leading wildcard for non-null first and last names
           firstName = firstName ? `*${firstName}` : firstName;
@@ -67,8 +67,8 @@ const mapQuery = (endpointQuery) => {
   };
 
   let ldapQuery = '';
-  _.keys(endpointQuery).forEach((key) => {
-    if (keyMap[key]) ldapQuery += `(${valueOperations(key, endpointQuery[key])})`;
+  _.forEach(endpointQuery, (value, key) => {
+    if (keyMap[key]) ldapQuery += `(${valueOperations(key, value)})`;
   });
   if (ldapQuery) ldapQuery = `(&${ldapQuery})`;
   return ldapQuery;
@@ -100,7 +100,8 @@ const getDirectory = pathParameter => new Promise((resolve, reject) => {
 /**
  * @summary Return a list of directories
  * @function
- * @returns {Promise<object>} Promise object represents a serialized list of directory resrouces
+ * @returns {Promise<object>} Promise object represents a serialized list of directory resources
+ * @returns undefined if query is empty
  */
 const getDirectories = endpointQuery => new Promise((resolve, reject) => {
   const ldapQuery = mapQuery(endpointQuery);
