@@ -37,6 +37,11 @@ paths:
             Full name directory searches. Fuzzy searches each word separated by space or comma. Last and first names can be in any order, but multiword first or last name components must be ordered "First1 First2 ..."
           type: string
           required: false
+        - name: firstName
+          in: query
+          description: Filter by first name
+          type: string
+          required: false
         - name: lastName
           in: query
           description: Filter by last name
