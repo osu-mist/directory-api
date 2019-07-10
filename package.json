@@ -1,7 +1,7 @@
 {
-  "name": "express-api-skeleton",
-  "version": "1.0.0",
-  "description": "Skeleton for Express APIs.",
+  "name": "directory-api",
+  "version": "2.0.0",
+  "description": "Public OSU directory API implemented with Express",
   "main": "app.js",
   "scripts": {
     "start": "./node_modules/.bin/gulp run",

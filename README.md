@@ -1,6 +1,8 @@
-# Express API Skeleton ![version](https://img.shields.io/badge/version-v1-blue.svg) [![openapi](https://img.shields.io/badge/openapi-2.0-green.svg)](./openapi.yaml) ![node](https://img.shields.io/badge/node-10.13-brightgreen.svg)
+# directory-api ![version](https://img.shields.io/badge/version-v2-blue.svg) [![openapi](https://img.shields.io/badge/openapi-2.0-green.svg)](./openapi.yaml) ![node](https://img.shields.io/badge/node-10.13-brightgreen.svg)
 
-Skeleton for Express APIs. API definition is contained in the [OpenAPI specification](./openapi.yaml).
+Public OSU directory API implemented with Express.
+
+API definition is contained in the [OpenAPI specification](./openapi.yaml).
 
 ## Getting Started
 
