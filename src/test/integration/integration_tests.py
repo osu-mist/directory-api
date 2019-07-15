@@ -66,7 +66,7 @@ class gateway_tests(unittest.TestCase):
         self.assertNotEqual(response.json()['data'], [])
 
     def test_sanitize(self):
-        good_uid = "browtayl"
+        good_uid = "carneyjo"
         for bad_char in "()*&#":
             response = self._request("", q=good_uid + bad_char)
             self.assertEquals(response.status_code, 200)
