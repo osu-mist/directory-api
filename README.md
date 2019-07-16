@@ -16,8 +16,7 @@ API definition is contained in the [OpenAPI specification](./openapi.yaml).
     $ openssl x509 -req -days 365 -in csr.pem -signkey key.pem -out server.crt
     ```
 
-3. Document API design in [openapi.yaml](./openapi.yaml). Please keep in mind that openapi documentation is mainly for the client's view. Directly implement the feature in the API if there is any difference between what the client should expect and what our server should provide.
-4. Copy [config/default-example.yaml](config/default-example.yaml) to `config/default.yaml`. Modify as necessary, being careful to avoid committing sensitive data. If you want to configure application through [custom environment variables](https://github.com/lorenwest/node-config/wiki/Environment-Variables#custom-environment-variables), copy [config/custom-environment-variables-example.yaml](config/custom-environment-variables-example.yaml) as `config/custom-environment-variables.yaml` and map the environment variable names into your configuration structure.
+3. Copy [config/default-example.yaml](config/default-example.yaml) to `config/default.yaml`. Modify as necessary, being careful to avoid committing sensitive data. If you want to configure application through [custom environment variables](https://github.com/lorenwest/node-config/wiki/Environment-Variables#custom-environment-variables), copy [config/custom-environment-variables-example.yaml](config/custom-environment-variables-example.yaml) as `config/custom-environment-variables.yaml` and map the environment variable names into your configuration structure.
 
     **Environment variables**: Sensitive data and data that changes per environment have been moved into environment variables. Below is a list of the variables along with a definition:
 
