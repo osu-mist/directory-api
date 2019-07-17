@@ -299,10 +299,10 @@ definitions:
             type: string
             format: url
             description: A link to further information about the error
-            example: "https://developer.oregonstate.edu/documentation/error-reference#1234"
-  Errors:
+            example: https://developer.oregonstate.edu/documentation/error-reference#1234
+  ErrorResult:
     properties:
       errors:
         type: array
         items:
-          $ref: '#/definitions/Error'
+          $ref: '#/definitions/ErrorObject'
