@@ -107,7 +107,7 @@ paths:
         "400":
           description: Bad request
           schema:
-            $ref: "#/definitions/Errors"
+            $ref: "#/definitions/ErrorResult"
   /directory/{osuUid}:
     get:
       tags:
@@ -129,7 +129,7 @@ paths:
         "404":
           description: Not found
           schema:
-            $ref: "#/definitions/Errors"
+            $ref: "#/definitions/ErrorResult"
 parameters:
   authorization:
     name: Authorization
@@ -276,7 +276,7 @@ definitions:
       self:
         type: string
         format: url
-  Error:
+  ErrorObject:
     properties:
       status:
         type: string
@@ -300,9 +300,9 @@ definitions:
             format: url
             description: A link to further information about the error
             example: "https://developer.oregonstate.edu/documentation/error-reference#1234"
-  Errors:
+  ErrorResult:
     properties:
       errors:
         type: array
         items:
-          $ref: '#/definitions/Error'
+          $ref: '#/definitions/ErrorObject'
