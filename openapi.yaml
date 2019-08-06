@@ -119,8 +119,8 @@ paths:
           in: path
           description: "osuUid of the person to be fetched."
           type: string
+          pattern: '^\d+$'
           required: true
-        - $ref: "#/parameters/authorization"
       responses:
         "200":
           description: Directory entity

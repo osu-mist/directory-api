@@ -3,6 +3,7 @@ const config = require('config');
 const _ = require('lodash');
 
 const { openapi } = appRoot.require('utils/load-openapi');
+const { logger } = require('./logger');
 
 const { dataSources } = config.get('dataSources');
 const json = dataSources.includes('json')
@@ -18,10 +19,7 @@ const ldap = dataSources.includes('ldap')
   ? appRoot.require(`/api${openapi.basePath}/db/ldap/connection`).validateLdap
   : null;
 
-/**
- * @summary Validate database configuration
- * @function
- */
+/** Validate database configuration */
 const validateDataSource = () => {
   const validationMethods = {
     awsS3,
@@ -34,7 +32,7 @@ const validateDataSource = () => {
   _.each(dataSources, (dataSourceType) => {
     if (dataSourceType in validationMethods) {
       validationMethods[dataSourceType]().catch((err) => {
-        console.error(err);
+        logger.error(err);
         process.exit(1);
       });
     } else {
