@@ -7,6 +7,9 @@ const { openapi: { paths } } = appRoot.require('utils/load-openapi');
 
 /**
  * @summary Get directory
+ * @param {object} req request
+ * @param {object} res response
+ * @returns {Promise<object>} response
  */
 const get = async (req, res) => {
   try {

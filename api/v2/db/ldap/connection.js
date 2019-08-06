@@ -6,7 +6,7 @@ const { url } = config.get('dataSources.ldap');
 /**
  * @summary Get an ldap connection
  * @function
- * @returns {ldapjs.client} ldap client connection object
+ * @returns {object} ldap client connection object
  */
 const getClient = () => ldap.createClient({ url });
 

@@ -6,6 +6,7 @@ const conn = require('./connection');
 /**
  * @summary Map endpoint query to ldap query
  * @function
+ * @param {object} endpointQuery query object in terms of API query params
  * @returns {string} string representing search filter for ldap query
  */
 const mapQuery = (endpointQuery) => {
@@ -77,7 +78,8 @@ const mapQuery = (endpointQuery) => {
 /**
  * @summary Return a directory
  * @function
- * @returns {Promise<Object>} Promise object represents a serialized directory resource
+ * @param {string} pathParameter osuUID from query as path parameter
+ * @returns {Promise<object>} Promise object represents a serialized directory resource
  */
 const getDirectory = pathParameter => new Promise((resolve, reject) => {
   const client = conn.getClient();
@@ -100,8 +102,9 @@ const getDirectory = pathParameter => new Promise((resolve, reject) => {
 /**
  * @summary Return a list of directories
  * @function
- * @returns {Promise<object>} Promise object represents a serialized list of directory resources
- * @returns undefined if query is empty
+ * @param {object} endpointQuery endpointQuery query object in terms of API query params
+ * @returns {Promise<object>} Promise object represents a serialized list of directory resources,
+ *   or undefined array if query is empty
  */
 const getDirectories = endpointQuery => new Promise((resolve, reject) => {
   const ldapQuery = mapQuery(endpointQuery);

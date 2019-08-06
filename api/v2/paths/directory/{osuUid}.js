@@ -4,8 +4,12 @@ const directoryDao = require('../../db/ldap/directory-dao');
 
 const { errorBuilder, errorHandler } = appRoot.require('errors/errors');
 const { openapi: { paths } } = appRoot.require('utils/load-openapi');
+
 /**
- * @summary Get directory by unique osuUid
+ * @summary Get directory
+ * @param {object} req request
+ * @param {object} res response
+ * @returns {Promise<object>} response
  */
 const get = async (req, res) => {
   try {

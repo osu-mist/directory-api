@@ -70,9 +70,9 @@ _.forEach(directoryResourceKeys, (key, index) => {
 /**
  * @summary Serialize directoryResources to JSON API
  * @function
- * @param {[Object]} rawDirectory Raw data rows from data source
- * @param {Object} query Query parameters
- * @returns {Object} Serialized directoryResources object
+ * @param {[object]} rawDirectories Raw data rows from data source
+ * @param {object} query Query parameters
+ * @returns {object} Serialized directoryResources object
  */
 const serializeDirectories = (rawDirectories, query) => {
   const pageQuery = {
@@ -113,8 +113,8 @@ const serializeDirectories = (rawDirectories, query) => {
 /**
  * @summary Serialize directoryResource to JSON API
  * @function
- * @param {Object} rawDirectory Raw data row from data source
- * @returns {Object} Serialized directoryResource object
+ * @param {object} rawDirectory Raw data row from data source
+ * @returns {object} Serialized directoryResource object
  */
 const serializeDirectory = (rawDirectory) => {
   Object.keys(rawDirectory).forEach((key) => {
