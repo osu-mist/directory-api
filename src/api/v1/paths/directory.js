@@ -1,9 +1,7 @@
-const appRoot = require('app-root-path');
+import directoryDao from '../../../db/ldap/directory-dao';
 
-const directoryDao = require('../db/ldap/directory-dao');
-
-const { errorHandler, errorBuilder } = appRoot.require('errors/errors');
-const { openapi: { paths } } = appRoot.require('utils/load-openapi');
+import { errorHandler, errorBuilder } from '../../../errors/errors';
+import { openapi: { paths } } from '../../../utils/load-openapi';
 
 /**
  * @summary Get directory
@@ -32,4 +30,4 @@ const get = async (req, res) => {
 
 get.apiDoc = paths['/directory'].get;
 
-module.exports = { get };
+export { get };

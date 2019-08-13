@@ -1,5 +1,5 @@
-const config = require('config');
-const ldap = require('ldapjs');
+import config from 'config';
+import ldap from 'ldapjs';
 
 const { url } = config.get('dataSources.ldap');
 
@@ -27,4 +27,4 @@ const validateLdap = async () => {
   }
 };
 
-module.exports = { getClient, validateLdap };
+export { getClient, validateLdap };

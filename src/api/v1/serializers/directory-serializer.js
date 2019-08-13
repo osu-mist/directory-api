@@ -1,17 +1,16 @@
-const appRoot = require('app-root-path');
-const JsonApiSerializer = require('jsonapi-serializer').Serializer;
-const _ = require('lodash');
+import { Serializer: JsonApiSerializer } from 'jsonapi-serializer';
+import _ from 'lodash';
 
-const { serializerOptions } = appRoot.require('utils/jsonapi');
-const { openapi } = appRoot.require('utils/load-openapi');
-const { paginate } = appRoot.require('utils/paginator');
-const { apiBaseUrl, resourcePathLink, paramsLink } = appRoot.require('utils/uri-builder');
+import { serializerOptions } from '../../../utils/jsonapi';
+import { openapi } from '../../../utils/load-openapi';
+import { paginate } from '../../../utils/paginator';
+import { apiBaseUrl, resourcePathLink, paramsLink } from '../../../utils/uri-builder';
 
-const directoryResourceProp = openapi.definitions.DirectoryResourceObject.properties;
-const directoryResourceType = directoryResourceProp.type.enum[0];
-const directoryResourceKeys = _.keys(directoryResourceProp.attributes.properties);
-const directoryResourcePath = 'directory';
-const directoryResourceUrl = resourcePathLink(apiBaseUrl, directoryResourcePath);
+import directoryResourceProp = openapi.definitions.DirectoryResourceObject.properties;
+import directoryResourceType = directoryResourceProp.type.enum[0];
+import directoryResourceKeys = _.keys(directoryResourceProp.attributes.properties);
+import directoryResourcePath = 'directory';
+import directoryResourceUrl = resourcePathLink(apiBaseUrl, directoryResourcePath);
 
 const primaryAffiliationMap = {
   S: 'Student',
@@ -136,4 +135,4 @@ const serializeDirectory = (rawDirectory) => {
   ).serialize(rawDirectory);
 };
 
-module.exports = { serializeDirectories, serializeDirectory, primaryAffiliationMap };
+export { serializeDirectories, serializeDirectory, primaryAffiliationMap };

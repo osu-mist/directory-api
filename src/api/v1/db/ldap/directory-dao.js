@@ -1,7 +1,7 @@
-const _ = require('lodash');
-const util = require('util');
-const { serializeDirectories, serializeDirectory, primaryAffiliationMap } = require('../../serializers/directory-serializer');
-const conn = require('./connection');
+import _  from 'lodash';
+import util from 'util';
+import { serializeDirectories, serializeDirectory, primaryAffiliationMap } from '../../../../serializers/directory-serializer';
+import conn from './connection';
 
 /**
  * @summary Map endpoint query to ldap query
@@ -130,4 +130,4 @@ const getDirectories = endpointQuery => new Promise((resolve, reject) => {
   }
 });
 
-module.exports = { getDirectory, getDirectories };
+exports { getDirectory, getDirectories };
