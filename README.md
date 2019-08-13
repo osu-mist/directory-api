@@ -78,21 +78,67 @@ $ gulp test
 $ npm test
 ```
 
-### Incorporate updates from the skeleton
+### Type checking
 
-1. Add the skeleton as a remote:
+This API is configured to use [Flow static type checking](https://flow.org/).
+
+Check flow types:
+
+```shell
+# Using gulp
+$ gulp typecheck
+
+# Using npm
+$ npm run typecheck
+```
+
+## Babel
+
+This API uses [Babel](https://babeljs.io/) to transpile JavaScript code. After running, the transpiled code will be located in `dist/`. Source maps are also generated in the same directory. These contain references to the original source code for debugging purposes.
+
+Babel allows for newer ECMAScript syntax such as `import` and `export` from ES6. It also allows [Babel plugins](https://babeljs.io/docs/en/plugins) to be used.
+
+Compilation is done by the `babel` gulp task. This is handled automatically by other tasks but can be manually invoked:
+
+```shell
+# Using gulp
+$ gulp babel
+
+# Using npm
+$ npm run babel
+```
+
+## Base project off the skeleton
+
+### Base a new project off the skeleton
+
+1. Clone the skeleton:
 
     ```shell
-    $ git remote add skeleton git@github.com:osu-mist/express-api-skeleton.git
+    $ git clone --origin skeleton git@github.com:osu-mist/express-api-skeleton.git <my-api>
     ```
 
-2. Fetch updates from the skeleton:
+2. Rename project by modifying [package.json](./package.json).
+
+3. We use [express-openapi](https://www.npmjs.com/package/express-openapi) to generate API by inheriting openapi.yaml. Create path handlers and put them into corresponding directories. For example:
+
+    * The path handler for `/api/v1/pets` should go to [api/v1/paths/pet.js](api/v1/paths/pet.js)
+    * The path handler for `/api/v1/pets/{id}` should go to [api/v1/paths/pet/{id}.js](api/v1/paths/pet/{id}.js)
+
+4. Copy [api/v1/serializers/pets-serializer.js](api/v1/serializers/pets-serializer.js) to `api/v1/serializers/<resources>-serializer.js` and modify as necessary:
+
+    ```shell
+    $ cp api/v1/serializers/pets-serializer.js api/v1/serializers/<resources>-serializer.js
+    ```
+
+### Incorporate updates from the skeleton
+1. Fetch updates from the skeleton:
 
     ```shell
     $ git fetch skeleton
     ```
 
-3. Merge the skeleton into your codebase:
+2. Merge the skeleton into your codebase:
 
     ```shell
     $ git checkout feature/CO-1234-branch

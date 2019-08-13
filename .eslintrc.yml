@@ -1,7 +1,10 @@
+parser: babel-eslint
 extends:
   - airbnb-base
-  - plugin:jsdoc/recommended
+  - plugin:flowtype/recommended
 plugins:
+  - flowtype
+  - eslint-plugin-import-order-alphabetical
   - jsdoc
 env:
   node: true
@@ -11,7 +14,7 @@ rules:
   import/no-unresolved:
     - error
     - commonjs: true
-      ignore: [ ^aws-sdk$, ^oracledb$, ^request-promise-native$ ]
+      ignore: [ ^aws-sdk$, ^oracledb$, ^request-promise-native$, contrib/ ]
   jsdoc/require-param:
     - warn
     - exemptedBy: [ type ]
@@ -20,14 +23,19 @@ rules:
     - exemptedBy: [ type ]
   jsdoc/no-undefined-types:
     - warn
-      # Express types
+      # Express and gulpfile types
     - definedTypes:
         - RequestHandler
         - ErrorRequestHandler
         - Request
         - Response
+        - Stream
+        - ChildProcess
   jsdoc/require-jsdoc:
     - warn
     - publicOnly: true
       require:
         ArrowFunctionExpression: true
+settings:
+  import/resolver:
+    babel-module: {}
