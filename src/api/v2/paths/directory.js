@@ -1,7 +1,6 @@
-import directoryDao from '../../../db/ldap/directory-dao';
+import { errorHandler, errorBuilder } from 'errors/errors';
 
-import { errorHandler, errorBuilder } from '../../../errors/errors';
-import { openapi: { paths } } from '../../../utils/load-openapi';
+import { getDirectories } from '../db/ldap/directory-dao';
 
 /**
  * @summary Get directory
@@ -11,7 +10,7 @@ import { openapi: { paths } } from '../../../utils/load-openapi';
  */
 const get = async (req, res) => {
   try {
-    const result = await directoryDao.getDirectories(req.query);
+    const result = await getDirectories(req.query);
     if (!result) {
       return errorBuilder(res, 400, ['No query parameters specified.']);
     }
@@ -28,6 +27,6 @@ const get = async (req, res) => {
   }
 };
 
-get.apiDoc = paths['/directory'].get;
-
-export { get };
+export default {
+  get,
+};

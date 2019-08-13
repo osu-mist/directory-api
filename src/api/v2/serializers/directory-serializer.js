@@ -1,16 +1,16 @@
-import { Serializer: JsonApiSerializer } from 'jsonapi-serializer';
+import { Serializer as JsonApiSerializer } from 'jsonapi-serializer';
 import _ from 'lodash';
 
-import { serializerOptions } from '../../../utils/jsonapi';
-import { openapi } from '../../../utils/load-openapi';
-import { paginate } from '../../../utils/paginator';
-import { apiBaseUrl, resourcePathLink, paramsLink } from '../../../utils/uri-builder';
+import serializerOptions from 'utils/jsonapi';
+import openapi from 'utils/load-openapi';
+import paginate from 'utils/paginator';
+import { apiBaseUrl, resourcePathLink, paramsLink } from 'utils/uri-builder';
 
-import directoryResourceProp = openapi.definitions.DirectoryResourceObject.properties;
-import directoryResourceType = directoryResourceProp.type.enum[0];
-import directoryResourceKeys = _.keys(directoryResourceProp.attributes.properties);
-import directoryResourcePath = 'directory';
-import directoryResourceUrl = resourcePathLink(apiBaseUrl, directoryResourcePath);
+const directoryResourceProp = openapi.definitions.DirectoryResourceObject.properties;
+const directoryResourceType = directoryResourceProp.type.enum[0];
+const directoryResourceKeys = _.keys(directoryResourceProp.attributes.properties);
+const directoryResourcePath = 'directory';
+const directoryResourceUrl = resourcePathLink(apiBaseUrl, directoryResourcePath);
 
 const primaryAffiliationMap = {
   S: 'Student',
@@ -39,6 +39,13 @@ const ldapKeyToResourceKey = {
 
 const resourceKeyToLdapKey = _.invert(ldapKeyToResourceKey);
 
+/**
+ * @summary Manipulates values to match format expected in response
+ * @function
+ * @param {string} key Ldap key of attribute
+ * @param {string} value Value of attribute returned of ldap
+ * @returns {string} Value of attribute formatted for response
+ */
 const valueOperations = (key, value) => {
   switch (key) {
     case 'telephoneNumber':

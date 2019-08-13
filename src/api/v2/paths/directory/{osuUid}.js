@@ -1,7 +1,6 @@
-import directoryDao from '../../db/ldap/directory-dao';
+import { errorBuilder, errorHandler } from 'errors/errors';
 
-import { errorBuilder, errorHandler } from '../../../../errors/errors';
-import { openapi: { paths } } from '../../../../utils/load-openapi';
+import { getDirectory } from '../../db/ldap/directory-dao';
 
 /**
  * @summary Get directory
@@ -12,7 +11,7 @@ import { openapi: { paths } } from '../../../../utils/load-openapi';
 const get = async (req, res) => {
   try {
     const { osuUid } = req.params;
-    const result = await directoryDao.getDirectory(osuUid);
+    const result = await getDirectory(osuUid);
     if (!result) {
       errorBuilder(res, 404, 'A directory with the specified osuUid was not found.');
     } else {
@@ -23,6 +22,6 @@ const get = async (req, res) => {
   }
 };
 
-get.apiDoc = paths['/directory/{osuUid}'].get;
-
-export { get };
+export default {
+  get,
+};
