@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import util from 'util';
-import { serializeDirectories, serializeDirectory, primaryAffiliationMap } from '../../serializers/directory-serializer';
+import { serializeDirectories, serializeDirectory, primaryAffiliationMap } from 'api/v2/serializers/directory-serializer';
 import { getClient } from './connection';
 
 /**
@@ -81,7 +81,7 @@ const mapQuery = (endpointQuery) => {
  * @param {string} pathParameter osuUID from query as path parameter
  * @returns {Promise<object>} Promise object represents a serialized directory resource
  */
-const getDirectory = pathParameter => new Promise((resolve, reject) => {
+const getDirectory = (pathParameter) => new Promise((resolve, reject) => {
   const client = getClient();
   client.promiseSearch = util.promisify(client.search);
   client.promiseSearch('o=orst.edu', { filter: `osuUID=${pathParameter}`, scope: 'sub' }).then((res) => {
@@ -106,7 +106,7 @@ const getDirectory = pathParameter => new Promise((resolve, reject) => {
  * @returns {Promise<object>} Promise object represents a serialized list of directory resources,
  *   or undefined array if query is empty
  */
-const getDirectories = endpointQuery => new Promise((resolve, reject) => {
+const getDirectories = (endpointQuery) => new Promise((resolve, reject) => {
   const ldapQuery = mapQuery(endpointQuery);
   if (!ldapQuery) {
     resolve(undefined);

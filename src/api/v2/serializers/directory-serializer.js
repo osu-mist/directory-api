@@ -1,9 +1,9 @@
 import { Serializer as JsonApiSerializer } from 'jsonapi-serializer';
 import _ from 'lodash';
 
-import serializerOptions from 'utils/jsonapi';
-import openapi from 'utils/load-openapi';
-import paginate from 'utils/paginator';
+import { serializerOptions } from 'utils/jsonapi';
+import { openapi } from 'utils/load-openapi';
+import { paginate } from 'utils/paginator';
 import { apiBaseUrl, resourcePathLink, paramsLink } from 'utils/uri-builder';
 
 const directoryResourceProp = openapi.definitions.DirectoryResourceObject.properties;
@@ -103,7 +103,7 @@ const serializeDirectories = (rawDirectories, query) => {
     resourceKeys: directoryResourceKeys,
     pagination,
     resourcePath: directoryResourcePath,
-    keyForAttribute: attribute => (ldapKeyToResourceKey[attribute]),
+    keyForAttribute: (attribute) => (ldapKeyToResourceKey[attribute]),
     topLevelSelfLink,
     query: _.omit(query, 'page[size]', 'page[number]'),
     enableDataLinks: true,
@@ -131,7 +131,7 @@ const serializeDirectory = (rawDirectory) => {
     identifierField: 'osuUID',
     resourceKeys: directoryResourceKeys,
     resourcePath: directoryResourcePath,
-    keyForAttribute: attribute => (ldapKeyToResourceKey[attribute]),
+    keyForAttribute: (attribute) => (ldapKeyToResourceKey[attribute]),
     enableDataLinks: true,
     resourceType: directoryResourceType,
   };

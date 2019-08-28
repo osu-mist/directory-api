@@ -1,6 +1,6 @@
-import config from 'config';
 import _ from 'lodash';
-import { validateLdap as ldap } from '../api/v2/db/ldap/connection';
+import config from 'config';
+import { validateLdap as ldap } from 'api/v2/db/ldap/connection';
 
 const { dataSources } = config.get('dataSources');
 
@@ -24,4 +24,4 @@ const validateDataSource = () => {
   });
 };
 
-export default validateDataSource;
+export { validateDataSource };

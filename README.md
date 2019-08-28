@@ -31,10 +31,6 @@ API definition is contained in the [OpenAPI specification](./openapi.yaml).
 ### Installing
 
 ```shell
-# Using yarn (recommended)
-$ yarn
-
-# Using npm
 $ npm install
 ```
 
@@ -43,10 +39,10 @@ $ npm install
 Run the application:
 
   ```shell
-  # Run linting and testing tasks before starting the app
-  $ gulp run
+  # Build and run the app
+  $ gulp devRun
 
-  # Run the app without running linting and testing tasks (only for development)
+  # Run the app without building
   $ gulp start
   ```
 
@@ -64,7 +60,8 @@ $ gulp lint
 $ npm run lint
 ```
 
-> Note: We are following [Airbnb's style](https://github.com/airbnb/javascript) as the JavaScript style guide.
+> Note: We use [Airbnb's style](https://github.com/airbnb/javascript) as a base style guide.
+> Additional rules and modifications can be found in [.eslintrc.yml](./.eslintrc.yml).
 
 ### Testing
 
@@ -108,7 +105,16 @@ $ gulp babel
 $ npm run babel
 ```
 
-## Base project off the skeleton
+### Resolving Paths
+
+This skeleton uses
+[babel-plugin-module-resolver](https://github.com/tleunen/babel-plugin-module-resolver) to resolve
+paths. The list of functions that use this plugin can be found in
+[babel.config.js](./babel.config.js) under `transformFunctions`.
+
+> Note: `proxyquire` is included but only the path given by the first argument to this function will
+> resolve correctly. The keys for each dependency path in the second argument must be relative
+> paths.
 
 ### Base a new project off the skeleton
 
@@ -122,13 +128,13 @@ $ npm run babel
 
 3. We use [express-openapi](https://www.npmjs.com/package/express-openapi) to generate API by inheriting openapi.yaml. Create path handlers and put them into corresponding directories. For example:
 
-    * The path handler for `/api/v1/pets` should go to [api/v1/paths/pet.js](api/v1/paths/pet.js)
-    * The path handler for `/api/v1/pets/{id}` should go to [api/v1/paths/pet/{id}.js](api/v1/paths/pet/{id}.js)
+    * The path handler for `/src/api/v1/pets` should go to [src/api/v1/paths/pet.js](./src/api/v1/paths/pet.js)
+    * The path handler for `/src/api/v1/pets/{id}` should go to [src/api/v1/paths/pet/{id}.js](./src/api/v1/paths/pet/{id}.js)
 
-4. Copy [api/v1/serializers/pets-serializer.js](api/v1/serializers/pets-serializer.js) to `api/v1/serializers/<resources>-serializer.js` and modify as necessary:
+4. Copy [src/api/v1/serializers/pets-serializer.js](./src/api/v1/serializers/pets-serializer.js) to `src/api/v1/serializers/<resources>-serializer.js` and modify as necessary:
 
     ```shell
-    $ cp api/v1/serializers/pets-serializer.js api/v1/serializers/<resources>-serializer.js
+    $ cp src/api/v1/serializers/pets-serializer.js src/api/v1/serializers/<resources>-serializer.js
     ```
 
 ### Incorporate updates from the skeleton
