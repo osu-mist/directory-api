@@ -1,35 +1,7 @@
-<<<<<<< HEAD
-# Gradle
-.gradle/
-
-# Extra dependencies (database drivers)
-bin/
-
-# Dropwizard
-build/
-logs/
-configuration.yaml
-configuration.json
-
-# IntelliJ IDEA
-*.iml
-*.ipr
-*.iws
-.idea/
-out/
-
-# Mac OS X
-.DS_Store
-
-# Build Properties
-build.properties
-=======
 # Logs
 logs
 *.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # Runtime data
 pids
@@ -77,9 +49,6 @@ typings/
 # Output of 'npm pack'
 *.tgz
 
-# Yarn Integrity file
-.yarn-integrity
-
 # dotenv environment variables file
 .env
 
@@ -89,18 +58,10 @@ typings/
 # API
 config/*.yaml
 bin
->>>>>>> skeleton/master
 
 # Keytool Files
 *.pem
 *.cer
-<<<<<<< HEAD
-*.keystore
-*.truststore
-
-# Integration Tests
-*.pyc
-=======
 *.crt
 *.keystore
 *.truststore
@@ -109,7 +70,7 @@ bin
 .DS_Store
 
 # Integration tests configuration
-tests/integration/configuration.json
+src/tests/integration/configuration.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -124,4 +85,6 @@ venv/
 ENV/
 env.bak/
 venv.bak/
->>>>>>> skeleton/master
+
+# Transpiled Babel code and source maps
+dist/**

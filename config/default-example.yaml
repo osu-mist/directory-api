@@ -12,16 +12,15 @@ authentication:
   username: ${USER}
   password: ${PASSWD}
 
-logger:
-  size: 10m
-  path: logs
-  pattern: YYYY-MM-DD
-  archive: true
-
 dataSources:
+<<<<<<< HEAD
+  dataSources: ['ldap']
+  ldap:
+    url: 'ldaps://ldap.onid.orst.edu'
+=======
   dataSources: ['json', 'oracledb', 'awsS3']
   json:
-    dbPath: 'tests/unit/mock-data.json'
+    dbPath: 'src/tests/unit/mock-data.json'
   oracledb:
     connectString: ${DB_URL}
     user: ${DB_USER}
@@ -38,3 +37,4 @@ dataSources:
     # These values are for local or proxy S3 instances
     endpoint: null
     s3ForcePathStyle: false
+>>>>>>> 389634c25175947adcce13a9b5480702132a3327
