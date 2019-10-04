@@ -2,7 +2,7 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
 import _ from 'lodash';
-import conn from 'api/v2/db/ldap/connection';
+import * as conn from 'api/v2/db/ldap/connection';
 import { openapi } from 'utils/load-openapi';
 import { fakeBaseUrl } from './mock-data';
 
