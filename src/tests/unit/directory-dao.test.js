@@ -1,4 +1,3 @@
-import appRoot from 'app-root-path';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import _ from 'lodash';
@@ -21,7 +20,7 @@ describe('Test directory-dao', () => {
     serializeDirectoryStub.returnsArg(0);
     serializeDirectoriesStub.returnsArg(0);
 
-    directoryDao = proxyquire(`${appRoot}/src/api/v2/db/ldap/directory-dao`, {
+    directoryDao = proxyquire('api/v2/db/ldap/directory-dao', {
       '../../serializers/directory-serializer': {
         serializeDirectory: serializeDirectoryStub,
         serializeDirectories: serializeDirectoriesStub,
