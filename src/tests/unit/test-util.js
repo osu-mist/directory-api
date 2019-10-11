@@ -5,26 +5,18 @@ import _ from 'lodash';
 import * as conn from 'api/v2/db/ldap/connection';
 import { openapi } from 'utils/load-openapi';
 import { fakeBaseUrl } from './mock-data';
+// import { clear } from 'winston';
 
 
 /**
  * @summary Create the stub for client object that is useful for controlled testing environment.
  * @function
- * @param {object} testCase The testcase that becomes the return value of connection.execute
+ * @param {object} testCase The testcase that becomes the return value of client.promiseSearch
  * in the stub.
  * @returns {object} An object of all the interal function stub created for this stub.
  */
-const createClientStub = (testCase) => {
-  const executeStub = sinon.stub().returns(testCase);
-  sinon.stub(conn, 'getClient').resolves({
-    execute: executeStub,
-    close: () => null,
-    commit: () => null,
-  });
-  return {
-    executeStub,
-  };
-};
+const createClientStub = () => sinon.stub(conn, 'getClient').resolves({});
+
 
 /**
  * @summary Transform the rawData into serializedData.
