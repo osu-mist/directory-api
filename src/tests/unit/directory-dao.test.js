@@ -12,7 +12,34 @@ chai.use(chaiAsPromised);
 
 let directoryDao;
 
+const proxyDirectory = (option) => {
+  const proxyquireObject = {
+    './connection': {
+      getClient: sinon.stub().returns({ search: {} }),
+    },
+  };
+  if (option === 'getDirectories') {
+    proxyquireObject.promisify = () => sinon.stub().resolves({
+      on: (type, listener) => {
+        if (type === 'end') {
+          listener();
+        }
+      },
+    });
+  } else if (option === 'getDirectory') {
+    proxyquireObject.promisify = () => sinon.stub().resolves({
+      on: (type, listener) => {
+        if (type === 'searchEntry') {
+          listener();
+        }
+      },
+    });
+  }
+  return proxyquire('api/v2/db/ldap/directory-dao', proxyquireObject);
+};
+
 describe('Test directory-dao', () => {
+  /*
   beforeEach(() => {
     directoryDao = proxyquire('api/v2/db/ldap/directory-dao', {
 
@@ -32,9 +59,12 @@ describe('Test directory-dao', () => {
       },
     });
   });
+  */
+
   afterEach(() => sinon.restore());
 
   describe('Test getDirectory', () => {
+    directoryDao = proxyDirectory('getDirectory');
     const testCaseList = [singleResult];
     _.forEach(testCaseList, ({ testCase, expectedResult, description }) => {
       it(`getDirectory should be fulfilled with ${description}`, () => {
@@ -49,6 +79,7 @@ describe('Test directory-dao', () => {
   });
 
   describe('Test getDirectories', () => {
+    directoryDao = proxyDirectory('getDirectories');
     const testCaseList = [multiResult];
     _.forEach(testCaseList, ({ testCase, expectedResult, description }) => {
       it(`getDirectories should be fulfilled with ${description}`, () => {
@@ -61,11 +92,9 @@ describe('Test directory-dao', () => {
       });
     });
 
-    /*
     it('getDirectories should return undefined when no query parameters are passed', () => {
       const result = directoryDao.getDirectories({});
       return result.should.eventually.be.fulfilled.and.equal(undefined);
     });
-    */
   });
 });
