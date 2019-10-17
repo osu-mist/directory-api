@@ -10,16 +10,17 @@ import { singleResult, multiResult } from './mock-data';
 chai.should();
 chai.use(chaiAsPromised);
 
-let directoryDao;
-
-const proxyDirectory = (option) => {
+const proxyDao = (option) => {
   const proxyquireObject = {
+    util: {},
+
     './connection': {
       getClient: sinon.stub().returns({ search: {} }),
     },
   };
+
   if (option === 'getDirectories') {
-    proxyquireObject.promisify = () => sinon.stub().resolves({
+    proxyquireObject.util.promisify = () => sinon.stub().resolves({
       on: (type, listener) => {
         if (type === 'end') {
           listener();
@@ -27,10 +28,10 @@ const proxyDirectory = (option) => {
       },
     });
   } else if (option === 'getDirectory') {
-    proxyquireObject.promisify = () => sinon.stub().resolves({
+    proxyquireObject.util.promisify = () => sinon.stub().resolves({
       on: (type, listener) => {
         if (type === 'searchEntry') {
-          listener();
+          listener({ object: {} });
         }
       },
     });
@@ -39,61 +40,34 @@ const proxyDirectory = (option) => {
 };
 
 describe('Test directory-dao', () => {
-  /*
-  beforeEach(() => {
-    directoryDao = proxyquire('api/v2/db/ldap/directory-dao', {
-
-      util: {
-        promisify: () => sinon.stub().resolves({
-          on: (type, listener) => {
-            if (type === 'end') {
-              listener();
-            }
-          },
-        }),
-      },
-
-      './connection': {
-        getClient: sinon.stub().returns({ search: {} }),
-
-      },
-    });
-  });
-  */
-
   afterEach(() => sinon.restore());
 
   describe('Test getDirectory', () => {
-    directoryDao = proxyDirectory('getDirectory');
     const testCaseList = [singleResult];
     _.forEach(testCaseList, ({ testCase, expectedResult, description }) => {
       it(`getDirectory should be fulfilled with ${description}`, () => {
         const serializeDirectoryStub = sinon.stub(directorySerializer, 'serializeDirectory');
         serializeDirectoryStub.returns(testCase);
-        const result = directoryDao.getDirectories('fakeId');
-        return result.should
-          .eventually.be.fulfilled
-          .and.deep.equal(expectedResult);
+        const result = proxyDao('getDirectory').getDirectory('fakeId');
+        return result.should.eventually.be.fulfilled.and.deep.equal(expectedResult);
       });
     });
   });
 
+
   describe('Test getDirectories', () => {
-    directoryDao = proxyDirectory('getDirectories');
     const testCaseList = [multiResult];
     _.forEach(testCaseList, ({ testCase, expectedResult, description }) => {
       it(`getDirectories should be fulfilled with ${description}`, () => {
         const serializeDirectoriesStub = sinon.stub(directorySerializer, 'serializeDirectories');
         serializeDirectoriesStub.returns(testCase);
-        const result = directoryDao.getDirectories({ firstName: 'fakeName' });
-        return result.should
-          .eventually.be.fulfilled
-          .and.deep.equal(expectedResult);
+        const result = proxyDao('getDirectories').getDirectories({ firstName: 'fakeName' });
+        return result.should.eventually.be.fulfilled.and.deep.equal(expectedResult);
       });
     });
 
     it('getDirectories should return undefined when no query parameters are passed', () => {
-      const result = directoryDao.getDirectories({});
+      const result = proxyDao('getDirectories').getDirectories({});
       return result.should.eventually.be.fulfilled.and.equal(undefined);
     });
   });
