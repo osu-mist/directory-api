@@ -1,5 +1,6 @@
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
+import config from 'config';
 import proxyquire from 'proxyquire';
 import sinon from 'sinon';
 
@@ -40,9 +41,13 @@ const testEndpoint = (endpoint, endpointName, testObject) => {
 };
 
 let endpointName;
+// sinon.replace(config, 'get', () => {});
+
 
 describe('Test directory-dao', () => {
+  sinon.replace(config, 'get', () => ({ ldap: {} }));
   afterEach(() => sinon.restore());
+
   describe('Test getDirectory', () => {
     endpointName = 'getDirectory';
     // Test that getDirectory returns a single result
