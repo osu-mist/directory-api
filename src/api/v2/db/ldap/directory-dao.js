@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import util from 'util';
+
 import { serializeDirectories, serializeDirectory, primaryAffiliationMap } from 'api/v2/serializers/directory-serializer';
 import { getClient } from './connection';
 

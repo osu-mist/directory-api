@@ -1,6 +1,6 @@
-import sinon from 'sinon';
 import { expect } from 'chai';
 import _ from 'lodash';
+import sinon from 'sinon';
 
 import * as conn from 'api/v2/db/ldap/connection';
 import { openapi } from 'utils/load-openapi';
