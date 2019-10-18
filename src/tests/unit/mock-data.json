@@ -1,19 +1,19 @@
 {
-  "singleResultInList": {
-    "testCase": [{}],
-    "expectedResult": [{}],
-    "description": "a single result in an array"
-  },
   "singleResult": {
-    "testCase": {},
+    "testCase": "fakeId",
     "expectedResult": {},
-    "description": "a single result"
+    "description": "fulfilled with a single result"
   },
   "multiResult": {
-    "testCase": [{}, {}],
-    "expectedResult": [{}, {}],
-    "description": "multiple results"
+    "testCase": { "firstName": "fakeName" },
+    "expectedResult": [],
+    "description": "fulfilled with multiple results"
   },
+  "noQueryParams": {
+    "testCase": {},
+    "description": "return undefined when no query parameters are passed"
+  },
+
   "people": [
     {
       "id": "1111",
