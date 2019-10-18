@@ -4,11 +4,12 @@ import config from 'config';
 import proxyquire from 'proxyquire';
 import sinon from 'sinon';
 
-import * as directorySerializer from 'api/v2/serializers/directory-serializer';
 import { singleResult, multiResult, noQueryParams } from './mock-data';
 
 chai.should();
 chai.use(chaiAsPromised);
+
+const anonStub = sinon.stub().returnsArg(0);
 
 const proxyDao = (endpointName) => {
   const option = endpointName === 'getDirectory' ? 'searchEntry' : 'end';
@@ -25,6 +26,11 @@ const proxyDao = (endpointName) => {
     './connection': {
       getClient: sinon.stub().returns({ search: {} }),
     },
+    '../../serializers/directory-serializer': {
+      serializeDirectory: anonStub,
+      serializeDirectories: anonStub,
+    },
+
   };
   return proxyquire('api/v2/db/ldap/directory-dao', proxyquireObject);
 };
@@ -32,20 +38,15 @@ const proxyDao = (endpointName) => {
 const testEndpoint = (endpoint, endpointName, testObject) => {
   const { testCase, expectedResult, description } = testObject;
   it(`${endpointName} should be ${description}`, () => {
-    const serializer = endpointName === 'getDirectory' ? 'serializeDirectory' : 'serializeDirectories';
-    const serializerStub = sinon.stub(directorySerializer, serializer);
-    serializerStub.returnsArg(0);
     const result = endpoint(testCase);
     return result.should.eventually.be.fulfilled.and.deep.equal(expectedResult);
   });
 };
 
 let endpointName;
-// sinon.replace(config, 'get', () => {});
-
+sinon.replace(config, 'get', () => ({ ldap: {} }));
 
 describe('Test directory-dao', () => {
-  sinon.replace(config, 'get', () => ({ ldap: {} }));
   afterEach(() => sinon.restore());
 
   describe('Test getDirectory', () => {
