@@ -30,27 +30,31 @@ const proxyDao = (endpointName) => {
 
 const testEndpoint = (endpoint, endpointName, testObject) => {
   const { testCase, expectedResult, description } = testObject;
-  describe(`Test ${endpointName}`, () => {
-    it(`${endpointName} should be ${description}`, () => {
-      const serializer = endpointName === 'getDirectory' ? 'serializeDirectory' : 'serializeDirectories';
-      const serializerStub = sinon.stub(directorySerializer, serializer);
-      serializerStub.returnsArg(0);
-      const result = endpoint(testCase);
-      return result.should.eventually.be.fulfilled.and.deep.equal(expectedResult);
-    });
+  it(`${endpointName} should be ${description}`, () => {
+    const serializer = endpointName === 'getDirectory' ? 'serializeDirectory' : 'serializeDirectories';
+    const serializerStub = sinon.stub(directorySerializer, serializer);
+    serializerStub.returnsArg(0);
+    const result = endpoint(testCase);
+    return result.should.eventually.be.fulfilled.and.deep.equal(expectedResult);
   });
 };
 
+let endpointName;
+
 describe('Test directory-dao', () => {
   afterEach(() => sinon.restore());
-  let endpointName = 'getDirectory';
-  // Test that getDirectory returns a single result
-  testEndpoint(proxyDao(endpointName).getDirectory, endpointName, singleResult);
+  describe('Test getDirectory', () => {
+    endpointName = 'getDirectory';
+    // Test that getDirectory returns a single result
+    testEndpoint(proxyDao(endpointName).getDirectory, endpointName, singleResult);
+  });
 
-  endpointName = 'getDirectories';
-  // Test that getDirectories returns multiple results
-  testEndpoint(proxyDao(endpointName).getDirectories, endpointName, multiResult);
-
-  // Test that getDirectories returns undefined when no query parameters are passed
-  testEndpoint(proxyDao(endpointName).getDirectories, endpointName, noQueryParams);
+  describe('Test getDirectories', () => {
+    endpointName = 'getDirectories';
+    const endpoint = proxyDao(endpointName).getDirectories;
+    // Test that getDirectories returns multiple results
+    testEndpoint(endpoint, endpointName, multiResult);
+    // Test that getDirectories returns undefined when no query parameters are passed
+    testEndpoint(endpoint, endpointName, noQueryParams);
+  });
 });
