@@ -24,7 +24,7 @@ const createClientStub = () => sinon.stub(conn, 'getClient').resolves({});
  * @returns {object} Expected serialized rawData.
  */
 const resourceSchema = (resourceType, resourceId, resourceAttributes, relationships) => {
-  const fakeUrl = `/${fakeBaseUrl}/${resourceType}s/${resourceId}`;
+  const fakeUrl = `/${fakeBaseUrl}/${resourceType}/${resourceId}`;
   const schema = {
     links: {
       self: fakeUrl,
