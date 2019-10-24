@@ -86,15 +86,12 @@ const serializeDirectories = (rawDirectories, query) => {
     number: query['page[number]'],
   };
 
-  // TODO: Something is wrong at this function, double adding + in front of tele numbers
   rawDirectories.forEach((directory) => {
     Object.keys(directory).forEach((key) => {
       directory[key] = valueOperations(key, directory[key]);
-      console.log('key:', key);
-      console.log('directory[key] -> ', directory[key]);
     });
   });
-  console.log('rawDirectories:', rawDirectories);
+
 
   const pagination = paginate(rawDirectories, pageQuery);
   pagination.totalResults = rawDirectories.length;
@@ -151,4 +148,5 @@ export {
   serializeDirectory,
   primaryAffiliationMap,
   valueOperations,
+  resourceKeyToLdapKey,
 };

@@ -5,15 +5,18 @@ const singleResult = {
   expectedResult: {},
   description: 'fulfilled with a single result',
 };
+
 const multiResult = {
   testCase: { firstName: 'fakeName' },
   expectedResult: [],
   description: 'fulfilled with multiple results',
 };
+
 const noQueryParams = {
   testCase: {},
   description: 'return undefined when no query parameters are passed',
 };
+
 const people = [
   {
     id: '1111',
@@ -34,6 +37,7 @@ const people = [
     primaryAffiliation: 'Student',
   },
 ];
+
 const rawDirectories = [
   {
     dn: 'osuuid=12345678910,ou=people,o=orst.edu',
