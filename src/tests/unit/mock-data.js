@@ -103,86 +103,11 @@ const rawDirectories = [
   },
 ];
 
-const expectedSerializedDirectories = {
-  links: {
-    self: '/v2/directory?page[number]=1&page[size]=2',
-    first: '/v2/directory?page[number]=1&page[size]=2',
-    last: '/v2/directory?page[number]=1&page[size]=2',
-    next: null,
-    prev: null,
-  },
-  meta: {
-    totalResults: 2,
-    totalPages: 1,
-    currentPageNumber: 1,
-    currentPageSize: 2,
-  },
-  data: [
-    {
-      type: 'directory',
-      id: '12345678910',
-      links: {
-        self: '/v2/directory/12345678910',
-      },
-      attributes: {
-        firstName: 'Just',
-        lastName: 'Guy',
-        fullName: 'Guy, Just A',
-        primaryAffiliation: 'Employee',
-        jobTitle: 'Courtesy Appointment',
-        department: 'Horticulture',
-        departmentMailingAddress:
-          'Horticulture, Oregon State University, 4017 Ag and Life Science Bldg, Corvallis, OR 97331-8646',
-        officePhoneNumber: '+1 541 867 5309',
-        officeAddress:
-          'Horticulture, USDA-ARS (HCRL), 3420 NW Orchard Ave, Corvallis, OR 97330-5014',
-        faxNumber: '+1 541 867 5309',
-        emailAddress: 'guy@oregonstate.edu',
-        username: 'aguy',
-        osuUid: '12345678910',
-      },
-    },
-    {
-      type: 'directory',
-      id: '12345678911',
-      links: {
-        self: '/v2/directory/12345678911',
-      },
-      attributes: {
-        firstName: 'A',
-        lastName: 'Guy',
-        fullName: 'Guy, A Different',
-        primaryAffiliation: 'Employee',
-        jobTitle: 'Courtesy Appointment',
-        department: 'Horticulture',
-        departmentMailingAddress:
-          'Horticulture, Oregon State University, 4017 Ag and Life Science Bldg, Corvallis, OR 97331-8646',
-        officePhoneNumber: '+1 541 867 5309',
-        officeAddress:
-          'Horticulture, USDA-ARS (HCRL), 3420 NW Orchard Ave, Corvallis, OR 97330-5014',
-        faxNumber: '+1 541 867 5309',
-        emailAddress: 'anotherguy@oregonstate.edu',
-        username: 'adiffguy',
-        osuUid: '12345678911',
-      },
-    },
-  ],
-};
-
-const expectedSerializedDirectory = {
-  links: {
-    self: undefined,
-  },
-  data: expectedSerializedDirectories.data[0],
-};
-
 export {
   singleResult,
   multiResult,
   noQueryParams,
   people,
   rawDirectories,
-  expectedSerializedDirectory,
-  expectedSerializedDirectories,
   fakeBaseUrl,
 };

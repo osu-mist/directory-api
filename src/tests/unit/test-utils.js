@@ -49,14 +49,10 @@ const getDefinition = (def) => openapi.definitions[def].properties;
  * @param {string} resourceType The type of the resource.
  * @param {string} resourceId The id of the resource.
  * @param {object} nestedProps The attributes of the resource.
- * @param {[object]} relationships The relationships of the resource.
  */
-const testSingleResource = (serializedResource,
-  resourceType, resourceId, nestedProps, relationships) => {
-  expect(serializedResource).to.deep.equal(resourceSchema(resourceType,
-    resourceId,
-    nestedProps,
-    relationships));
+const testSingleResource = (serializedResource, nestedProps, resourceType, resourceId) => {
+  const schema = resourceSchema(resourceType, nestedProps[resourceId], nestedProps);
+  expect(serializedResource).to.deep.equal(schema);
 };
 
 /**
@@ -66,7 +62,6 @@ const testSingleResource = (serializedResource,
  * @param {object} rawResources Raw resources to be used in test.
  * @param {*} resourceType The type of the resource.
  * @param {*} resourceKey The id of the resource.
- * @param {object} relationships The relationships of the resource.
  */
 const testMultipleResources = (
   serializedResources,
@@ -83,29 +78,50 @@ const testMultipleResources = (
 };
 
 /**
+ * @param {object} rawDirectory Array of raw directory objects
+ * @returns {object} A directory object with converted resource key values.
+ * @note rawDirectory should be cloned BEFORE being passed into this function to prevent overwriting
+ *       the test data.
+ */
+const performValueOperationsHelper = (rawDirectory) => {
+  _.keys(rawDirectory).forEach((key) => {
+    switch (key) {
+      case 'objectClass':
+      case 'controls':
+      case 'dn':
+        break;
+      default:
+        rawDirectory[key] = valueOperations(key, rawDirectory[key]);
+        rawDirectory[ldapKeyToResourceKey[key]] = rawDirectory[key];
+    }
+    delete rawDirectory[key];
+  });
+  return rawDirectory;
+};
+
+/**
+ * Converts ldap keys to resource keys and omits non-attribute keys
+ *
+ * @param {object} rawDirectory A raw directory object
+ * @returns {object} A directory object with converted resource key values.
+ */
+const performValueOperations = (rawDirectory) => {
+  const directoryCopy = _.cloneDeep(rawDirectory);
+  return performValueOperationsHelper(directoryCopy);
+};
+
+/**
  * Validate multiple serialized resources.
  *
  * @param {object} rawDirectories Array of raw directory objects
  * @returns {object} Array of directory objects with converted resource key values.
  */
-const performValueOperations = (rawDirectories) => {
-  const rawTestDirectories = _.cloneDeep(rawDirectories);
-  _.forEach(rawTestDirectories, (directory) => {
-    _.keys(directory).forEach((key) => {
-      switch (key) {
-        case 'objectClass':
-        case 'controls':
-        case 'dn':
-          break;
-        default:
-          directory[key] = valueOperations(key, directory[key]);
-          directory[ldapKeyToResourceKey[key]] = directory[key];
-      }
-      delete directory[key];
-      // console.log('directory:', directory);
-    });
+const performMultipleValueOperations = (rawDirectories) => {
+  const directoriesCopy = _.cloneDeep(rawDirectories);
+  _.forEach(directoriesCopy, (directory) => {
+    performValueOperationsHelper(directory);
   });
-  return _.toArray(rawTestDirectories);
+  return _.toArray(directoriesCopy);
 };
 
 export {
@@ -114,4 +130,5 @@ export {
   testMultipleResources,
   getDefinition,
   performValueOperations,
+  performMultipleValueOperations,
 };
