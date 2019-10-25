@@ -92,7 +92,6 @@ const serializeDirectories = (rawDirectories, query) => {
     });
   });
 
-
   const pagination = paginate(rawDirectories, pageQuery);
   pagination.totalResults = rawDirectories.length;
   rawDirectories = pagination.paginatedRows;
@@ -148,5 +147,5 @@ export {
   serializeDirectory,
   primaryAffiliationMap,
   valueOperations,
-  resourceKeyToLdapKey,
+  ldapKeyToResourceKey,
 };

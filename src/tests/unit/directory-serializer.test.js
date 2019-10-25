@@ -2,8 +2,9 @@ import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import _ from 'lodash';
 
-import { rawDirectories, expectedSerializedDirectory, expectedSerializedDirectories } from './mock-data';
+import { rawDirectories, expectedSerializedDirectory } from './mock-data';
 import { serializeDirectories, serializeDirectory } from '../../api/v2/serializers/directory-serializer';
+import { testMultipleResources, performValueOperations } from './test-utils';
 
 chai.should();
 chai.use(chaiAsPromised);
@@ -24,11 +25,10 @@ describe('Test directory-serializer', () => {
         'page[size]': '2',
         'page[number]': '1',
       };
-      const rawTestDirectories = _.cloneDeep(rawDirectories);
-      const serializedDirectories = serializeDirectories(rawTestDirectories, query);
-      expect(serializedDirectories).to.have.all.keys('data', 'meta', 'links');
-      expect(serializedDirectories.data).to.be.an('array');
-      expect(serializedDirectories).to.deep.equal(expectedSerializedDirectories);
+      const toBeSerialized = _.toArray(_.cloneDeep(rawDirectories));
+      const rawTestDirectories = performValueOperations(rawDirectories);
+      const serializedDirectories = serializeDirectories(toBeSerialized, query);
+      testMultipleResources(serializedDirectories, rawTestDirectories, 'directory', 'osuUid');
     });
   });
 });
