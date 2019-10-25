@@ -30,7 +30,6 @@ const proxyDao = (endpointName) => {
       serializeDirectory: anonStub,
       serializeDirectories: anonStub,
     },
-
   };
   return proxyquire('api/v2/db/ldap/directory-dao', proxyquireObject);
 };
