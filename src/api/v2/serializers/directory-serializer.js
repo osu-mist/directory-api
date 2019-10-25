@@ -126,12 +126,13 @@ const serializeDirectory = (rawDirectory) => {
   Object.keys(rawDirectory).forEach((key) => {
     rawDirectory[key] = valueOperations(key, rawDirectory[key]);
   });
-
+  const topLevelSelfLink = resourcePathLink(directoryResourceUrl, rawDirectory.osuUID);
   const serializerArgs = {
     identifierField: 'osuUID',
     resourceKeys: directoryResourceKeys,
     resourcePath: directoryResourcePath,
     keyForAttribute: (attribute) => (ldapKeyToResourceKey[attribute]),
+    topLevelSelfLink,
     enableDataLinks: true,
     resourceType: directoryResourceType,
   };
