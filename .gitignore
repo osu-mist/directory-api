@@ -88,3 +88,6 @@ venv.bak/
 
 # Transpiled Babel code and source maps
 dist/**
+
+#VScode
+.vscode/
