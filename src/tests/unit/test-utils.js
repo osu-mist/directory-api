@@ -5,7 +5,6 @@ import { openapi } from 'utils/load-openapi';
 import { fakeBaseUrl } from './mock-data';
 import { valueOperations, ldapKeyToResourceKey } from '../../api/v2/serializers/directory-serializer';
 
-
 /**
  * @summary Transform the rawData into serializedData.
  * @param {string} resourceType The type of resource.
@@ -60,8 +59,8 @@ const testSingleResource = (serializedResource, nestedProps, resourceType, resou
  *
  * @param {object} serializedResources serialized resource to be tested.
  * @param {object} rawResources Raw resources to be used in test.
- * @param {*} resourceType The type of the resource.
- * @param {*} resourceKey The id of the resource.
+ * @param {string} resourceType The type of the resource.
+ * @param {string} resourceKey The id of the resource.
  */
 const testMultipleResources = (
   serializedResources,
