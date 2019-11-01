@@ -13,12 +13,7 @@ authentication:
   password: ${PASSWD}
 
 dataSources:
-<<<<<<< HEAD
-  dataSources: ['ldap']
-  ldap:
-    url: 'ldaps://ldap.onid.orst.edu'
-=======
-  dataSources: ['json', 'oracledb', 'awsS3']
+  dataSources: ['json', 'oracledb', 'awsS3', 'ldap']
   json:
     dbPath: 'src/tests/unit/mock-data.json'
   oracledb:
@@ -37,4 +32,5 @@ dataSources:
     # These values are for local or proxy S3 instances
     endpoint: null
     s3ForcePathStyle: false
->>>>>>> 389634c25175947adcce13a9b5480702132a3327
+  ldap:
+    url: 'ldaps://ldap.onid.orst.edu'
