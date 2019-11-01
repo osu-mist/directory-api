@@ -37,17 +37,35 @@ class integration_tests(unittest.TestCase):
         cls.session.close()
 
     # Test GET /directory
-    def test_get_directory_by_id(self, endpoint='/directory'):
-        valid_ids = self.test_cases['valid_ids']
-        invalid_ids = self.test_cases['invalid_ids']
-        for valid_id in valid_ids:
-            response = utils.test_endpoint(self, f'{endpoint}/{valid_id}',
-                                           DIR_RES, 200)
-            actual_id = response.json()['data']['id']
-            self.assertEqual(actual_id, valid_id)
+    def test_get_directory(self, endpoint='/directory'):
+        '''
+        tests = {}
+        test_cases = self.test_cases
+        for param in test_cases:
+            if param != 'id':
+                tests[param] = test_cases[param]
+                for test in test_cases[param]:
+                    tests[param][test] = test_cases[param][test]
 
+        for query_param in tests:
+            utils.test_query_params(self, endpoint, query_param,
+                                    tests[query_param]['valid'],
+                                    tests[query_param]['invalid'])
+        '''
+
+    # Test GET /directory/{osuUid}
+    def test_get_directory_by_id(self, endpoint='/directory'):
+        valid_ids = self.test_cases['id']['valid']
+        invalid_ids = self.test_cases['id']['invalid']
+        for valid_id in valid_ids:
+            test_endpoint = f'{endpoint}/{valid_id}'
+            response = utils.test_endpoint(self, test_endpoint, DIR_RES, 200)
+            response_data = response.json()['data']
+            self.assertEqual(valid_id, response_data['id'])
+            self.assertEqual(valid_id, response_data['attributes']['osuUid'])
         for invalid_id in invalid_ids:
-            utils.test_endpoint(self, f'{endpoint}/{invalid_id}', DIR_RES, 404)
+            test_endpoint = f'{endpoint}/{invalid_id}'
+            utils.test_endpoint(self, test_endpoint, ERR_OBJ, 404)
 
 
 if __name__ == '__main__':

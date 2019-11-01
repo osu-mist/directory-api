@@ -291,6 +291,28 @@ def test_endpoint(self, endpoint, resource, response_code, query_params=None,
     return response
 
 
+def test_query_params(self, endpoint, filter_type, valid_tests, invalid_tests):
+    print('Testing', filter)
+    DIR_RES = 'DirectoryResourceObject'
+    for test in valid_tests:
+        params = {filter_type: test, 'page[number]': 1, "page[size]": 25}
+        response = test_endpoint(self, endpoint, DIR_RES, 200,
+                                 query_params=params)
+        response_data = response.json()['data']
+        for resource in response_data:
+            if filter_type == 'onid':
+                filter_type = 'username'
+            actual = resource['attributes'][filter_type]
+            self.assertEqual(actual.lower(), test.lower())
+
+    for test in invalid_tests:
+        params = {filter_type: test}
+        response = test_endpoint(self, endpoint, DIR_RES, 200,
+                                 query_params=params)
+        response_data = response.json()['data']
+        self.assertFalse(response_data)
+
+
 class assertion_tests(unittest.TestCase):
     # Helper function to check if a response value starts with the test value
     def actual_starts_with_test(self, actual_case, test_case):
