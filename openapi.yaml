@@ -208,6 +208,9 @@ definitions:
     properties:
       data:
         $ref: "#/definitions/DirectoryResourceObject"
+      links:
+        allOf:
+          - $ref: '#/definitions/ResourceLinks'
   DirectoryResourceObject:
     properties:
       id:
