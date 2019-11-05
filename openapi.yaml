@@ -194,23 +194,23 @@ definitions:
        description: The next page of data
   DirectoryResultObjects:
     properties:
-      data:
-        type: array
-        items:
-          $ref: "#/definitions/DirectoryResourceObject"
       links:
         allOf:
           - $ref: '#/definitions/ResourceLinks'
           - $ref: '#/definitions/PaginationLinks'
       meta:
         $ref: '#/definitions/Meta'
+      data:
+        type: array
+        items:
+          $ref: "#/definitions/DirectoryResourceObject"
   DirectoryResultObject:
     properties:
-      data:
-        $ref: "#/definitions/DirectoryResourceObject"
       links:
         allOf:
           - $ref: '#/definitions/ResourceLinks'
+      data:
+        $ref: "#/definitions/DirectoryResourceObject"
   DirectoryResourceObject:
     properties:
       id:
