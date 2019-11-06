@@ -90,7 +90,7 @@ def make_request(self, endpoint, expected_status_code,
     """
 
     requested_url = f'{self.base_url}{endpoint}'
-    response = self.session.get(requested_url, params=params)
+    response = self.session.get(requested_url, params=None)
     logging.debug(f'Sent request to {requested_url}, params = {params}')
     status_code = response.status_code
     response_code_details = textwrap.dedent(f'''
@@ -249,14 +249,16 @@ def check_url(self, link_url, endpoint, query_params=None):
         base_url = re.sub(r':\d{4}/api', '', self.base_url)
 
     base_url = re.sub(r'host\.docker\.internal', 'localhost', base_url)
-
     link_url_obj = urllib.parse.urlparse(link_url)
     base_url_obj = urllib.parse.urlparse(base_url)
-
+    link_path = link_url_obj.path
+    link_query = link_url_obj.query
     url_equalities = [
       [link_url_obj.scheme, base_url_obj.scheme, 'scheme'],
       [link_url_obj.netloc, base_url_obj.netloc, 'netloc'],
-      [link_url_obj.path, f'{base_url_obj.path}{endpoint}', 'path']]
+      [f'{link_path}?{link_query}' if link_query else link_path,
+       f'{base_url_obj.path}{endpoint}', 'path']
+    ]
 
     for link_attribute, base_attribute, attribute_type in url_equalities:
         self.assertEqual(link_attribute, base_attribute,
@@ -281,9 +283,7 @@ def test_endpoint(self, endpoint, resource, response_code, query_params=None,
                   nullable_fields=None):
     nullable_fields = [] if nullable_fields is None else nullable_fields
     schema = get_resource_schema(self, resource)
-    response = make_request(self, endpoint, response_code,
-                            params=query_params)
-
+    response = make_request(self, endpoint, response_code, params=query_params)
     check_schema(self, response, schema, nullable_fields)
     response_json = response.json()
     if 'links' in response_json:
@@ -292,11 +292,13 @@ def test_endpoint(self, endpoint, resource, response_code, query_params=None,
 
 
 def test_query_params(self, endpoint, filter_type, valid_tests, invalid_tests):
-    print('Testing', filter)
     DIR_RES = 'DirectoryResourceObject'
     for test in valid_tests:
-        params = {filter_type: test, 'page[number]': 1, "page[size]": 25}
-        response = test_endpoint(self, endpoint, DIR_RES, 200,
+        params = {filter_type: test}  # 'page[number]': 1, "page[size]": 25
+        test_url = endpoint
+        for param in params:
+            test_url = f'{test_url}?{param}={params[param]}'
+        response = test_endpoint(self, test_url, DIR_RES, 200,
                                  query_params=params)
         response_data = response.json()['data']
         for resource in response_data:
@@ -311,6 +313,13 @@ def test_query_params(self, endpoint, filter_type, valid_tests, invalid_tests):
                                  query_params=params)
         response_data = response.json()['data']
         self.assertFalse(response_data)
+
+
+def params_link(endpoint, query_params):
+    encoded_params = urllib.parse.urlencode(query_params)
+    encoded_params = re.sub(r'%5B', '[', encoded_params)
+    encoded_params = re.sub(r'%5D', ']', encoded_params)
+    return f'{endpoint}?{encoded_params}' if query_params else endpoint
 
 
 class assertion_tests(unittest.TestCase):

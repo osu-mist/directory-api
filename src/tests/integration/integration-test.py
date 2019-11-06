@@ -37,8 +37,8 @@ class integration_tests(unittest.TestCase):
         cls.session.close()
 
     # Test GET /directory
+    '''
     def test_get_directory(self, endpoint='/directory'):
-        '''
         tests = {}
         test_cases = self.test_cases
         for param in test_cases:
@@ -51,9 +51,9 @@ class integration_tests(unittest.TestCase):
             utils.test_query_params(self, endpoint, query_param,
                                     tests[query_param]['valid'],
                                     tests[query_param]['invalid'])
-        '''
-
+    '''
     # Test GET /directory/{osuUid}
+
     def test_get_directory_by_id(self, endpoint='/directory'):
         valid_ids = self.test_cases['id']['valid']
         invalid_ids = self.test_cases['id']['invalid']
@@ -66,6 +66,47 @@ class integration_tests(unittest.TestCase):
         for invalid_id in invalid_ids:
             test_endpoint = f'{endpoint}/{invalid_id}'
             utils.test_endpoint(self, test_endpoint, ERR_OBJ, 404)
+
+    # Test pagination
+    def test_get_directories_pagination(self, endpoint='/directory'):
+        testing_paginations = [
+            {'number': 1, 'size': 25, 'expected_status_code': 200},
+            {'number': 1, 'size': None, 'expected_status_code': 200},
+            {'number': None, 'size': 25, 'expected_status_code': 200},
+            {'number': 999, 'size': 1, 'expected_status_code': 200},
+            {'number': -1, 'size': 25, 'expected_status_code': 400},
+            {'number': 1, 'size': -1, 'expected_status_code': 400},
+            {'number': 1, 'size': 501, 'expected_status_code': 400}
+        ]
+        nullable_fields = []
+        for pagination in testing_paginations:
+            params = {'lastName': 'Wilson'}
+            for k in ['number', 'size']:
+                if pagination[k] is not None:
+                    params[f'page[{k}]'] = pagination[k]
+                else:
+                    params[f'page[{k}]'] = 1 if k == 'number' else 25
+            test_endpoint = utils.params_link(endpoint, params)
+            expected_status_code = pagination['expected_status_code']
+            resource = (
+                DIR_RES if expected_status_code == 200
+                else ERR_OBJ
+            )
+            response = utils.test_endpoint(self, test_endpoint, resource,
+                                           expected_status_code,
+                                           query_params=params,
+                                           nullable_fields=nullable_fields)
+            content = utils.get_json_content(self, response)
+            if expected_status_code == 200:
+                try:
+                    meta = content['meta']
+                    num = pagination['number'] if pagination['number'] else 1
+                    size = pagination['size'] if pagination['size'] else 25
+
+                    self.assertEqual(num, meta['currentPageNumber'])
+                    self.assertEqual(size, meta['currentPageSize'])
+                except KeyError as error:
+                    self.fail(error)
 
 
 if __name__ == '__main__':
