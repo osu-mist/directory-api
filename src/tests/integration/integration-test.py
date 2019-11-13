@@ -37,7 +37,6 @@ class integration_tests(unittest.TestCase):
         cls.session.close()
 
     # Test GET /directory
-    '''
     def test_get_directory(self, endpoint='/directory'):
         tests = {}
         test_cases = self.test_cases
@@ -51,21 +50,20 @@ class integration_tests(unittest.TestCase):
             utils.test_query_params(self, endpoint, query_param,
                                     tests[query_param]['valid'],
                                     tests[query_param]['invalid'])
-    '''
-    # Test GET /directory/{osuUid}
 
+    # Test GET /directory/{osuUid}
     def test_get_directory_by_id(self, endpoint='/directory'):
         valid_ids = self.test_cases['id']['valid']
         invalid_ids = self.test_cases['id']['invalid']
         for valid_id in valid_ids:
-            test_endpoint = f'{endpoint}/{valid_id}'
-            response = utils.test_endpoint(self, test_endpoint, DIR_RES, 200)
+            test_url = f'{endpoint}/{valid_id}'
+            response = utils.test_endpoint(self, test_url, DIR_RES, 200)
             response_data = response.json()['data']
             self.assertEqual(valid_id, response_data['id'])
             self.assertEqual(valid_id, response_data['attributes']['osuUid'])
         for invalid_id in invalid_ids:
-            test_endpoint = f'{endpoint}/{invalid_id}'
-            utils.test_endpoint(self, test_endpoint, ERR_OBJ, 404)
+            test_url = f'{endpoint}/{invalid_id}'
+            utils.test_endpoint(self, test_url, ERR_OBJ, 404)
 
     # Test pagination
     def test_get_directories_pagination(self, endpoint='/directory'):
@@ -86,13 +84,9 @@ class integration_tests(unittest.TestCase):
                     params[f'page[{k}]'] = pagination[k]
                 else:
                     params[f'page[{k}]'] = 1 if k == 'number' else 25
-            test_endpoint = utils.params_link(endpoint, params)
             expected_status_code = pagination['expected_status_code']
-            resource = (
-                DIR_RES if expected_status_code == 200
-                else ERR_OBJ
-            )
-            response = utils.test_endpoint(self, test_endpoint, resource,
+            resource = DIR_RES if expected_status_code == 200 else ERR_OBJ
+            response = utils.test_endpoint(self, endpoint, resource,
                                            expected_status_code,
                                            query_params=params,
                                            nullable_fields=nullable_fields)
@@ -102,7 +96,6 @@ class integration_tests(unittest.TestCase):
                     meta = content['meta']
                     num = pagination['number'] if pagination['number'] else 1
                     size = pagination['size'] if pagination['size'] else 25
-
                     self.assertEqual(num, meta['currentPageNumber'])
                     self.assertEqual(size, meta['currentPageSize'])
                 except KeyError as error:
