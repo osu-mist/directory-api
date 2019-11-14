@@ -8,15 +8,44 @@
     "basic_auth": {
       "username": "username",
       "password": "password"
-    },
-    "oauth2": {
-      "token_api_url": "https://api.oregonstate.edu/oauth2/token",
-      "client_id": "client_id",
-      "client_secret": "client_secret"
     }
   },
   "test_cases": {
-    "valid_pet_ids": ["1", "2", "3"],
-    "invalid_pet_ids": ["999", "-1", "invalid_id"]
+    "id": {
+      "valid": ["43868700139", "53868730879", "44979934575", "28313180078"],
+      "invalid": ["-2", "0", "noID"]
+    },
+    "firstName": {
+      "valid": ["Frederick", "Toby", "Greta"],
+      "invalid": ["fdsafdsa", "12357"]
+    },
+    "lastName": {
+      "valid": ["McDonald", "Liang", "Wilson"],
+      "invalid": ["fdsafdsa", "12357"]
+    },
+    "onid": {
+      "valid": ["kalcicd", "awaik", "kauffmza"],
+      "invalid": ["123", "asdf"]
+    },
+    "primaryAffiliation": {
+      "valid": ["Employee", "Student", "Other"],
+      "invalid": ["1234", "fdsa", "djklsa"]
+    },
+    "emailAddress": {
+      "valid": ["kalcicd@oregonstate.edu", "awaik@oregonstate.edu", "kauffmza@oregonstate.edu"],
+      "invalid": ["1234", "fdsa", "djklsa"]
+    },
+    "phoneNumber": {
+      "valid": ["15418670386", "0386", "404"],
+      "invalid": ["asdf", "noNumbersHere123"]
+    },
+    "officeAddress": {
+      "valid": [],
+      "invalid": []
+    },
+    "department": {
+      "valid": ["English", "Computer Science", "Mechanical Engineering"],
+      "invalid": ["Underwater Basket Weaving", "Leisure Studies"]
+    }
   }
 }
