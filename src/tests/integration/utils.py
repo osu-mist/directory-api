@@ -253,8 +253,7 @@ def check_url(self, link_url, endpoint, query_params=None):
     link_url_obj = urllib.parse.urlparse(link_url)
     base_url_obj = urllib.parse.urlparse(base_url)
     expected_self_link = params_link(f'{base_url}{endpoint}', query_params)
-    print('actual:', link_url)
-    print('expected:', expected_self_link)
+
     url_equalities = [
       [link_url_obj.scheme, base_url_obj.scheme, 'scheme'],
       [link_url_obj.netloc, base_url_obj.netloc, 'netloc'],
