@@ -252,13 +252,14 @@ def check_url(self, link_url, endpoint, query_params=None):
     base_url = re.sub(r'host\.docker\.internal', 'localhost', base_url)
     link_url_obj = urllib.parse.urlparse(link_url)
     base_url_obj = urllib.parse.urlparse(base_url)
-    expected_self_link = params_link(f'{base_url}{endpoint}', query_params)
+    # expected_self_link = params_link(f'{base_url}{endpoint}', query_params)
 
     url_equalities = [
       [link_url_obj.scheme, base_url_obj.scheme, 'scheme'],
       [link_url_obj.netloc, base_url_obj.netloc, 'netloc'],
-      [link_url_obj.path, f'{base_url_obj.path}{endpoint}', 'path'],
-      [link_url, expected_self_link, 'self link']
+      [link_url_obj.path, f'{base_url_obj.path}{endpoint}', 'path']
+      # [link_url, expected_self_link, 'self link']  Uncomment this to expect
+      #                                              encoded self links
     ]
 
     for link_attribute, base_attribute, attribute_type in url_equalities:
@@ -295,8 +296,14 @@ def test_endpoint(self, endpoint, resource, response_code, query_params=None,
 def test_query_params(self, endpoint, param, valid_tests, invalid_tests):
     DIR_RES = 'DirectoryResourceObject'
     ERR_OBJ = 'ErrorObject'
-    # lists params that return too broad of a search
+    # lists params that return too broad of a search, resulting in 400, not 200
     broad_search = ['primaryAffiliation', 'department']
+    phone_number_params = [
+        'phoneNumber',
+        'officePhoneNumber',
+        'alternatePhoneNumber',
+        'faxNumber'
+    ]
     res_code = 400 if param in broad_search else 200
     res_object = ERR_OBJ if param in broad_search else DIR_RES
     params = {param: None, 'page[number]': 1, 'page[size]': 25}
@@ -305,15 +312,14 @@ def test_query_params(self, endpoint, param, valid_tests, invalid_tests):
 
     for test in valid_tests:
         params[param] = test
-        print('testing', param, params)
         response = test_endpoint(self, endpoint, res_object, res_code,
                                  query_params=params)
         if res_code == 200:
             response_data = response.json()['data']
             for resource in response_data:
                 test_filter = 'username' if param == 'onid' else param
-                if param == 'phoneNumber':
-                    self.assertTrue(check_phone_number(resource, test))
+                if param in phone_number_params:
+                    self.assertTrue(check_phone_number(param, resource, test))
                 else:
                     actual = resource['attributes'][test_filter]
                     self.assertEqual(actual.lower(), test.lower())
@@ -323,7 +329,6 @@ def test_query_params(self, endpoint, param, valid_tests, invalid_tests):
 
     for test in invalid_tests:
         params[param] = test
-        print('testing', param, params)
         response = test_endpoint(self, endpoint, res_object, res_code,
                                  query_params=params)
         if res_code == 200:
@@ -338,19 +343,22 @@ def params_link(endpoint, query_params):
     return f'{endpoint}?{encoded_params}'
 
 
-def check_phone_number(resource, raw_number):
+def check_phone_number(mode, resource, raw_number):
     attributes = resource['attributes']
     numbers = []
-    for number_type in ['officePhoneNumber', 'faxNumber']:
+    fields = [mode] if mode != 'phoneNumber' else ['officePhoneNumber',
+                                                   'faxNumber',
+                                                   'alternatePhoneNumber']
+    for number_type in fields:
         if number_type in attributes:
             numbers.append(attributes[number_type])
     formatted_number = re.sub(r'[^0-9]', '', str(raw_number))
-    match = False
+    correct = 0
     for number in numbers:
         actual_formatted = re.sub(r'[^0-9]', '', number)
         if formatted_number in actual_formatted:
-            match = True
-    return match
+            correct += 1
+    return correct >= 1
 
 
 class assertion_tests(unittest.TestCase):

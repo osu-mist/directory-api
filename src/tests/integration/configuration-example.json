@@ -39,6 +39,18 @@
       "valid": ["15418670386", "0386", "404"],
       "invalid": ["asdf", "noNumbersHere123"]
     },
+    "alternatePhoneNumber": {
+      "valid": [],
+      "invalid": []
+    },
+    "officePhoneNumber": {
+      "valid": [],
+      "invalid": []
+    },
+    "faxNumber": {
+      "valid": [],
+      "invalid": []
+    },
     "officeAddress": {
       "valid": [],
       "invalid": []
