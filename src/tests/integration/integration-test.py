@@ -37,19 +37,19 @@ class integration_tests(unittest.TestCase):
         cls.session.close()
 
     # Test GET /directory
+    '''
+    There are no test cases for alternativePhoneNumber, officePhoneNumber,
+    faxNumber, and officeAddress because the query parameters are bugged. See
+    ticket CO-1634. Will add test cases once the issues are resolved so all
+    query parameter tests can be run without erroring.
+    '''
     def test_get_directory(self, endpoint='/directory'):
-        tests = {}
         test_cases = self.test_cases
-        for param in test_cases:
-            if param != 'id':
-                tests[param] = test_cases[param]
-                for test in test_cases[param]:
-                    tests[param][test] = test_cases[param][test]
-
-        for query_param in tests:
-            utils.test_query_params(self, endpoint, query_param,
-                                    tests[query_param]['valid'],
-                                    tests[query_param]['invalid'])
+        for query_param in test_cases:
+            if query_param != 'id':
+                utils.test_query_params(self, endpoint, query_param,
+                                        test_cases[query_param]['valid'],
+                                        test_cases[query_param]['invalid'])
 
     # Test GET /directory/{osuUid}
     def test_get_directory_by_id(self, endpoint='/directory'):
@@ -80,10 +80,11 @@ class integration_tests(unittest.TestCase):
         for pagination in testing_paginations:
             params = {'lastName': 'Wilson'}
             for k in ['number', 'size']:
+                pagination_key = f'page[{k}]'
                 if pagination[k] is not None:
-                    params[f'page[{k}]'] = pagination[k]
+                    params[pagination_key] = pagination[k]
                 else:
-                    params[f'page[{k}]'] = 1 if k == 'number' else 25
+                    params[pagination_key] = 1 if k == 'number' else 25
             expected_status_code = pagination['expected_status_code']
             resource = DIR_RES if expected_status_code == 200 else ERR_OBJ
             response = utils.test_endpoint(self, endpoint, resource,
