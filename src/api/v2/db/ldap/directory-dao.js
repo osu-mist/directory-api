@@ -53,7 +53,7 @@ const mapQuery = (endpointQuery) => {
       case 'alternatePhoneNumber':
       case 'faxNumber':
       case 'officeAddress': {
-        return `(${ldapKey}=*${value}*)`;
+        return `${ldapKey}=*${value}*`;
       }
       case 'phoneNumber': {
         return `|(${ldapKey}=*${value}*)(${keyMap.alternatePhoneNumber}=*${value}*)`
