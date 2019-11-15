@@ -5,7 +5,7 @@ import re
 import requests
 import sys
 import textwrap
-import urllib
+from urllib import parse
 import unittest
 from collections import OrderedDict
 
@@ -250,16 +250,15 @@ def check_url(self, link_url, endpoint, query_params=None):
         base_url = re.sub(r':\d{4}/api', '', self.base_url)
 
     base_url = re.sub(r'host\.docker\.internal', 'localhost', base_url)
-    link_url_obj = urllib.parse.urlparse(link_url)
-    base_url_obj = urllib.parse.urlparse(base_url)
-    # expected_self_link = params_link(f'{base_url}{endpoint}', query_params)
+    link_url_obj = parse.urlparse(link_url)
+    base_url_obj = parse.urlparse(base_url)
+    expected_self_link = params_link(f'{base_url}{endpoint}', query_params)
 
     url_equalities = [
       [link_url_obj.scheme, base_url_obj.scheme, 'scheme'],
       [link_url_obj.netloc, base_url_obj.netloc, 'netloc'],
-      [link_url_obj.path, f'{base_url_obj.path}{endpoint}', 'path']
-      # [link_url, expected_self_link, 'self link']  Uncomment this to expect
-      #                                              encoded self links
+      [link_url_obj.path, f'{base_url_obj.path}{endpoint}', 'path'],
+      [link_url, expected_self_link, 'self link']
     ]
 
     for link_attribute, base_attribute, attribute_type in url_equalities:
@@ -269,7 +268,7 @@ def check_url(self, link_url, endpoint, query_params=None):
                             Expected: {base_attribute}
                             Link: {link_attribute}'''))
 
-    link_url_query = dict(urllib.parse.parse_qsl(
+    link_url_query = dict(parse.parse_qsl(
         link_url_obj.query,
         keep_blank_values=True
     ))
@@ -339,7 +338,7 @@ def test_query_params(self, endpoint, param, valid_tests, invalid_tests):
 def params_link(endpoint, query_params):
     if not query_params:
         return endpoint
-    encoded_params = urllib.parse.urlencode(query_params)
+    encoded_params = parse.urlencode(query_params, quote_via=parse.quote)
     return f'{endpoint}?{encoded_params}'
 
 
