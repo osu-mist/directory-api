@@ -6,6 +6,8 @@ import yaml
 from prance import ResolvingParser
 
 import utils
+DIR_RES = 'DirectoryResourceObject'
+ERR_OBJ = 'ErrorObject'
 
 
 class integration_tests(unittest.TestCase):
@@ -34,28 +36,31 @@ class integration_tests(unittest.TestCase):
     def cleanup(cls):
         cls.session.close()
 
-    # Test case: GET /pets
-    def test_get_all_pets(self, endpoint='/pets'):
-        nullable_fields = ['owner']
-        utils.test_endpoint(self, endpoint, 'PetResource', 200,
-                            nullable_fields=nullable_fields)
+    # Test GET /directory
+    def test_get_directory(self, endpoint='/directory'):
+        test_cases = self.test_cases
+        for query_param in test_cases:
+            if query_param != 'id':
+                utils.test_query_params(self, endpoint, query_param,
+                                        test_cases[query_param]['valid'],
+                                        test_cases[query_param]['invalid'])
 
-    # Test case: GET /pets with species filter
-    def test_get_pets_with_filter(self, endpoint='/pets'):
-        testing_species = ['dog', 'CAT', 'tUrTlE']
-
-        for species in testing_species:
-            params = {'species': species}
-            response = utils.test_endpoint(self, endpoint, 'PetResource', 200,
-                                           query_params=params)
-
+    # Test GET /directory/{osuUid}
+    def test_get_directory_by_id(self, endpoint='/directory'):
+        valid_ids = self.test_cases['id']['valid']
+        invalid_ids = self.test_cases['id']['invalid']
+        for valid_id in valid_ids:
+            test_url = f'{endpoint}/{valid_id}'
+            response = utils.test_endpoint(self, test_url, DIR_RES, 200)
             response_data = response.json()['data']
-            for resource in response_data:
-                actual_species = resource['attributes']['species']
-                self.assertEqual(actual_species.lower(), species.lower())
+            self.assertEqual(valid_id, response_data['id'])
+            self.assertEqual(valid_id, response_data['attributes']['osuUid'])
+        for invalid_id in invalid_ids:
+            test_url = f'{endpoint}/{invalid_id}'
+            utils.test_endpoint(self, test_url, ERR_OBJ, 404)
 
-    # Test case: GET /pets with pagination parameters
-    def test_get_pets_pagination(self, endpoint='/pets'):
+    # Test pagination
+    def test_get_directories_pagination(self, endpoint='/directory'):
         testing_paginations = [
             {'number': 1, 'size': 25, 'expected_status_code': 200},
             {'number': 1, 'size': None, 'expected_status_code': 200},
@@ -65,14 +70,17 @@ class integration_tests(unittest.TestCase):
             {'number': 1, 'size': -1, 'expected_status_code': 400},
             {'number': 1, 'size': 501, 'expected_status_code': 400}
         ]
-        nullable_fields = ['owner']
+        nullable_fields = []
         for pagination in testing_paginations:
-            params = {f'page[{k}]': pagination[k] for k in ['number', 'size']}
+            params = {'lastName': 'Wilson'}
+            for k in ['number', 'size']:
+                pagination_key = f'page[{k}]'
+                if pagination[k] is not None:
+                    params[pagination_key] = pagination[k]
+                else:
+                    params[pagination_key] = 1 if k == 'number' else 25
             expected_status_code = pagination['expected_status_code']
-            resource = (
-                'PetResource' if expected_status_code == 200
-                else 'ErrorObject'
-            )
+            resource = DIR_RES if expected_status_code == 200 else ERR_OBJ
             response = utils.test_endpoint(self, endpoint, resource,
                                            expected_status_code,
                                            query_params=params,
@@ -83,24 +91,10 @@ class integration_tests(unittest.TestCase):
                     meta = content['meta']
                     num = pagination['number'] if pagination['number'] else 1
                     size = pagination['size'] if pagination['size'] else 25
-
                     self.assertEqual(num, meta['currentPageNumber'])
                     self.assertEqual(size, meta['currentPageSize'])
                 except KeyError as error:
                     self.fail(error)
-
-    # Test case: GET /pets/{id}
-    def test_get_pet_by_id(self, endpoint='/pets'):
-        valid_pet_ids = self.test_cases['valid_pet_ids']
-        invalid_pet_ids = self.test_cases['invalid_pet_ids']
-
-        for pet_id in valid_pet_ids:
-            resource = 'PetResource'
-            utils.test_endpoint(self, f'{endpoint}/{pet_id}', resource, 200)
-
-        for pet_id in invalid_pet_ids:
-            resource = 'ErrorObject'
-            utils.test_endpoint(self, f'{endpoint}/{pet_id}', resource, 404)
 
 
 if __name__ == '__main__':

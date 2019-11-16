@@ -5,8 +5,9 @@ import re
 import requests
 import sys
 import textwrap
-import urllib
+from urllib import parse
 import unittest
+from collections import OrderedDict
 
 
 # Handler for parsing command-line arguments
@@ -249,14 +250,16 @@ def check_url(self, link_url, endpoint, query_params=None):
         base_url = re.sub(r':\d{4}/api', '', self.base_url)
 
     base_url = re.sub(r'host\.docker\.internal', 'localhost', base_url)
-
-    link_url_obj = urllib.parse.urlparse(link_url)
-    base_url_obj = urllib.parse.urlparse(base_url)
+    link_url_obj = parse.urlparse(link_url)
+    base_url_obj = parse.urlparse(base_url)
+    expected_self_link = params_link(f'{base_url}{endpoint}', query_params)
 
     url_equalities = [
       [link_url_obj.scheme, base_url_obj.scheme, 'scheme'],
       [link_url_obj.netloc, base_url_obj.netloc, 'netloc'],
-      [link_url_obj.path, f'{base_url_obj.path}{endpoint}', 'path']]
+      [link_url_obj.path, f'{base_url_obj.path}{endpoint}', 'path'],
+      [link_url, expected_self_link, 'self link']
+    ]
 
     for link_attribute, base_attribute, attribute_type in url_equalities:
         self.assertEqual(link_attribute, base_attribute,
@@ -265,7 +268,7 @@ def check_url(self, link_url, endpoint, query_params=None):
                             Expected: {base_attribute}
                             Link: {link_attribute}'''))
 
-    link_url_query = dict(urllib.parse.parse_qsl(
+    link_url_query = dict(parse.parse_qsl(
         link_url_obj.query,
         keep_blank_values=True
     ))
@@ -281,14 +284,83 @@ def test_endpoint(self, endpoint, resource, response_code, query_params=None,
                   nullable_fields=None):
     nullable_fields = [] if nullable_fields is None else nullable_fields
     schema = get_resource_schema(self, resource)
-    response = make_request(self, endpoint, response_code,
-                            params=query_params)
-
+    response = make_request(self, endpoint, response_code, params=query_params)
     check_schema(self, response, schema, nullable_fields)
     response_json = response.json()
     if 'links' in response_json:
         check_url(self, response_json['links']['self'], endpoint, query_params)
     return response
+
+
+def test_query_params(self, endpoint, param, valid_tests, invalid_tests):
+    DIR_RES = 'DirectoryResourceObject'
+    ERR_OBJ = 'ErrorObject'
+    # lists params that return too broad of a search, resulting in 400, not 200
+    broad_search = ['primaryAffiliation', 'department']
+    phone_number_params = [
+        'phoneNumber',
+        'officePhoneNumber',
+        'alternatePhoneNumber',
+        'faxNumber'
+    ]
+    res_code = 400 if param in broad_search else 200
+    res_object = ERR_OBJ if param in broad_search else DIR_RES
+    params = {param: None, 'page[number]': 1, 'page[size]': 25}
+    # params need to be sorted alphabetically by key for self link to match
+    params = dict(OrderedDict(sorted(params.items(), key=lambda t: t[0])))
+
+    for test in valid_tests:
+        params[param] = test
+        response = test_endpoint(self, endpoint, res_object, res_code,
+                                 query_params=params)
+        if res_code == 200:
+            response_data = response.json()['data']
+            for resource in response_data:
+                test_filter = 'username' if param == 'onid' else param
+                if param in phone_number_params:
+                    self.assertTrue(check_phone_number(param, resource, test))
+                else:
+                    actual = resource['attributes'][test_filter]
+                    if param == 'officeAddress':
+                        self.assertTrue(test.lower() in actual.lower())
+                    else:
+                        self.assertEqual(actual.lower(), test.lower())
+
+    if param == 'department':
+        res_code = 200
+
+    for test in invalid_tests:
+        params[param] = test
+        response = test_endpoint(self, endpoint, res_object, res_code,
+                                 query_params=params)
+        if res_code == 200:
+            response_data = response.json()['data']
+            self.assertFalse(response_data)
+
+
+def params_link(endpoint, query_params):
+    if not query_params:
+        return endpoint
+    encoded_params = parse.urlencode(query_params, quote_via=parse.quote)
+    return f'{endpoint}?{encoded_params}'
+
+
+def check_phone_number(mode, resource, raw_number):
+    attributes = resource['attributes']
+    numbers = []
+    fields = [mode] if mode != 'phoneNumber' else ['officePhoneNumber',
+                                                   'faxNumber',
+                                                   'alternatePhoneNumber']
+    for number_type in fields:
+        if number_type in attributes:
+            numbers.append(attributes[number_type])
+    formatted_number = re.sub(r'[^0-9]', '', str(raw_number))
+    correct = 0
+    for number in numbers:
+        actual_formatted = re.sub(r'[^0-9]', '', number)
+        if formatted_number in actual_formatted:
+            correct += 1
+    return correct >= 1
 
 
 class assertion_tests(unittest.TestCase):
