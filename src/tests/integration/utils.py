@@ -321,7 +321,10 @@ def test_query_params(self, endpoint, param, valid_tests, invalid_tests):
                     self.assertTrue(check_phone_number(param, resource, test))
                 else:
                     actual = resource['attributes'][test_filter]
-                    self.assertEqual(actual.lower(), test.lower())
+                    if param == 'officeAddress':
+                        self.assertTrue(test.lower() in actual.lower())
+                    else:
+                        self.assertEqual(actual.lower(), test.lower())
 
     if param == 'department':
         res_code = 200

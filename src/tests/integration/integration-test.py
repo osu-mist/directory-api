@@ -37,12 +37,6 @@ class integration_tests(unittest.TestCase):
         cls.session.close()
 
     # Test GET /directory
-    '''
-    There are no test cases for alternativePhoneNumber, officePhoneNumber,
-    faxNumber, and officeAddress because the query parameters are bugged. See
-    ticket CO-1634. Will add test cases once the issues are resolved so all
-    query parameter tests can be run without erroring.
-    '''
     def test_get_directory(self, endpoint='/directory'):
         test_cases = self.test_cases
         for query_param in test_cases:
