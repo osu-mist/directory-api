@@ -40,20 +40,20 @@
       "invalid": ["asdf", "noNumbersHere123"]
     },
     "alternatePhoneNumber": {
-      "valid": [],
-      "invalid": []
+      "valid": ["404", "15417374098", "78"],
+      "invalid": ["asdf", "noNumbersHere123"]
     },
     "officePhoneNumber": {
-      "valid": [],
-      "invalid": []
+      "valid": ["456", "15417376456", "404"],
+      "invalid": ["asdf", "noNumbersHere123"]
     },
     "faxNumber": {
-      "valid": [],
-      "invalid": []
+      "valid": ["404", "15418674049", "66"],
+      "invalid": ["asdf", "noNumbersHere123"]
     },
     "officeAddress": {
-      "valid": [],
-      "invalid": []
+      "valid": ["Johnson Hall", "Portland", "3420 NW Orchard Ave"],
+      "invalid": ["foobar", "Narnia", "EEEEEEEEE"]
     },
     "department": {
       "valid": ["English", "Computer Science", "Mechanical Engineering"],
