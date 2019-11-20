@@ -15,7 +15,7 @@ const get = async (req, res) => {
     const errors = [];
     _.forEach(req.query, (value, key) => {
       if (!value) {
-        errors.push(`Query parameter '${key}' must have a value`);
+        errors.push(`Query parameter '${key}' must have a value.`);
       }
     });
     if (!_.isEmpty(errors)) {
