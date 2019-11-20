@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import { errorHandler, errorBuilder } from 'errors/errors';
 
 import { getDirectories } from '../db/ldap/directory-dao';
@@ -10,6 +12,16 @@ import { getDirectories } from '../db/ldap/directory-dao';
  */
 const get = async (req, res) => {
   try {
+    const errors = [];
+    _.forEach(req.query, (value, key) => {
+      if (!value) {
+        errors.push(`Query parameter '${key}' must have a value`);
+      }
+    });
+    if (!_.isEmpty(errors)) {
+      return errorBuilder(res, 400, errors);
+    }
+
     const result = await getDirectories(req.query);
     if (!result) {
       return errorBuilder(res, 400, ['No query parameters specified.']);
