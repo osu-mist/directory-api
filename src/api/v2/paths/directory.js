@@ -12,7 +12,13 @@ import { getDirectories } from '../db/ldap/directory-dao';
  */
 const get = async (req, res) => {
   try {
-    const valuelessParams = _.pickBy(req.query, (value) => !value && value !== 0);
+    const params = req.query;
+    const paramKeys = Object.keys(params);
+    if (paramKeys.includes('primaryAffiliation') && paramKeys.length === 3) {
+      return errorBuilder(res, 400, ['primaryAffiliation may not be used as a lone query parameter.']);
+    }
+
+    const valuelessParams = _.pickBy(params, (value) => !value && value !== 0);
     const generateErrorString = (accumulator, value, key) => {
       accumulator.push(`Query parameter '${key}' must have a value.`);
       return accumulator;
@@ -22,7 +28,7 @@ const get = async (req, res) => {
       return errorBuilder(res, 400, errors);
     }
 
-    const result = await getDirectories(req.query);
+    const result = await getDirectories(params);
     if (!result) {
       return errorBuilder(res, 400, ['No query parameters specified.']);
     }
