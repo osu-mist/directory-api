@@ -24,8 +24,7 @@ const get = async (req, res) => {
       accumulator.push(`Query parameter '${key}' must have a value.`);
       return accumulator;
     };
-    const emptyValueErrors = _.reduce(valuelessParams, generateErrorString, []);
-    errors = _.concat(errors, emptyValueErrors);
+    errors = _.reduce(valuelessParams, generateErrorString, errors);
     if (!_.isEmpty(errors)) {
       return errorBuilder(res, 400, errors);
     }
