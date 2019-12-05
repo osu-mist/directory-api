@@ -21,7 +21,7 @@ const mapQuery = (endpointQuery) => {
       case 'filter[primaryAffiliation]': return 'osuPrimaryAffiliation';
       case 'filter[onid]': return 'uid';
       case 'filter[emailAddress]': return 'mail';
-      case 'filter[officePhoneNumber]': return 'telephoneNumber';
+      case 'filter[officePhoneNumber][fuzzy]': return 'telephoneNumber';
       case 'filter[alternatePhoneNumber][fuzzy]': return 'osuAltPhoneNumber';
       case 'filter[faxNumber]':
       case 'filter[faxNumber][fuzzy]': return 'facsimileTelephoneNumber';
