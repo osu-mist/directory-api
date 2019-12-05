@@ -13,21 +13,16 @@ import { getClient } from './connection';
 const mapQuery = (endpointQuery) => {
   const keyMap = (key) => {
     switch (key) {
-      case 'filter[fullName][fuzzy]': return 'cn';
-      case 'filter[lastName][fuzzy]':
+      case 'filter[fullName]': return 'cn';
       case 'filter[lastName]': return 'sn';
-      case 'filter[firstName][fuzzy]':
       case 'filter[firstName]': return 'givenName';
       case 'filter[primaryAffiliation]': return 'osuPrimaryAffiliation';
       case 'filter[onid]': return 'uid';
       case 'filter[emailAddress]': return 'mail';
       case 'filter[officePhoneNumber][fuzzy]': return 'telephoneNumber';
       case 'filter[alternatePhoneNumber][fuzzy]': return 'osuAltPhoneNumber';
-      case 'filter[faxNumber]':
       case 'filter[faxNumber][fuzzy]': return 'facsimileTelephoneNumber';
-      case 'filter[phoneNumber]':
       case 'filter[phoneNumber][fuzzy]': return 'telephoneNumber';
-      case 'filter[officeAddress]':
       case 'filter[officeAddress][fuzzy]': return 'osuOfficeAddress';
       case 'filter[department]': return 'osuDepartment';
       default: return undefined;
