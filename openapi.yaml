@@ -92,7 +92,7 @@ paths:
           description: Filter by office address
           type: string
           required: false
-        - name: filter[department][fuzzy]
+        - name: filter[department]
           in: query
           description: Filter by department
           type: string
