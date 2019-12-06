@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 import { errorHandler, errorBuilder } from 'errors/errors';
 
-import { getDirectories } from '../db/ldap/directory-dao';
+import { getDirectories, keyMap } from '../db/ldap/directory-dao';
 
 /**
  * @summary Get directory
@@ -19,7 +19,7 @@ const get = async (req, res) => {
       errors.push('primaryAffiliation may not be used as a lone query parameter.');
     }
 
-    const valuelessParams = _.pickBy(params, (value) => !value && value !== 0);
+    const valuelessParams = _.pickBy(params, (value, key) => !value && value !== 0 && keyMap(key));
     const generateErrorString = (accumulator, value, key) => {
       accumulator.push(`Query parameter '${key}' must have a value.`);
       return accumulator;
@@ -31,7 +31,7 @@ const get = async (req, res) => {
 
     const result = await getDirectories(params);
     if (!result) {
-      return errorBuilder(res, 400, ['No query parameters specified.']);
+      return errorBuilder(res, 400, ['No non-pagination query parameters specified.']);
     }
     return res.send(result);
   } catch (err) {
