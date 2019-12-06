@@ -13,7 +13,7 @@ import { getClient } from './connection';
 const mapQuery = (endpointQuery) => {
   const keyMap = (key) => {
     switch (key) {
-      case 'filter[fullName]': return 'cn';
+      case 'filter[fullName][fuzzy]': return 'cn';
       case 'filter[lastName]': return 'sn';
       case 'filter[firstName]': return 'givenName';
       case 'filter[primaryAffiliation]': return 'osuPrimaryAffiliation';
