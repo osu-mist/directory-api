@@ -12,13 +12,8 @@ import { getDirectories, keyMap } from '../db/ldap/directory-dao';
  */
 const get = async (req, res) => {
   try {
-    const params = req.query;
-    const paramKeys = _.keys(params);
     let errors = [];
-    if (paramKeys.includes('primaryAffiliation') && paramKeys.length === 3) {
-      errors.push('primaryAffiliation may not be used as a lone query parameter.');
-    }
-
+    const params = req.query;
     const valuelessParams = _.pickBy(params, (value, key) => !value && value !== 0 && keyMap(key));
     const generateErrorString = (accumulator, value, key) => {
       accumulator.push(`Query parameter '${key}' must have a value.`);
@@ -39,6 +34,9 @@ const get = async (req, res) => {
     if (ldeMessage) {
       if (ldeMessage.includes('Size Limit Exceeded')) {
         return errorBuilder(res, 400, ['Size Limit Exceeded (search too broad)']);
+      }
+      if (ldeMessage.includes('Time Limit Exceeded')) {
+        return errorBuilder(res, 400, ['Query is too broad, causing a timeout on the database end. Please limit query to be more specific']);
       }
       return errorHandler(res, [ldeMessage]);
     }

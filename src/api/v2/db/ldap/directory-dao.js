@@ -12,7 +12,7 @@ import { getClient } from './connection';
  */
 const keyMap = (key) => {
   switch (key) {
-    case 'fullName': return 'cn';
+    case 'fuzzyName': return 'cn';
     case 'lastName': return 'sn';
     case 'firstName': return 'givenName';
     case 'primaryAffiliation': return 'osuPrimaryAffiliation';
