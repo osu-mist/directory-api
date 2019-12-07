@@ -1,4 +1,3 @@
-"""Integration tests"""
 import json
 import logging
 import unittest
@@ -11,13 +10,9 @@ DIR_RES = 'DirectoryResourceObject'
 ERR_OBJ = 'ErrorObject'
 
 
-class IntegrationTests(utils.UtilsTestCase):
-    """Integration tests class"""
-
+class integration_tests(unittest.TestCase):
     @classmethod
     def setup(cls, config_path, openapi_path):
-        """Performs basic setup"""
-
         with open(config_path) as config_file:
             config = json.load(config_file)
             cls.base_url = utils.setup_base_url(config)
@@ -38,10 +33,9 @@ class IntegrationTests(utils.UtilsTestCase):
         cls.openapi = parser.specification
 
     @classmethod
-    def tearDownClass(cls):
+    def cleanup(cls):
         cls.session.close()
 
-<<<<<<< HEAD:src/tests/integration/integration-test.py
     # Test GET /directory
     def test_get_directory(self, endpoint='/directory'):
         test_cases = self.test_cases
@@ -67,33 +61,6 @@ class IntegrationTests(utils.UtilsTestCase):
 
     # Test pagination
     def test_get_directories_pagination(self, endpoint='/directory'):
-=======
-    def test_get_all_pets(self, endpoint='/pets'):
-        """Test case: GET /pets"""
-
-        nullable_fields = ['owner']
-        self.check_endpoint(endpoint, 'PetResource', 200,
-                            nullable_fields=nullable_fields)
-
-    def test_get_pets_with_filter(self, endpoint='/pets'):
-        """Test case: GET /pets with species filter"""
-
-        testing_species = ['dog', 'CAT', 'tUrTlE']
-
-        for species in testing_species:
-            params = {'species': species}
-            response = self.check_endpoint(endpoint, 'PetResource', 200,
-                                           query_params=params)
-
-            response_data = response.json()['data']
-            for resource in response_data:
-                actual_species = resource['attributes']['species']
-                self.assertEqual(actual_species.lower(), species.lower())
-
-    def test_get_pets_pagination(self, endpoint='/pets'):
-        """Test case: GET /pets with pagination parameters"""
-
->>>>>>> skeleton/master:src/tests/integration/integration_test.py
         testing_paginations = [
             {'number': 1, 'size': 25, 'expected_status_code': 200},
             {'number': 1, 'size': None, 'expected_status_code': 200},
@@ -113,20 +80,12 @@ class IntegrationTests(utils.UtilsTestCase):
                 else:
                     params[pagination_key] = 1 if k == 'number' else 25
             expected_status_code = pagination['expected_status_code']
-<<<<<<< HEAD:src/tests/integration/integration-test.py
             resource = DIR_RES if expected_status_code == 200 else ERR_OBJ
             response = utils.test_endpoint(self, endpoint, resource,
-=======
-            resource = (
-                'PetResource' if expected_status_code == 200
-                else 'ErrorObject'
-            )
-            response = self.check_endpoint(endpoint, resource,
->>>>>>> skeleton/master:src/tests/integration/integration_test.py
                                            expected_status_code,
                                            query_params=params,
                                            nullable_fields=nullable_fields)
-            content = self.get_json_content(response)
+            content = utils.get_json_content(self, response)
             if expected_status_code == 200:
                 try:
                     meta = content['meta']
@@ -137,23 +96,6 @@ class IntegrationTests(utils.UtilsTestCase):
                 except KeyError as error:
                     self.fail(error)
 
-<<<<<<< HEAD:src/tests/integration/integration-test.py
-=======
-    def test_get_pet_by_id(self, endpoint='/pets'):
-        """Test case: GET /pets/{id}"""
-
-        valid_pet_ids = self.test_cases['valid_pet_ids']
-        invalid_pet_ids = self.test_cases['invalid_pet_ids']
-
-        for pet_id in valid_pet_ids:
-            resource = 'PetResource'
-            self.check_endpoint(f'{endpoint}/{pet_id}', resource, 200)
-
-        for pet_id in invalid_pet_ids:
-            resource = 'ErrorObject'
-            self.check_endpoint(f'{endpoint}/{pet_id}', resource, 404)
-
->>>>>>> skeleton/master:src/tests/integration/integration_test.py
 
 if __name__ == '__main__':
     arguments, argv = utils.parse_arguments()
@@ -164,5 +106,6 @@ if __name__ == '__main__':
     else:
         logging.basicConfig(level=logging.INFO)
 
-    IntegrationTests.setup(arguments.config_path, arguments.openapi_path)
+    integration_tests.setup(arguments.config_path, arguments.openapi_path)
     unittest.main(argv=argv)
+    integration_tests.cleanup()

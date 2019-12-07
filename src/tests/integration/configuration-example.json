@@ -11,7 +11,6 @@
     }
   },
   "test_cases": {
-<<<<<<< HEAD
     "id": {
       "valid": ["43868700139", "53868730879", "44979934575", "28313180078"],
       "invalid": ["-2", "0", "noID"]
@@ -60,13 +59,5 @@
       "valid": ["English", "Computer Science", "Mechanical Engineering"],
       "invalid": ["Underwater Basket Weaving", "Leisure Studies"]
     }
-=======
-    "valid_pet_ids": [
-      "57e1aab0-c50b-11e9-a7bd-1fb8646e6a06",
-      "757f4d20-c50b-11e9-a7bd-1fb8646e6a06",
-      "79b8ff30-c50b-11e9-a7bd-1fb8646e6a06"
-     ],
-    "invalid_pet_ids": ["999", "-1", "invalid_id"]
->>>>>>> skeleton/master
   }
 }
