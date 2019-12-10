@@ -1,4 +1,4 @@
-# directory-api ![version](https://img.shields.io/badge/version-v2-blue.svg) [![openapi](https://img.shields.io/badge/openapi-2.0-green.svg)](./openapi.yaml) ![node](https://img.shields.io/badge/node-10.13-brightgreen.svg)
+# directory-api ![version](https://img.shields.io/badge/version-v2-blue.svg) [![openapi](https://img.shields.io/badge/openapi-2.0-green.svg)](./openapi.yaml) ![node](https://img.shields.io/badge/node-10.17-brightgreen.svg)
 
 Public OSU directory API implemented with Express.
 
@@ -28,6 +28,8 @@ API definition is contained in the [OpenAPI specification](./openapi.yaml).
     | `${API_USER}` | The HTTP Basic username used to authenticate API calls. |
     | `${API_PASSWD}` | The HTTP Basic password used to authenticate API calls. |
 
+5 Copy [db/mock-data-example.json](db/mock-data-example.yaml) to `db/mock-data.json`. This will serve as the JSON DB, which is not committed to source code as it will change as the POST endpoint is used.
+
 ### Installing
 
 ```shell
@@ -39,11 +41,11 @@ $ npm install
 Run the application:
 
   ```shell
-  # Build and run the app
-  $ gulp devRun
+  # Build and run the app and watch for changes using nodemon
+  $ npm run dev
 
   # Run the app without building
-  $ gulp start
+  $ npm start
   ```
 
 ## Running the tests
