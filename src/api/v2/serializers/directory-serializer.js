@@ -8,10 +8,8 @@ import { apiBaseUrl, resourcePathLink, paramsLink } from 'utils/uri-builder';
 
 const directoryResourceProp = openapi.definitions.DirectoryResourceObject.properties;
 const directoryResourceType = directoryResourceProp.type.enum[0];
-const directoryResourceKeys = _.keys(directoryResourceProp.attributes.properties);
 const directoryResourcePath = 'directory';
 const directoryResourceUrl = resourcePathLink(apiBaseUrl, directoryResourcePath);
-
 const primaryAffiliationMap = {
   S: 'Student',
   E: 'Employee',
@@ -37,7 +35,7 @@ const ldapKeyToResourceKey = {
   osuUID: 'osuUid',
 };
 
-const resourceKeyToLdapKey = _.invert(ldapKeyToResourceKey);
+const ldapKeys = Object.keys(ldapKeyToResourceKey);
 
 /**
  * @summary Manipulates values to match format expected in response
@@ -67,13 +65,6 @@ const valueOperations = (key, value) => {
 };
 
 /**
- * The resourceKeys serializer argument requires LDAP keys
- */
-_.forEach(directoryResourceKeys, (key, index) => {
-  directoryResourceKeys[index] = resourceKeyToLdapKey[key];
-});
-
-/**
  * @summary Serialize directoryResources to JSON API
  * @function
  * @param {[object]} rawDirectories Raw data rows from data source
@@ -86,9 +77,15 @@ const serializeDirectories = (rawDirectories, query) => {
     number: query['page[number]'],
   };
 
+  // Perform value operations and add null keys to raw data
   rawDirectories.forEach((directory) => {
     Object.keys(directory).forEach((key) => {
       directory[key] = valueOperations(key, directory[key]);
+    });
+    _.forEach(ldapKeys, (value) => {
+      if (!directory[value]) {
+        directory[value] = null;
+      }
     });
   });
 
@@ -100,7 +97,7 @@ const serializeDirectories = (rawDirectories, query) => {
 
   const serializerArgs = {
     identifierField: 'osuUID',
-    resourceKeys: directoryResourceKeys,
+    resourceKeys: ldapKeys,
     pagination,
     resourcePath: directoryResourcePath,
     keyForAttribute: (attribute) => (ldapKeyToResourceKey[attribute]),
@@ -126,10 +123,15 @@ const serializeDirectory = (rawDirectory) => {
   Object.keys(rawDirectory).forEach((key) => {
     rawDirectory[key] = valueOperations(key, rawDirectory[key]);
   });
+  _.forEach(ldapKeys, (value) => {
+    if (!rawDirectory[value]) {
+      rawDirectory[value] = null;
+    }
+  });
   const topLevelSelfLink = resourcePathLink(directoryResourceUrl, rawDirectory.osuUID);
   const serializerArgs = {
     identifierField: 'osuUID',
-    resourceKeys: directoryResourceKeys,
+    resourceKeys: ldapKeys,
     resourcePath: directoryResourcePath,
     keyForAttribute: (attribute) => (ldapKeyToResourceKey[attribute]),
     topLevelSelfLink,
