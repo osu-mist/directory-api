@@ -6,6 +6,14 @@ import { fakeBaseUrl } from './mock-data';
 import { valueOperations, ldapKeyToResourceKey } from '../../api/v2/serializers/directory-serializer';
 
 /**
+ * Get the schema of a type of resource.
+ *
+ * @param {string} def The type of the resource.
+ * @returns {object} The schema of the resource to look up.
+ */
+const getDefinition = (def) => openapi.definitions[def].properties;
+
+/**
  * @summary Transform the rawData into serializedData.
  * @param {string} resourceType The type of resource.
  * @param {string} resourceId The id of resource.
@@ -27,20 +35,17 @@ const resourceSchema = (resourceType, resourceId, resourceAttributes) => {
     },
   };
   if (resourceAttributes) {
-    resourceAttributes = _.mapKeys(resourceAttributes,
-      (value, key) => _.camelCase(key));
-    schema.data.attributes = resourceAttributes;
+    // populate object of attributes defined by swagger
+    schema.data.attributes = _.reduce(_.keys(getDefinition('Attributes')), (result, value) => {
+      result[value] = null;
+      if (resourceAttributes[value]) {
+        result[value] = resourceAttributes[value];
+      }
+      return result;
+    }, {});
   }
   return schema;
 };
-
-/**
- * Get the schema of a type of resource.
- *
- * @param {string} def The type of the resource.
- * @returns {object} The schema of the resource to look up.
- */
-const getDefinition = (def) => openapi.definitions[def].properties;
 
 /**
  * @summary Test if a single resource matches the schema in the specification.
