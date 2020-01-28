@@ -37,10 +37,7 @@ const resourceSchema = (resourceType, resourceId, resourceAttributes) => {
   if (resourceAttributes) {
     // populate object of attributes defined by swagger
     schema.data.attributes = _.reduce(_.keys(getDefinition('Attributes')), (result, value) => {
-      result[value] = null;
-      if (resourceAttributes[value]) {
-        result[value] = resourceAttributes[value];
-      }
+      result[value] = resourceAttributes[value] ? resourceAttributes[value] : null;
       return result;
     }, {});
   }

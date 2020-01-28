@@ -65,6 +65,22 @@ const valueOperations = (key, value) => {
 };
 
 /**
+ * @summary perform value operations on resource keys and values
+ * @function
+ * @param {object} directory a directory resource object
+ */
+const performValueOperations = (directory) => {
+  Object.keys(directory).forEach((key) => {
+    directory[key] = valueOperations(key, directory[key]);
+  });
+  _.forEach(ldapKeys, (value) => {
+    if (!directory[value]) {
+      directory[value] = null;
+    }
+  });
+};
+
+/**
  * @summary Serialize directoryResources to JSON API
  * @function
  * @param {[object]} rawDirectories Raw data rows from data source
@@ -78,16 +94,7 @@ const serializeDirectories = (rawDirectories, query) => {
   };
 
   // Perform value operations and add null keys to raw data
-  rawDirectories.forEach((directory) => {
-    Object.keys(directory).forEach((key) => {
-      directory[key] = valueOperations(key, directory[key]);
-    });
-    _.forEach(ldapKeys, (value) => {
-      if (!directory[value]) {
-        directory[value] = null;
-      }
-    });
-  });
+  _.forEach(rawDirectories, (directory) => performValueOperations(directory));
 
   const pagination = paginate(rawDirectories, pageQuery);
   pagination.totalResults = rawDirectories.length;
@@ -120,14 +127,7 @@ const serializeDirectories = (rawDirectories, query) => {
  * @returns {object} Serialized directoryResource object
  */
 const serializeDirectory = (rawDirectory) => {
-  Object.keys(rawDirectory).forEach((key) => {
-    rawDirectory[key] = valueOperations(key, rawDirectory[key]);
-  });
-  _.forEach(ldapKeys, (value) => {
-    if (!rawDirectory[value]) {
-      rawDirectory[value] = null;
-    }
-  });
+  performValueOperations(rawDirectory);
   const topLevelSelfLink = resourcePathLink(directoryResourceUrl, rawDirectory.osuUID);
   const serializerArgs = {
     identifierField: 'osuUID',
