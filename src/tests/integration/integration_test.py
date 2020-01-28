@@ -72,7 +72,7 @@ class integration_tests(unittest.TestCase):
         ]
         nullable_fields = []
         for pagination in testing_paginations:
-            params = {'lastName': 'Wilson'}
+            params = {'filter[lastName]': 'Wilson'}
             for k in ['number', 'size']:
                 pagination_key = f'page[{k}]'
                 if pagination[k] is not None:

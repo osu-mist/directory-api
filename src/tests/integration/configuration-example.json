@@ -15,47 +15,47 @@
       "valid": ["43868700139", "53868730879", "44979934575", "28313180078"],
       "invalid": ["-2", "0", "noID"]
     },
-    "firstName": {
+    "filter[firstName]": {
       "valid": ["Frederick", "Toby", "Greta"],
       "invalid": ["fdsafdsa", "12357"]
     },
-    "lastName": {
+    "filter[lastName]": {
       "valid": ["McDonald", "Liang", "Wilson"],
       "invalid": ["fdsafdsa", "12357"]
     },
-    "onid": {
+    "filter[onid]": {
       "valid": ["kalcicd", "awaik", "kauffmza"],
       "invalid": ["123", "asdf"]
     },
-    "primaryAffiliation": {
+    "filter[primaryAffiliation]": {
       "valid": ["Employee", "Student", "Other"],
       "invalid": ["1234", "fdsa", "djklsa"]
     },
-    "emailAddress": {
+    "filter[emailAddress]": {
       "valid": ["kalcicd@oregonstate.edu", "awaik@oregonstate.edu", "kauffmza@oregonstate.edu"],
       "invalid": ["1234", "fdsa", "djklsa"]
     },
-    "phoneNumber": {
+    "filter[phoneNumber][fuzzy]": {
       "valid": ["15418670386", "0386", "404"],
       "invalid": ["asdf", "noNumbersHere123"]
     },
-    "alternatePhoneNumber": {
+    "filter[alternatePhoneNumber][fuzzy]": {
       "valid": ["404", "15417374098", "78"],
       "invalid": ["asdf", "noNumbersHere123"]
     },
-    "officePhoneNumber": {
+    "filter[officePhoneNumber][fuzzy]": {
       "valid": ["456", "15417376456", "404"],
       "invalid": ["asdf", "noNumbersHere123"]
     },
-    "faxNumber": {
+    "filter[faxNumber][fuzzy]": {
       "valid": ["404", "15418674049", "66"],
       "invalid": ["asdf", "noNumbersHere123"]
     },
-    "officeAddress": {
+    "filter[officeAddress][fuzzy]": {
       "valid": ["Johnson Hall", "Portland", "3420 NW Orchard Ave"],
       "invalid": ["foobar", "Narnia", "EEEEEEEEE"]
     },
-    "department": {
+    "filter[department]": {
       "valid": ["English", "Computer Science", "Mechanical Engineering"],
       "invalid": ["Underwater Basket Weaving", "Leisure Studies"]
     }

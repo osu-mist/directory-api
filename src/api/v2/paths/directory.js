@@ -15,8 +15,8 @@ const get = async (req, res) => {
     const params = req.query;
     const paramKeys = _.keys(params);
     let errors = [];
-    if (paramKeys.includes('primaryAffiliation') && paramKeys.length === 3) {
-      errors.push('primaryAffiliation may not be used as a lone query parameter.');
+    if (paramKeys.includes('filter[primaryAffiliation]') && paramKeys.length === 3) {
+      errors.push('filter[primaryAffiliation] may not be used as a lone query parameter.');
     }
 
     const valuelessParams = _.pickBy(params, (value) => !value && value !== 0);
