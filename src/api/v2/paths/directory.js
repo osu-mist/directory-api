@@ -2,7 +2,7 @@ import _ from 'lodash';
 
 import { errorHandler, errorBuilder } from 'errors/errors';
 
-import { getDirectories, keyMap } from '../db/ldap/directory-dao';
+import { getDirectories } from '../db/ldap/directory-dao';
 
 /**
  * @summary Get directory
@@ -11,10 +11,25 @@ import { getDirectories, keyMap } from '../db/ldap/directory-dao';
  * @returns {Promise<object>} response
  */
 const get = async (req, res) => {
+  const keyMap = {
+    'filter[fullName][fuzzy]': 'cn',
+    'filter[lastName]': 'sn',
+    'filter[firstName]': 'givenName',
+    'filter[primaryAffiliation]': 'osuPrimaryAffiliation',
+    'filter[onid]': 'uid',
+    'filter[emailAddress]': 'mail',
+    'filter[officePhoneNumber][fuzzy]': 'telephoneNumber',
+    'filter[alternatePhoneNumber][fuzzy]': 'osuAltPhoneNumber',
+    'filter[faxNumber][fuzzy]': 'facsimileTelephoneNumber',
+    'filter[phoneNumber][fuzzy]': 'telephoneNumber',
+    'filter[officeAddress][fuzzy]': 'osuOfficeAddress',
+    'filter[department]': 'osuDepartment',
+  };
+
   try {
     let errors = [];
     const params = req.query;
-    const valuelessParams = _.pickBy(params, (value, key) => !value && value !== 0 && keyMap(key));
+    const valuelessParams = _.pickBy(params, (value, key) => !value && value !== 0 && keyMap[key]);
     const generateErrorString = (accumulator, value, key) => {
       accumulator.push(`Query parameter '${key}' must have a value.`);
       return accumulator;

@@ -5,41 +5,32 @@ import { serializeDirectories, serializeDirectory, primaryAffiliationMap } from 
 import { getClient } from './connection';
 
 /**
- * @summary Map query param key to ldap key
- * @function
- * @param {string} key query param key
- * @returns {string} corresponding ldap key
- */
-const keyMap = (key) => {
-  switch (key) {
-    case 'fuzzyName': return 'cn';
-    case 'lastName': return 'sn';
-    case 'firstName': return 'givenName';
-    case 'primaryAffiliation': return 'osuPrimaryAffiliation';
-    case 'onid': return 'uid';
-    case 'emailAddress': return 'mail';
-    case 'officePhoneNumber': return 'telephoneNumber';
-    case 'alternatePhoneNumber': return 'osuAltPhoneNumber';
-    case 'faxNumber': return 'facsimileTelephoneNumber';
-    case 'phoneNumber': return 'telephoneNumber';
-    case 'officeAddress': return 'osuOfficeAddress';
-    case 'department': return 'osuDepartment';
-    default: return undefined;
-  }
-};
-
-/**
  * @summary Map endpoint query to ldap query
  * @function
  * @param {object} endpointQuery query object in terms of API query params
  * @returns {string} string representing search filter for ldap query
  */
 const mapQuery = (endpointQuery) => {
+  const keyMap = {
+    'filter[fullName][fuzzy]': 'cn',
+    'filter[lastName]': 'sn',
+    'filter[firstName]': 'givenName',
+    'filter[primaryAffiliation]': 'osuPrimaryAffiliation',
+    'filter[onid]': 'uid',
+    'filter[emailAddress]': 'mail',
+    'filter[officePhoneNumber][fuzzy]': 'telephoneNumber',
+    'filter[alternatePhoneNumber][fuzzy]': 'osuAltPhoneNumber',
+    'filter[faxNumber][fuzzy]': 'facsimileTelephoneNumber',
+    'filter[phoneNumber][fuzzy]': 'telephoneNumber',
+    'filter[officeAddress][fuzzy]': 'osuOfficeAddress',
+    'filter[department]': 'osuDepartment',
+  };
+
   const valueOperations = (key, value) => {
-    const ldapKey = keyMap(key);
+    const ldapKey = keyMap[key];
     const defaultOperation = `${ldapKey}=${value}`;
     switch (key) {
-      case 'fuzzyName': {
+      case 'filter[fullName][fuzzy]': {
         let fuzzyFilters = '|'; // 'or' condition for all name orderings
 
         const valueTerms = value.split(/[ ,]+/);
@@ -58,17 +49,17 @@ const mapQuery = (endpointQuery) => {
 
         return fuzzyFilters;
       }
-      case 'officePhoneNumber':
-      case 'alternatePhoneNumber':
-      case 'faxNumber':
-      case 'officeAddress': {
+      case 'filter[officePhoneNumber][fuzzy]':
+      case 'filter[alternatePhoneNumber][fuzzy]':
+      case 'filter[faxNumber][fuzzy]':
+      case 'filter[officeAddress][fuzzy]': {
         return `${ldapKey}=*${value}*`;
       }
-      case 'phoneNumber': {
-        return `|(${ldapKey}=*${value}*)(${keyMap('alternatePhoneNumber')}=*${value}*)`
-          + `(${keyMap('faxNumber')}=*${value}*)`;
+      case 'filter[phoneNumber][fuzzy]': {
+        return `|(${ldapKey}=*${value}*)(${keyMap['filter[alternatePhoneNumber]']}=*${value}*)`
+          + `(${keyMap['filter[faxNumber]']}=*${value}*)`;
       }
-      case 'primaryAffiliation': {
+      case 'filter[primaryAffiliation]': {
         return `${ldapKey}=${_.invert(primaryAffiliationMap)[value]}`;
       }
       default: {
@@ -79,7 +70,7 @@ const mapQuery = (endpointQuery) => {
 
   let ldapQuery = '';
   _.forEach(endpointQuery, (value, key) => {
-    if (keyMap(key)) ldapQuery += `(${valueOperations(key, value)})`;
+    if (keyMap[key]) ldapQuery += `(${valueOperations(key, value)})`;
   });
   if (ldapQuery) ldapQuery = `(&${ldapQuery})`;
   return ldapQuery;
@@ -140,4 +131,4 @@ const getDirectories = (endpointQuery) => new Promise((resolve, reject) => {
   }
 });
 
-export { getDirectory, getDirectories, keyMap };
+export { getDirectory, getDirectories };

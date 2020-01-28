@@ -292,16 +292,20 @@ def test_endpoint(self, endpoint, resource, response_code, query_params=None,
     return response
 
 
+def get_query_param_name(param):
+    return list(filter(None, re.split(r'\[|\]', param)))[1]
+
+
 def test_query_params(self, endpoint, param, valid_tests, invalid_tests):
     DIR_RES = 'DirectoryResourceObject'
     ERR_OBJ = 'ErrorObject'
     # lists params that return too broad of a search, resulting in 400, not 200
-    broad_search = ['primaryAffiliation', 'department']
+    broad_search = ['filter[primaryAffiliation]', 'filter[department]']
     phone_number_params = [
-        'phoneNumber',
-        'officePhoneNumber',
-        'alternatePhoneNumber',
-        'faxNumber'
+        'filter[phoneNumber][fuzzy]',
+        'filter[officePhoneNumber][fuzzy]',
+        'filter[alternatePhoneNumber][fuzzy]',
+        'filter[faxNumber][fuzzy]'
     ]
     res_code = 400 if param in broad_search else 200
     res_object = ERR_OBJ if param in broad_search else DIR_RES
@@ -316,17 +320,21 @@ def test_query_params(self, endpoint, param, valid_tests, invalid_tests):
         if res_code == 200:
             response_data = response.json()['data']
             for resource in response_data:
-                test_filter = 'username' if param == 'onid' else param
+                test_filter = 'filter[username]' if param == 'filter[onid]' \
+                    else param
+                test_filter_name = get_query_param_name(test_filter)
                 if param in phone_number_params:
-                    self.assertTrue(check_phone_number(param, resource, test))
+                    self.assertTrue(check_phone_number(test_filter_name,
+                                                       resource,
+                                                       test))
                 else:
-                    actual = resource['attributes'][test_filter]
-                    if param == 'officeAddress':
+                    actual = resource['attributes'][test_filter_name]
+                    if param == 'filter[officeAddress][fuzzy]':
                         self.assertTrue(test.lower() in actual.lower())
                     else:
                         self.assertEqual(actual.lower(), test.lower())
 
-    if param == 'department':
+    if param == 'filter[department]':
         res_code = 200
 
     for test in invalid_tests:

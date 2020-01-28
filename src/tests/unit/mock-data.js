@@ -7,7 +7,7 @@ const singleResult = {
 };
 
 const multiResult = {
-  testCase: { firstName: 'fakeName' },
+  testCase: { 'filter[firstName]': 'fakeName' },
   expectedResult: [],
   description: 'fulfilled with multiple results',
 };
