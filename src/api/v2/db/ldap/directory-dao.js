@@ -11,26 +11,23 @@ import { getClient } from './connection';
  * @returns {string} string representing search filter for ldap query
  */
 const mapQuery = (endpointQuery) => {
-  const keyMap = (key) => {
-    switch (key) {
-      case 'filter[fullName][fuzzy]': return 'cn';
-      case 'filter[lastName]': return 'sn';
-      case 'filter[firstName]': return 'givenName';
-      case 'filter[primaryAffiliation]': return 'osuPrimaryAffiliation';
-      case 'filter[onid]': return 'uid';
-      case 'filter[emailAddress]': return 'mail';
-      case 'filter[officePhoneNumber][fuzzy]': return 'telephoneNumber';
-      case 'filter[alternatePhoneNumber][fuzzy]': return 'osuAltPhoneNumber';
-      case 'filter[faxNumber][fuzzy]': return 'facsimileTelephoneNumber';
-      case 'filter[phoneNumber][fuzzy]': return 'telephoneNumber';
-      case 'filter[officeAddress][fuzzy]': return 'osuOfficeAddress';
-      case 'filter[department]': return 'osuDepartment';
-      default: return undefined;
-    }
+  const keyMap = {
+    'filter[fullName][fuzzy]': 'cn',
+    'filter[lastName]': 'sn',
+    'filter[firstName]': 'givenName',
+    'filter[primaryAffiliation]': 'osuPrimaryAffiliation',
+    'filter[onid]': 'uid',
+    'filter[emailAddress]': 'mail',
+    'filter[officePhoneNumber][fuzzy]': 'telephoneNumber',
+    'filter[alternatePhoneNumber][fuzzy]': 'osuAltPhoneNumber',
+    'filter[faxNumber][fuzzy]': 'facsimileTelephoneNumber',
+    'filter[phoneNumber][fuzzy]': 'telephoneNumber',
+    'filter[officeAddress][fuzzy]': 'osuOfficeAddress',
+    'filter[department]': 'osuDepartment',
   };
 
   const valueOperations = (key, value) => {
-    const ldapKey = keyMap(key);
+    const ldapKey = keyMap[key];
     const defaultOperation = `${ldapKey}=${value}`;
     switch (key) {
       case 'filter[fullName][fuzzy]': {
@@ -59,8 +56,8 @@ const mapQuery = (endpointQuery) => {
         return `${ldapKey}=*${value}*`;
       }
       case 'filter[phoneNumber][fuzzy]': {
-        return `|(${ldapKey}=*${value}*)(${keyMap('filter[alternatePhoneNumber]')}=*${value}*)`
-          + `(${keyMap('filter[faxNumber]')}=*${value}*)`;
+        return `|(${ldapKey}=*${value}*)(${keyMap['filter[alternatePhoneNumber]']}=*${value}*)`
+          + `(${keyMap['filter[faxNumber]']}=*${value}*)`;
       }
       case 'filter[primaryAffiliation]': {
         return `${ldapKey}=${_.invert(primaryAffiliationMap)[value]}`;
@@ -73,7 +70,7 @@ const mapQuery = (endpointQuery) => {
 
   let ldapQuery = '';
   _.forEach(endpointQuery, (value, key) => {
-    if (keyMap(key)) ldapQuery += `(${valueOperations(key, value)})`;
+    if (keyMap[key]) ldapQuery += `(${valueOperations(key, value)})`;
   });
   if (ldapQuery) ldapQuery = `(&${ldapQuery})`;
   return ldapQuery;
