@@ -296,7 +296,8 @@ def get_query_param_name(param):
     return list(filter(None, re.split(r'\[|\]', param)))[1]
 
 
-def test_query_params(self, endpoint, param, valid_tests, invalid_tests):
+def test_query_params(self, endpoint, param, valid_tests, invalid_tests,
+                      nullable_fields):
     DIR_RES = 'DirectoryResourceObject'
     ERR_OBJ = 'ErrorObject'
     # lists params that return too broad of a search, resulting in 400, not 200
@@ -315,8 +316,8 @@ def test_query_params(self, endpoint, param, valid_tests, invalid_tests):
 
     for test in valid_tests:
         params[param] = test
-        response = test_endpoint(self, endpoint, res_object, res_code,
-                                 query_params=params)
+        response = test_endpoint(self, endpoint, res_object, res_code, params,
+                                 nullable_fields)
         if res_code == 200:
             response_data = response.json()['data']
             for resource in response_data:
@@ -329,18 +330,18 @@ def test_query_params(self, endpoint, param, valid_tests, invalid_tests):
                                                        test))
                 else:
                     actual = resource['attributes'][test_filter_name]
-                    if param == 'filter[officeAddress][fuzzy]':
+                    if '[fuzzy]' in param:
                         self.assertTrue(test.lower() in actual.lower())
                     else:
                         self.assertEqual(actual.lower(), test.lower())
 
-    if param == 'filter[department]':
+    if param == 'filter[department]' or '[fuzzy]' in param:
         res_code = 200
 
     for test in invalid_tests:
         params[param] = test
-        response = test_endpoint(self, endpoint, res_object, res_code,
-                                 query_params=params)
+        response = test_endpoint(self, endpoint, res_object, res_code, params,
+                                 nullable_fields)
         if res_code == 200:
             response_data = response.json()['data']
             self.assertFalse(response_data)
@@ -363,12 +364,12 @@ def check_phone_number(mode, resource, raw_number):
         if number_type in attributes:
             numbers.append(attributes[number_type])
     formatted_number = re.sub(r'[^0-9]', '', str(raw_number))
-    correct = 0
+    matches = 0
     for number in numbers:
         actual_formatted = re.sub(r'[^0-9]', '', number)
         if formatted_number in actual_formatted:
-            correct += 1
-    return correct >= 1
+            matches += 1
+    return matches >= 1
 
 
 class assertion_tests(unittest.TestCase):
