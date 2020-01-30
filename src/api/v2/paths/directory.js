@@ -11,15 +11,25 @@ import { getDirectories } from '../db/ldap/directory-dao';
  * @returns {Promise<object>} response
  */
 const get = async (req, res) => {
-  try {
-    const params = req.query;
-    const paramKeys = _.keys(params);
-    let errors = [];
-    if (paramKeys.includes('filter[primaryAffiliation]') && paramKeys.length === 3) {
-      errors.push('filter[primaryAffiliation] may not be used as a lone query parameter.');
-    }
+  const keyMap = {
+    'filter[fullName][fuzzy]': 'cn',
+    'filter[lastName]': 'sn',
+    'filter[firstName]': 'givenName',
+    'filter[primaryAffiliation]': 'osuPrimaryAffiliation',
+    'filter[onid]': 'uid',
+    'filter[emailAddress]': 'mail',
+    'filter[officePhoneNumber][fuzzy]': 'telephoneNumber',
+    'filter[alternatePhoneNumber][fuzzy]': 'osuAltPhoneNumber',
+    'filter[faxNumber][fuzzy]': 'facsimileTelephoneNumber',
+    'filter[phoneNumber][fuzzy]': 'telephoneNumber',
+    'filter[officeAddress][fuzzy]': 'osuOfficeAddress',
+    'filter[department]': 'osuDepartment',
+  };
 
-    const valuelessParams = _.pickBy(params, (value) => !value && value !== 0);
+  try {
+    let errors = [];
+    const params = req.query;
+    const valuelessParams = _.pickBy(params, (value, key) => !value && value !== 0 && keyMap[key]);
     const generateErrorString = (accumulator, value, key) => {
       accumulator.push(`Query parameter '${key}' must have a value.`);
       return accumulator;
@@ -31,7 +41,7 @@ const get = async (req, res) => {
 
     const result = await getDirectories(params);
     if (!result) {
-      return errorBuilder(res, 400, ['No query parameters specified.']);
+      return errorBuilder(res, 400, ['No non-pagination query parameters specified.']);
     }
     return res.send(result);
   } catch (err) {
@@ -39,6 +49,9 @@ const get = async (req, res) => {
     if (ldeMessage) {
       if (ldeMessage.includes('Size Limit Exceeded')) {
         return errorBuilder(res, 400, ['Size Limit Exceeded (search too broad)']);
+      }
+      if (ldeMessage.includes('Time Limit Exceeded')) {
+        return errorBuilder(res, 400, ['Request timed out. You are most likely seeing this if your query is too broad, causing a timeout on the database end. Try limiting query to be more specific']);
       }
       return errorHandler(res, [ldeMessage]);
     }
