@@ -51,9 +51,7 @@ const get = async (req, res) => {
         return errorBuilder(res, 400, ['Size Limit Exceeded (search too broad)']);
       }
       if (ldeMessage.includes('Time Limit Exceeded')) {
-        return errorBuilder(res, 400, ['Request timed out. You are most likely seeing this if '
-        + 'your query is too broad, causing a timeout on the database end. Try limiting query to '
-        + 'be more specific']);
+        return errorBuilder(res, 400, ['Request timed out. You are most likely seeing this if your query is too broad, causing a timeout on the database end. Try limiting query to be more specific']);
       }
       return errorHandler(res, [ldeMessage]);
     }
