@@ -74,7 +74,7 @@ const performValueOperations = (directory) => {
     directory[key] = valueOperations(key, directory[key]);
   });
   _.forEach(ldapKeys, (key) => {
-    if (!directory[key] && directory[key] !== 0) {
+    if (directory[key] === undefined) {
       directory[key] = null;
     }
   });
