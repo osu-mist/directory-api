@@ -35,7 +35,7 @@ const ldapKeyToResourceKey = {
   osuUID: 'osuUid',
 };
 
-const ldapKeys = Object.keys(ldapKeyToResourceKey);
+const ldapKeys = _.keys(ldapKeyToResourceKey);
 
 /**
  * @summary Manipulates values to match format expected in response
@@ -70,12 +70,12 @@ const valueOperations = (key, value) => {
  * @param {object} directory a directory resource object
  */
 const performValueOperations = (directory) => {
-  Object.keys(directory).forEach((key) => {
+  _.forEach(_.keys(directory), (key) => {
     directory[key] = valueOperations(key, directory[key]);
   });
-  _.forEach(ldapKeys, (value) => {
-    if (!directory[value]) {
-      directory[value] = null;
+  _.forEach(ldapKeys, (key) => {
+    if (!directory[key] && directory[key] !== 0) {
+      directory[key] = null;
     }
   });
 };
