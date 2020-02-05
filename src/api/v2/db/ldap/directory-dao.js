@@ -12,25 +12,25 @@ import { getClient } from './connection';
  */
 const mapQuery = (endpointQuery) => {
   const keyMap = {
-    fuzzyName: 'cn',
-    lastName: 'sn',
-    firstName: 'givenName',
-    primaryAffiliation: 'osuPrimaryAffiliation',
-    onid: 'uid',
-    emailAddress: 'mail',
-    officePhoneNumber: 'telephoneNumber',
-    alternatePhoneNumber: 'osuAltPhoneNumber',
-    faxNumber: 'facsimileTelephoneNumber',
-    phoneNumber: 'telephoneNumber',
-    officeAddress: 'osuOfficeAddress',
-    department: 'osuDepartment',
+    'filter[fullName][fuzzy]': 'cn',
+    'filter[lastName]': 'sn',
+    'filter[firstName]': 'givenName',
+    'filter[primaryAffiliation]': 'osuPrimaryAffiliation',
+    'filter[onid]': 'uid',
+    'filter[emailAddress]': 'mail',
+    'filter[officePhoneNumber][fuzzy]': 'telephoneNumber',
+    'filter[alternatePhoneNumber][fuzzy]': 'osuAltPhoneNumber',
+    'filter[faxNumber][fuzzy]': 'facsimileTelephoneNumber',
+    'filter[phoneNumber][fuzzy]': 'telephoneNumber',
+    'filter[officeAddress][fuzzy]': 'osuOfficeAddress',
+    'filter[department]': 'osuDepartment',
   };
 
   const valueOperations = (key, value) => {
     const ldapKey = keyMap[key];
     const defaultOperation = `${ldapKey}=${value}`;
     switch (key) {
-      case 'fuzzyName': {
+      case 'filter[fullName][fuzzy]': {
         let fuzzyFilters = '|'; // 'or' condition for all name orderings
 
         const valueTerms = value.split(/[ ,]+/);
@@ -49,17 +49,17 @@ const mapQuery = (endpointQuery) => {
 
         return fuzzyFilters;
       }
-      case 'officePhoneNumber':
-      case 'alternatePhoneNumber':
-      case 'faxNumber':
-      case 'officeAddress': {
+      case 'filter[officePhoneNumber][fuzzy]':
+      case 'filter[alternatePhoneNumber][fuzzy]':
+      case 'filter[faxNumber][fuzzy]':
+      case 'filter[officeAddress][fuzzy]': {
         return `${ldapKey}=*${value}*`;
       }
-      case 'phoneNumber': {
-        return `|(${ldapKey}=*${value}*)(${keyMap.alternatePhoneNumber}=*${value}*)`
-          + `(${keyMap.faxNumber}=*${value}*)`;
+      case 'filter[phoneNumber][fuzzy]': {
+        return `|(${ldapKey}=*${value}*)(${keyMap['filter[alternatePhoneNumber]']}=*${value}*)`
+          + `(${keyMap['filter[faxNumber]']}=*${value}*)`;
       }
-      case 'primaryAffiliation': {
+      case 'filter[primaryAffiliation]': {
         return `${ldapKey}=${_.invert(primaryAffiliationMap)[value]}`;
       }
       default: {

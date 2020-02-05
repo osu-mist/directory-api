@@ -10,17 +10,51 @@
       "password": "password"
     }
   },
+  "nullable_fields": [
+    "firstName",
+    "lastName",
+    "fullName",
+    "primaryAffiliation",
+    "jobTitle",
+    "department",
+    "departmentMailingAddress",
+    "officePhoneNumber",
+    "officeAddress",
+    "faxNumber",
+    "emailAddress",
+    "username",
+    "alternatePhoneNumber",
+    "osuUid"
+  ],
+  "query_params": [
+    "filter[fullName][fuzzy]",
+    "filter[firstName]",
+    "filter[lastName]",
+    "filter[primaryAffiliation]",
+    "filter[onid]",
+    "filter[emailAddress]",
+    "filter[officePhoneNumber][fuzzy]",
+    "filter[alternatePhoneNumber][fuzzy]",
+    "filter[faxNumber][fuzzy]",
+    "filter[phoneNumber][fuzzy]",
+    "filter[officeAddress][fuzzy]",
+    "filter[department]"
+  ],
   "test_cases": {
     "id": {
       "valid": ["43868700139", "53868730879", "44979934575", "28313180078"],
       "invalid": ["-2", "0", "noID"]
+    },
+    "fullName": {
+      "valid": ["kalci", "Kauffma", "awai"],
+      "invalid": ["zzzzzzzzz", "slurpee", "John Cena"]
     },
     "firstName": {
       "valid": ["Frederick", "Toby", "Greta"],
       "invalid": ["fdsafdsa", "12357"]
     },
     "lastName": {
-      "valid": ["McDonald", "Liang", "Wilson"],
+      "valid": ["McDonald", "Liang", "Harrison"],
       "invalid": ["fdsafdsa", "12357"]
     },
     "onid": {

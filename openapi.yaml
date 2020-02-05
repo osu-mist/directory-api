@@ -36,28 +36,27 @@ paths:
       parameters:
         - $ref: '#/parameters/pageNumber'
         - $ref: '#/parameters/pageSize'
-        - name: fuzzyName
+        - name: filter[fullName][fuzzy]
           in: query
-          description: |
-            Full name directory searches. Fuzzy searches each word separated by space or comma. Last and first names can be in any order, but multiword first or last name components must be ordered "First1 First2 ..."
+          description: Full name directory searches. Fuzzy searches each word separated by space or comma. Last and first names can be in any order, but multiword first or last name components must be ordered "First1 First2 ..."
           type: string
           required: false
-        - name: firstName
+        - name: filter[firstName]
           in: query
           description: Filter by first name
           type: string
           required: false
-        - name: lastName
+        - name: filter[lastName]
           in: query
           description: Filter by last name
           type: string
           required: false
-        - name: onid
+        - name: filter[onid]
           in: query
           description: Filter by ONID username
           type: string
           required: false
-        - name: primaryAffiliation
+        - name: filter[primaryAffiliation]
           in: query
           description: Filter by primary affiliation
           type: string
@@ -68,37 +67,37 @@ paths:
             - Retiree
             - Student
             - Unknown
-        - name: emailAddress
+        - name: filter[emailAddress]
           in: query
           description: Filter by email address
           type: string
           required: false
-        - name: officePhoneNumber
+        - name: filter[officePhoneNumber][fuzzy]
           in: query
           description: Filter by office phone number
           type: string
           required: false
-        - name: alternatePhoneNumber
+        - name: filter[alternatePhoneNumber][fuzzy]
           in: query
           description: Filter by alternate phone number
           type: string
           required: false
-        - name: phoneNumber
+        - name: filter[phoneNumber][fuzzy]
           in: query
           description: Filter by any phone number
           type: string
           required: false
-        - name: faxNumber
+        - name: filter[faxNumber][fuzzy]
           in: query
           description: Filter by fax number
           type: string
           required: false
-        - name: officeAddress
+        - name: filter[officeAddress][fuzzy]
           in: query
           description: Filter by office address
           type: string
           required: false
-        - name: department
+        - name: filter[department]
           in: query
           description: Filter by department
           type: string

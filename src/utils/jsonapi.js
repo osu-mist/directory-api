@@ -35,6 +35,7 @@ const serializerOptions = (serializerArgs) => {
 
   const resourceUrl = resourcePathLink(apiBaseUrl, resourcePath);
   const options = {
+    nullIfMissing: true,
     pluralizeType: false,
     attributes: resourceKeys,
     id: identifierField,
