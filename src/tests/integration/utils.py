@@ -361,7 +361,7 @@ def check_phone_number(mode, resource, raw_number):
                                                    'faxNumber',
                                                    'alternatePhoneNumber']
     for number_type in fields:
-        if number_type in attributes:
+        if number_type in attributes and attributes[number_type] is not None:
             numbers.append(attributes[number_type])
     formatted_number = re.sub(r'[^0-9]', '', str(raw_number))
     matches = 0

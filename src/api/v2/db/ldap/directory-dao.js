@@ -56,8 +56,8 @@ const mapQuery = (endpointQuery) => {
         return `${ldapKey}=*${value}*`;
       }
       case 'filter[phoneNumber][fuzzy]': {
-        return `|(${ldapKey}=*${value}*)(${keyMap['filter[alternatePhoneNumber]']}=*${value}*)`
-          + `(${keyMap['filter[faxNumber]']}=*${value}*)`;
+        return `|(${ldapKey}=*${value}*)(${keyMap['filter[alternatePhoneNumber][fuzzy]']}=*${value}*)`
+          + `(${keyMap['filter[faxNumber][fuzzy]']}=*${value}*)`;
       }
       case 'filter[primaryAffiliation]': {
         return `${ldapKey}=${_.invert(primaryAffiliationMap)[value]}`;

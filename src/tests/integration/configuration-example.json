@@ -8,6 +8,11 @@
     "basic_auth": {
       "username": "username",
       "password": "password"
+    },
+    "oauth2": {
+      "token_api_url": "https://api.oregonstate.edu/oauth2/token",
+      "client_id": "ssssshhhh!",
+      "client_secret": "it's a secret!"
     }
   },
   "nullable_fields": [
