@@ -19,7 +19,7 @@
     "dev": "nodemon -i dist/ -x 'npm run babel && npm start'",
     "lint": "gulp lint",
     "start": "pm2-runtime dist/app.js --no-auto-exit",
-    "test": "nyc --reporter=lcov gulp test",
+    "coverage": "nyc --reporter=lcov gulp test",
     "typecheck": "gulp typecheck"
   },
   "pre-commit": [
