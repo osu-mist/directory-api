@@ -19,7 +19,8 @@
     "dev": "nodemon -i dist/ -x 'npm run babel && npm start'",
     "lint": "gulp lint",
     "start": "pm2-runtime dist/app.js --no-auto-exit",
-    "coverage": "nyc --reporter=lcov gulp test",
+    "test": "gulp test",
+    "coverage": "nyc --reporter=lcov --reporter=text gulp test",
     "typecheck": "gulp typecheck"
   },
   "pre-commit": [
@@ -59,8 +60,6 @@
     "@babel/plugin-transform-runtime": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-flow": "^7.0.0",
-    "@babel/register": "^7.8.6",
-    "@istanbuljs/nyc-config-babel": "^3.0.0",
     "babel-eslint": "^10.0.2",
     "babel-plugin-istanbul": "^6.0.0",
     "babel-plugin-module-resolver": "^3.2.0",
