@@ -92,7 +92,6 @@ paths:
           type: string
           required: false
         - $ref: '#/parameters/pretty'
-        - $ref: '#/parameters/authorization'
       responses:
         "200":
           description: Array of directory entities
@@ -118,7 +117,6 @@ paths:
           format: int64
           required: true
         - $ref: '#/parameters/pretty'
-        - $ref: '#/parameters/authorization'
       responses:
         "200":
           description: Directory entity
@@ -135,12 +133,13 @@ parameters:
     type: boolean
     required: false
     description: If true, JSON response will be pretty-printed
-  authorization:
-    name: Authorization
-    in: header
-    type: string
-    required: true
-    description: '"Bearer [token]" where [token] is your OAuth2 access token'
+securityDefinitions:
+  OAuth2:
+    type: oauth2
+    flow: application
+    tokenUrl: https://api.oregonstate.edu/oauth2/token
+    scopes:
+      full: Full access to the API
 definitions:
   ResultObject:
     properties:
