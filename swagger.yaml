@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   title: OSU Directory Web API
-  description: Search LDAP directory entries using first / last name, email, or username.
+  description: Search LDAP directory entries.
   version: "1"
   license:
     name: GNU Affero General Public License Version 3
