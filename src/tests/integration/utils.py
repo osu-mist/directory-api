@@ -140,7 +140,7 @@ def check_schema(self, response, schema, nullable_fields):
         # pattern validation overrides any format validaton
         if pattern is not None:
             self.assertRegex(attribute, pattern, error_string)
-        elif formatting == 'url' or formatting == 'uri':
+        elif formatting in ['url', 'uri']:
             self.assertTrue(validators.url(attribute), error_string)
         elif formatting == 'email':
             self.assertTrue(validators.email(attribute), error_string)
