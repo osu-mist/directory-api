@@ -309,7 +309,13 @@ def test_endpoint(self, endpoint, resource, response_code, query_params=None,
                   nullable_fields=None):
     nullable_fields = [] if nullable_fields is None else nullable_fields
     schema = get_resource_schema(self, resource)
-    response = make_request(self, endpoint, response_code, params=query_params)
+    response = make_request(
+        self,
+        endpoint,
+        response_code,
+        params=query_params,
+        max_elapsed_seconds=10
+    )
     check_schema(self, response, schema, nullable_fields)
     response_json = response.json()
     if 'links' in response_json:
