@@ -314,7 +314,7 @@ def test_endpoint(self, endpoint, resource, response_code, query_params=None,
         endpoint,
         response_code,
         params=query_params,
-        max_elapsed_seconds=10
+        max_elapsed_seconds=14
     )
     check_schema(self, response, schema, nullable_fields)
     response_json = response.json()
