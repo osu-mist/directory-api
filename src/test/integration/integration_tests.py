@@ -82,7 +82,6 @@ class gateway_tests(unittest.TestCase):
         self.assertEquals(response.status_code, 200)
         json = response.json()
         self.assertGreaterEqual(len(json['data']), 0)
-        self.assertEquals(response.json()['data'][0]['attributes']['username'], 'martjesu')
 
     def test_osuuid_found(self):
         good_osuuid = config_json["good_osuuid"]
