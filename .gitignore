@@ -31,3 +31,7 @@ build.properties
 
 # Integration Tests
 *.pyc
+
+config/
+dist/
+node_modules
