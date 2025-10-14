@@ -16,3 +16,5 @@ dataSources:
   dataSources: ['ldap']
   ldap:
     url: 'ldaps://ldap.onid.orst.edu'
+    dn: ${LDAP_DN}
+    password: ${LDAP_PASSWORD}

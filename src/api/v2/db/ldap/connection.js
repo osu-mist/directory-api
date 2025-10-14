@@ -1,14 +1,25 @@
 import config from 'config';
 import ldap from 'ldapjs';
 
-const { url } = config.get('dataSources.ldap');
+const { url, dn, password } = config.get('dataSources.ldap');
 
 /**
  * @summary Get an ldap connection
  * @function
  * @returns {object} ldap client connection object
  */
-const getClient = () => ldap.createClient({ url });
+const getClient = () => {
+  const client = ldap.createClient({ url });
+
+  client.bind(dn, password, (err) => {
+    if (err) {
+      console.error('LDAP bind error:', err);
+      client.unbind();
+    }
+  });
+
+  return client;
+};
 
 /**
  * @summary Validate ldap connection and throw an error if invalid
