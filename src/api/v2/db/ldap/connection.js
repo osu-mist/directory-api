@@ -6,20 +6,22 @@ const { url, dn, password } = config.get('dataSources.ldap');
 /**
  * @summary Get an ldap connection
  * @function
- * @returns {object} ldap client connection object
+ * @returns {Promise<object>} Promise that resolves to ldap client after bind
  */
-const getClient = () => {
+const getClient = () => new Promise((resolve, reject) => {
   const client = ldap.createClient({ url });
 
   client.bind(dn, password, (err) => {
     if (err) {
+      // eslint-disable-next-line no-console
       console.error('LDAP bind error:', err);
       client.unbind();
+      reject(err);
+    } else {
+      resolve(client);
     }
   });
-
-  return client;
-};
+});
 
 /**
  * @summary Validate ldap connection and throw an error if invalid

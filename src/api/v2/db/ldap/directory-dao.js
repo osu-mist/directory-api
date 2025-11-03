@@ -83,17 +83,20 @@ const mapQuery = (endpointQuery) => {
  * @returns {Promise<object>} Promise object represents a serialized directory resource
  */
 const getDirectory = (pathParameter) => new Promise((resolve, reject) => {
-  const client = getClient();
-  client.promiseSearch = util.promisify(client.search);
-  client.promiseSearch('o=orst.edu', { filter: `osuUID=${pathParameter}`, scope: 'sub' }).then((res) => {
-    res.on('searchEntry', (entry) => {
-      resolve(serializeDirectory(entry.object));
-    });
-    res.on('error', (error) => {
+  getClient().then((client) => {
+    client.promiseSearch = util.promisify(client.search);
+    client.promiseSearch('o=orst.edu', { filter: `osuUID=${pathParameter}`, scope: 'sub' }).then((res) => {
+      res.on('searchEntry', (entry) => {
+        resolve(serializeDirectory(entry.object));
+      });
+      res.on('error', (error) => {
+        reject(error);
+      });
+      res.on('end', () => {
+        resolve(undefined);
+      });
+    }).catch((error) => {
       reject(error);
-    });
-    res.on('end', () => {
-      resolve(undefined);
     });
   }).catch((error) => {
     reject(error);
@@ -112,18 +115,21 @@ const getDirectories = (endpointQuery) => new Promise((resolve, reject) => {
   if (!ldapQuery) {
     resolve(undefined);
   } else {
-    const client = getClient();
-    client.promiseSearch = util.promisify(client.search);
-    const searchResults = [];
-    client.promiseSearch('o=orst.edu', { filter: ldapQuery, scope: 'sub' }).then((res) => {
-      res.on('searchEntry', (entry) => {
-        searchResults.push(entry.object);
-      });
-      res.on('error', (error) => {
+    getClient().then((client) => {
+      client.promiseSearch = util.promisify(client.search);
+      const searchResults = [];
+      client.promiseSearch('o=orst.edu', { filter: ldapQuery, scope: 'sub' }).then((res) => {
+        res.on('searchEntry', (entry) => {
+          searchResults.push(entry.object);
+        });
+        res.on('error', (error) => {
+          reject(error);
+        });
+        res.on('end', () => {
+          resolve(serializeDirectories(searchResults, endpointQuery));
+        });
+      }).catch((error) => {
         reject(error);
-      });
-      res.on('end', () => {
-        resolve(serializeDirectories(searchResults, endpointQuery));
       });
     }).catch((error) => {
       reject(error);
