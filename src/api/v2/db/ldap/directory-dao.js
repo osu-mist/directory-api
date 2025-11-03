@@ -83,7 +83,7 @@ const mapQuery = (endpointQuery) => {
  * @returns {Promise<object>} Promise object represents a serialized directory resource
  */
 const getDirectory = (pathParameter) => new Promise((resolve, reject) => {
-  getClient().then((client) => {
+  Promise.resolve(getClient()).then((client) => {
     client.promiseSearch = util.promisify(client.search);
     client.promiseSearch('o=orst.edu', { filter: `osuUID=${pathParameter}`, scope: 'sub' }).then((res) => {
       res.on('searchEntry', (entry) => {
@@ -115,7 +115,7 @@ const getDirectories = (endpointQuery) => new Promise((resolve, reject) => {
   if (!ldapQuery) {
     resolve(undefined);
   } else {
-    getClient().then((client) => {
+    Promise.resolve(getClient()).then((client) => {
       client.promiseSearch = util.promisify(client.search);
       const searchResults = [];
       client.promiseSearch('o=orst.edu', { filter: ldapQuery, scope: 'sub' }).then((res) => {
