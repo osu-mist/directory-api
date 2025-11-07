@@ -13,6 +13,10 @@ const anonStub = sinon.stub().returnsArg(0);
 
 const proxyDao = (endpointName) => {
   const option = endpointName === 'getDirectory' ? 'searchEntry' : 'end';
+  const mockClient = {
+    search: sinon.stub(),
+    unbind: sinon.stub().callsArg(0),
+  };
   const proxyquireObject = {
     util: {
       promisify: () => sinon.stub().resolves({
@@ -24,7 +28,7 @@ const proxyDao = (endpointName) => {
       }),
     },
     './connection': {
-      getClient: sinon.stub().returns({ search: {} }),
+      getClient: sinon.stub().resolves(mockClient),
     },
     '../../serializers/directory-serializer': {
       serializeDirectory: anonStub,

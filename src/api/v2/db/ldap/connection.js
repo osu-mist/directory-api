@@ -10,17 +10,43 @@ const { url, dn, password } = config.get('dataSources.ldap');
  */
 const getClient = () => new Promise((resolve, reject) => {
   const client = ldap.createClient({ url });
+  let bindAttempted = false;
+  let connectionEstablished = false;
 
-  client.bind(dn, password, (err) => {
-    if (err) {
+  // Handle connection errors before bind
+  client.on('error', (err) => {
+    if (!bindAttempted) {
       // eslint-disable-next-line no-console
-      console.error('LDAP bind error:', err);
-      client.unbind();
+      console.error('LDAP connection error:', err);
       reject(err);
-    } else {
-      resolve(client);
     }
   });
+
+  // Wait for connection to be established before binding
+  client.on('connect', () => {
+    connectionEstablished = true;
+    bindAttempted = true;
+
+    client.bind(dn, password, (err) => {
+      if (err) {
+        // eslint-disable-next-line no-console
+        console.error('LDAP bind error:', err);
+        client.unbind();
+        reject(err);
+      } else {
+        resolve(client);
+      }
+    });
+  });
+
+  // Handle timeout - if connection doesn't establish quickly
+  setTimeout(() => {
+    if (!connectionEstablished && !bindAttempted) {
+      const timeoutError = new Error('LDAP connection timeout');
+      client.unbind();
+      reject(timeoutError);
+    }
+  }, 10000); // 10 second timeout
 });
 
 /**
