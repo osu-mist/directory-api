@@ -9,44 +9,63 @@ const { url, dn, password } = config.get('dataSources.ldap');
  * @returns {Promise<object>} Promise that resolves to ldap client after bind
  */
 const getClient = () => new Promise((resolve, reject) => {
-  const client = ldap.createClient({ url });
-  let bindAttempted = false;
-  let connectionEstablished = false;
+  // Validate configuration
+  if (!dn || !password) {
+    const configError = new Error('LDAP DN or password not configured');
+    // eslint-disable-next-line no-console
+    console.error('LDAP configuration error:', configError);
+    reject(configError);
+    return;
+  }
 
-  // Handle connection errors before bind
+  const client = ldap.createClient({ url });
+  let bindCompleted = false;
+  let timeoutId = null;
+
+  // Handle connection errors
   client.on('error', (err) => {
-    if (!bindAttempted) {
+    if (!bindCompleted) {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
       // eslint-disable-next-line no-console
       console.error('LDAP connection error:', err);
-      reject(err);
+      client.unbind(() => {
+        reject(err);
+      });
     }
   });
 
-  // Wait for connection to be established before binding
-  client.on('connect', () => {
-    connectionEstablished = true;
-    bindAttempted = true;
-
-    client.bind(dn, password, (err) => {
-      if (err) {
-        // eslint-disable-next-line no-console
-        console.error('LDAP bind error:', err);
-        client.unbind();
-        reject(err);
-      } else {
-        resolve(client);
-      }
-    });
-  });
-
-  // Handle timeout - if connection doesn't establish quickly
-  setTimeout(() => {
-    if (!connectionEstablished && !bindAttempted) {
-      const timeoutError = new Error('LDAP connection timeout');
-      client.unbind();
-      reject(timeoutError);
+  // Set timeout for bind operation
+  timeoutId = setTimeout(() => {
+    if (!bindCompleted) {
+      const timeoutError = new Error('LDAP bind timeout');
+      client.unbind(() => {
+        reject(timeoutError);
+      });
     }
   }, 10000); // 10 second timeout
+
+  // Bind immediately - ldapjs will automatically wait for connection
+  // This is the most reliable approach as ldapjs handles connection state internally
+  client.bind(dn, password, (err) => {
+    bindCompleted = true;
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      timeoutId = null;
+    }
+
+    if (err) {
+      // eslint-disable-next-line no-console
+      console.error('LDAP bind error:', err);
+      client.unbind(() => {
+        reject(err);
+      });
+    } else {
+      resolve(client);
+    }
+  });
 });
 
 /**
