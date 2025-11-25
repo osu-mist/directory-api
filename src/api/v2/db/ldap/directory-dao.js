@@ -84,37 +84,19 @@ const mapQuery = (endpointQuery) => {
  */
 const getDirectory = (pathParameter) => new Promise((resolve, reject) => {
   Promise.resolve(getClient()).then((client) => {
-    let resolved = false;
-    const cleanup = (callback) => {
-      if (!resolved) {
-        resolved = true;
-        client.unbind(() => {
-          callback();
-        });
-      }
-    };
-
     client.promiseSearch = util.promisify(client.search);
     client.promiseSearch('o=orst.edu', { filter: `osuUID=${pathParameter}`, scope: 'sub' }).then((res) => {
       res.on('searchEntry', (entry) => {
-        cleanup(() => {
-          resolve(serializeDirectory(entry.object));
-        });
+        resolve(serializeDirectory(entry.object));
       });
       res.on('error', (error) => {
-        cleanup(() => {
-          reject(error);
-        });
-      });
-      res.on('end', () => {
-        cleanup(() => {
-          resolve(undefined);
-        });
-      });
-    }).catch((error) => {
-      cleanup(() => {
         reject(error);
       });
+      res.on('end', () => {
+        resolve(undefined);
+      });
+    }).catch((error) => {
+      reject(error);
     });
   }).catch((error) => {
     reject(error);
@@ -134,16 +116,6 @@ const getDirectories = (endpointQuery) => new Promise((resolve, reject) => {
     resolve(undefined);
   } else {
     Promise.resolve(getClient()).then((client) => {
-      let resolved = false;
-      const cleanup = (callback) => {
-        if (!resolved) {
-          resolved = true;
-          client.unbind(() => {
-            callback();
-          });
-        }
-      };
-
       client.promiseSearch = util.promisify(client.search);
       const searchResults = [];
       client.promiseSearch('o=orst.edu', { filter: ldapQuery, scope: 'sub' }).then((res) => {
@@ -151,19 +123,13 @@ const getDirectories = (endpointQuery) => new Promise((resolve, reject) => {
           searchResults.push(entry.object);
         });
         res.on('error', (error) => {
-          cleanup(() => {
-            reject(error);
-          });
-        });
-        res.on('end', () => {
-          cleanup(() => {
-            resolve(serializeDirectories(searchResults, endpointQuery));
-          });
-        });
-      }).catch((error) => {
-        cleanup(() => {
           reject(error);
         });
+        res.on('end', () => {
+          resolve(serializeDirectories(searchResults, endpointQuery));
+        });
+      }).catch((error) => {
+        reject(error);
       });
     }).catch((error) => {
       reject(error);
