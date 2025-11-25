@@ -75,13 +75,10 @@ const getClient = () => new Promise((resolve, reject) => {
  */
 const validateLdap = async () => {
   try {
-    const client = ldap.createClient({ url }).on('error', () => {
-      throw new Error('Error connecting to ldap');
-    }).on('connect', () => {
-      client.destroy();
-    });
+    const client = await getClient();
+    client.unbind();
   } catch (err) {
-    throw new Error('Invalid LDAP url');
+    throw new Error('Invalid LDAP configuration');
   }
 };
 
