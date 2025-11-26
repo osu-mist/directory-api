@@ -36,7 +36,7 @@ const getClient = () => {
       return;
     }
 
-    const client = ldap.createClient({ url });
+    const client = ldap.createClient({ url, reconnect: false });
     let bindCompleted = false;
     let timeoutId = null;
 
@@ -105,14 +105,14 @@ const getClient = () => {
 };
 
 /**
- * @summary Validate ldap connection and throw an error if invalid
+ * @summary Validate LDAP connection
  * @function
- * @throws Throws an error if unable to connect or search ldap
+ * @returns {Promise} Promise that resolves if connection is valid
  */
 const validateLdap = async () => {
   try {
-    const client = await getClient();
-    client.unbind();
+    await getClient();
+    // Do NOT unbind here. We want to keep the connection open for the pool.
   } catch (err) {
     throw new Error('Invalid LDAP configuration');
   }
