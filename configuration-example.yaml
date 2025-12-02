@@ -45,6 +45,8 @@ authentication:
 
 ldap:
   url: ldap://directory.example.com
+  dn: uid=api,ou=Directory,o=example.com
+  password: password
   base: ou=Directory, o=example.com
   maxPoolSize: 10
   minPoolSize: 3

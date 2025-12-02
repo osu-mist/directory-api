@@ -3,6 +3,9 @@ package edu.oregonstate.mist.directoryapi
 import edu.oregonstate.mist.api.Application
 import io.dropwizard.setup.Environment
 import org.ldaptive.DefaultConnectionFactory
+import org.ldaptive.ConnectionConfig
+import org.ldaptive.BindConnectionInitializer
+import org.ldaptive.Credential
 import org.ldaptive.pool.PoolConfig
 import org.ldaptive.pool.PooledConnectionFactory
 import org.ldaptive.pool.SoftLimitConnectionPool
@@ -36,7 +39,17 @@ class DirectoryApplication extends Application<DirectoryApplicationConfiguration
 
     private static PooledConnectionFactory configureLdapPool(Map<String,Object> ldapConfiguration) {
         def ldapURL = (String)ldapConfiguration.get('url')
-        DefaultConnectionFactory defaultConnectionFactory = new DefaultConnectionFactory(ldapURL)
+        ConnectionConfig connectionConfig = new ConnectionConfig(ldapURL)
+        def password = System.getenv('LDAP_PASSWORD') ?: (String)ldapConfiguration.get('password')
+        if (ldapConfiguration.get('dn') && password) {
+            connectionConfig.setConnectionInitializer(
+                new BindConnectionInitializer(
+                    (String)ldapConfiguration.get('dn'),
+                    new Credential(password)
+                )
+            )
+        }
+        DefaultConnectionFactory defaultConnectionFactory = new DefaultConnectionFactory(connectionConfig)
 
         PoolConfig poolConfig = new PoolConfig(
                 maxPoolSize: (int)ldapConfiguration.get('maxPoolSize'),
